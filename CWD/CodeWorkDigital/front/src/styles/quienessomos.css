@@ -1,0 +1,97 @@
+/* ================================
+   QUIENES SOMOS
+================================ */
+
+/* HEADER INTERNO (logo + titulo) */
+.homeimg {
+  background: black;
+  padding: 60px 20px 50px;
+  text-align: center;
+}
+
+.homeimg img {
+  margin-bottom: 15px;
+}
+
+.homeimg h1 {
+  color: white;
+  font-size: 42px;
+  margin: 10px 0 5px;
+  letter-spacing: 1px;
+}
+
+.homeimg h4 {
+  color: #2e8e9a;
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* ================================
+   HERO SECTION
+================================ */
+.hero-section1 {
+  background-color: #c7dbef;
+  padding: 80px 20px;
+}
+
+/* Contenedor central */
+.hero-section1 .container {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Títulos */
+.hero-section1 h2 {
+  font-size: 30px;
+  color: #003F5C;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+/* Texto principal */
+.subtitulo {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #003F5C;
+  max-width: 750px;
+  margin: 0 auto 35px;
+}
+
+/* ================================
+   LISTA ELEGIRNOS
+================================ */
+.hero-section1 ul {
+  list-style: none;
+  padding: 0;
+  margin: 30px auto 0;
+}
+
+.elegirnos1 {
+  font-size: 15px;
+  margin-bottom: 8px;
+  color: #003F5C;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .homeimg h1 {
+    font-size: 32px;
+  }
+
+  .homeimg h4 {
+    font-size: 16px;
+  }
+
+  .hero-section1 h2 {
+    font-size: 24px;
+  }
+
+  .subtitulo {
+    font-size: 15px;
+  }
+}
+

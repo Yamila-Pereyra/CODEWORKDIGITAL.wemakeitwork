@@ -1,0 +1,414 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #bdd3e9;
+  color:black;
+}
+
+/* -----------------------------------
+   TIPOGRAFÍAS
+----------------------------------- */
+
+/* Títulos → Michroma */
+h1,
+h2,
+h3,
+h4,
+header h1,
+header h4,
+.navbar .brand {
+  font-family: "Michroma", sans-serif;
+  letter-spacing: 1px;
+}
+
+
+body,
+p,
+li,
+a,
+button,
+input,
+textarea,
+label {
+  font-family: "Red Hat Display", sans-serif;
+}
+
+/* ================================
+   HEADER
+================================ */
+header {
+  background-color: black;
+  width: 100%;
+  padding: 20px 0 70px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* LOGO */
+header img {
+  width: 200px;
+  height: auto;
+  position: absolute;
+  left: 20px;
+  top: 10px;
+}
+
+/* TITULO */
+header h1 {
+  color: white;
+  font-size: 48px;
+  font-weight: 700;
+  margin: 20px 0 5px 0;
+  text-align: center;
+}
+
+/* SUBTÍTULO */
+header h4 {
+  color: #2e8e9a;
+  font-size: 22px;
+  margin: 0;
+  text-align: center;
+}
+
+/* RESPONSIVE HEADER */
+@media (max-width: 768px) {
+  header {
+    padding: 120px 20px 140px 20px;
+  }
+
+  header img {
+    position: static;
+    margin-bottom: 20px;
+    width: 150px;
+  }
+
+  header h1 {
+    font-size: 32px;
+  }
+
+  header h4 {
+    font-size: 18px;
+  }
+}
+
+/* ====NAVBAr====== */
+.navbar {
+  background-color: #236d78;
+  padding: 10px 0;
+}
+
+.nav-container {
+  width: 70%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  color: black;
+  font-weight: 700;
+  font-size: 1.4rem;
+  text-decoration: none;
+}
+
+/* Botón hamburguesa */
+.nav-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  display: none;
+}
+
+/* Menú */
+.nav-menu {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-menu li a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: 0.2s;
+}
+
+.nav-menu li a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* MENU RESPONSIVE */
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: block;
+  }
+
+  .nav-menu {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background-color: #236d78;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 1.5rem 0;
+    display: none;
+  }
+
+  .nav-menu.show {
+    display: flex;
+  }
+}
+
+/* ================================
+   HERO SECTION
+================================ */
+.hero-section {
+  padding: 80px 0;
+  text-align: center;
+  /*background: radial-gradient(circle, #aed6dc, #3692bd);*/
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #003F5C;
+  text-align: center;
+}
+
+.subtitulo {
+  max-width: 700px;
+  margin: 20px auto;
+  font-size: 18px;
+  text-align: center;
+  /* centra el texto */
+  line-height: 1.6;
+  /* mejor lectura */
+}
+
+.elegirnos1 {
+  color: black;
+  text-align: center;
+  font-size: 18px;
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0; 
+}
+
+/* ================================
+   SECCIONES GENERALES
+================================ */
+.nosotros,
+.beneficios,
+.servicios {
+  padding: 60px 0;
+  text-align: center;
+  /* background: radial-gradient(circle, #aed6dc, #3692bd);*/
+}
+
+.lista-beneficios {
+  max-width: 600px;
+  margin: 0 auto;
+  list-style: none;
+  padding: 0;
+  line-height: 2;
+}
+
+/* SERVICES CARDS */
+.service-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  margin: 20px 0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  transition: 0.2s;
+}
+
+.servicios .container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  padding: 60px 0;
+}
+
+.service-card:hover {
+  transform: translateY(-6px);
+}
+
+
+/* GRID solo para las tarjetas */
+.cards-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+/* Tamaño del card más chico */
+.service-card {
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+
+/* ================================
+   CTA FINAL
+================================ */
+.cta-final {
+  background: #003F5C;
+  color: white;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.cta-final .btn-primary {
+  background: white;
+  color: #003F5C;
+}
+
+/* ================================
+   CONTACTO
+================================ */
+.contacto {
+  padding: 80px 0;
+  text-align: center;
+  background: #1a242d;
+}
+
+.titulo-contacto {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #003F5C;
+}
+
+.texto-contacto {
+  max-width: 600px;
+  margin: 10px auto 40px;
+  color: #6B7280;
+}
+
+.contacto-what {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* CONTACT CARD */
+.contacto-box {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+.contacto-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* centra visualmente todo */
+    width: 100%;
+}
+.contacto-form input,
+.contacto-form textarea {
+    width: 100%;           /* ocupa todo el ancho disponible */
+    max-width: 400px;      /* controla el ancho */
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 2px solid #071a41;
+    margin-bottom: 15px;
+}
+.contacto-form label {
+    width: 100%;
+    max-width: 400px;
+    text-align: left;  /* queda prolijo encima del input */
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.contacto-box h3 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* centra horizontal */
+    justify-content: center; /* centra vertical si hay altura */
+    text-align: center; /* centra textos */
+}
+
+
+/* BOTONES */
+
+.btn-primary {
+  background: linear-gradient(to right, rgba(0, 63, 92, 0.9), rgba(47, 143, 157, 0.8));
+  border: 2px solid;
+  padding: 12px 24px;
+  border-radius: 10px;
+  color: black;
+  font-weight:300;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.btn-outline {
+  background: linear-gradient(to right, rgba(47, 143, 157, 0.8), rgba(0, 63, 92, 0.9));
+  border: 2px solid;
+  padding: 12px 24px;
+  border-radius: 10px;
+  color: black;
+  font-weight: 600;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #236d78;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+}
+
+form label {
+  font-weight: bold;
+}
+
+form input,
+form textarea,
+form select {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+form button {
+  padding: 10px;
+  border: none;
+  background-color: #236d78;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+form button:hover {
+  background-color: #1b565f;
+}
+
+p.error {
+  color: red;
+  font-weight: bold;
+}

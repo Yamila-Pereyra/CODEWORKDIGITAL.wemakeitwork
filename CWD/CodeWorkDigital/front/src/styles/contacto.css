@@ -1,0 +1,112 @@
+/* ================================
+   FORMULARIO DE CONTACTO
+================================ */
+
+.contacto-form-wrapper {
+  max-width: 500px;
+  margin: 2.5rem auto;
+  padding: 2.5rem 3rem;
+  background: black;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.titulo-contacto {
+  text-align: center;
+  color: #f55a13;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.texto-contacto {
+  text-align: center;
+  color: rgb(231, 11, 11);
+  margin-bottom: 2rem;
+}
+
+.contacto-form p {
+  margin-bottom: 1rem;
+}
+
+.contacto-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #333;
+}
+
+.contacto-form input,
+.contacto-form textarea {
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  background: #f9f9f9;
+  transition: all 0.3s ease;
+}
+
+.contacto-form input:focus,
+.contacto-form textarea:focus {
+  border-color: #3692bd;
+  box-shadow: 0 0 6px rgba(54, 146, 189, 0.3);
+  outline: none;
+  background: #fff;
+}
+
+.btn-primary.form-btn {
+  width: 100%;
+  background: linear-gradient(90deg, #3692bd, #aed6dc);
+  color: #fff;
+  border: none;
+  padding: 0.85rem 1.5rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.btn-primary.form-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(54, 146, 189, 0.4);
+}
+
+.form-msg {
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.form-msg.error {
+  color: #dc3545;
+}
+
+
+/* ================================
+   BOTÓN WHATSAPP CONTACTO
+================================ */
+
+.whatsapp-contacto {
+  margin-top: 1.8rem;
+  display: flex;
+  justify-content: center;
+}
+
+.whatsapp-btn {
+  background-color: #25d366;
+  color: #fff;
+  padding: 0.85rem 2rem;
+  border-radius: 50px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.whatsapp-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+}

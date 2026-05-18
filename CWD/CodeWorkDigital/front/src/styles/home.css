@@ -1,0 +1,30 @@
+/* ================================
+   HERO SECTION
+================================ */
+
+h2 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #003F5C;
+  text-align: center;
+}
+
+.subtitulo {
+  max-width: 700px;
+  margin: 20px auto;
+  font-size: 18px;
+  text-align: center;
+  /* centra el texto */
+  line-height: 1.6;
+  
+}
+
+.elegirnos1 {
+  color: black;
+  text-align: center;
+  font-size: 18px;
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0; 
+}
+
