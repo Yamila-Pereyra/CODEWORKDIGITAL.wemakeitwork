@@ -1,0 +1,268 @@
+/* ================================
+   RESET
+================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ================================
+   HEADER
+================================ */
+
+.top-header {
+  position: sticky;
+  top: 0;
+
+  width: calc(100% - 80px);
+  margin: 0 auto;
+
+  height: 95px;
+
+  background: #000;
+  border-bottom: 1px solid #222;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 20px;
+
+  z-index: 1000;
+}
+
+.logo-container {
+  flex-shrink: 0;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.logo-img {
+  width: 130px;
+  height: auto;
+}
+
+.slogan-img {
+  width: 260px;
+  height: auto;
+}
+
+/* ================================
+   NAV
+================================ */
+
+.nav-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+nav .holder {
+  list-style: none;
+
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+
+  padding: 12px 40px;
+}
+
+nav .holder li a {
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+nav .holder li a:hover,
+nav .holder li a.activo {
+  color: #38bdf8;
+}
+
+/* ================================
+   IDIOMAS
+================================ */
+
+.language-selector {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.language-selector button {
+  background: transparent;
+  border: 1px solid #444;
+  color: #fff;
+
+  width: 56px;
+  height: 42px;
+
+  border-radius: 999px;
+
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.language-selector button:hover {
+  border-color: #38bdf8;
+}
+.language-selector button.active-lang {
+  background: #fff;
+  color: #000;
+}
+
+
+/* ================================
+   CONTENIDO
+================================ */
+
+.main-content {
+  width: 100%;
+  min-height: 100vh;
+  background: #000;
+  overflow-x: hidden;
+}
+
+/* ================================
+   FOOTER
+================================ */
+
+footer {
+  background: #000;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid #222;
+}
+
+footer p {
+  margin: 0;
+}
+
+/* ================================
+   MENU MOBILE
+================================ */
+
+.menu-toggle {
+  display: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.bar {
+  display: block;
+  width: 28px;
+  height: 3px;
+  background: white;
+  margin: 5px 0;
+  border-radius: 999px;
+}
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 1024px) {
+  .top-header {
+    width: calc(100% - 40px);
+  }
+
+  .logo-img {
+    width: 100px;
+  }
+
+  .slogan-img {
+    width: 200px;
+  }
+
+  nav .holder {
+    gap: 1.5rem;
+  }
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 768px) {
+  .top-header {
+    width: calc(100% - 20px);
+
+    height: auto;
+
+    flex-direction: column;
+    justify-content: center;
+
+    gap: 14px;
+
+    padding: 16px;
+  }
+
+  .logo-img {
+    width: 70px;
+  }
+
+  .slogan-img {
+    width: 140px;
+  }
+
+  .nav-container {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  nav {
+    width: 100%;
+    text-align: center;
+  }
+
+  .menu-toggle {
+    display: inline-block;
+  }
+
+  nav .holder {
+    display: none;
+  }
+
+  nav .holder.open {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 14px;
+    width: 100%;
+  }
+
+  .language-selector {
+    justify-content: center;
+  }
+}
