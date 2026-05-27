@@ -1,0 +1,1093 @@
+/* ================================
+   GOOGLE FONTS
+================================ */
+@import url('https://fonts.googleapis.com/css2?family=Michroma&family=Red+Hat+Display:wght@300;400;600;700&display=swap');
+
+/* ================================
+   VARIABLES
+================================ */
+:root {
+  --color-primary: #f52512;
+  --color-secondary: #3692bd;
+  --color-accent: #f27e12;
+  --color-light: #111111;
+  --color-dark: #ffffff;
+  --color-gray: #cfcfcf;
+
+  --radius: 12px;
+  --transition: all 0.3s ease;
+}
+
+/* ================================
+   RESET
+================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ================================
+   BODY
+================================ */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  color: white;
+  font-family: 'Red Hat Display', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ================================
+   TIPOGRAFÍAS
+================================ */
+h1,
+h2,
+h3,
+h4,
+header h1,
+header h4 {
+  font-family: 'Red Hat Display', sans-serif;
+  letter-spacing: 1px;
+  color: white;
+  margin: 0;
+}
+
+p,
+li,
+a,
+button,
+input,
+textarea,
+label {
+  font-family: 'Red Hat Display', sans-serif;
+  color: white;
+  line-height: 1.5;
+}
+
+/* ================================
+   HEADER
+================================ */
+header {
+  background-color: black;
+  width: 100%;
+  overflow: hidden;
+}
+
+.header-container {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ================================
+   NAVBAR NEGRA
+================================ */
+nav {
+  background-color: black;
+  padding: 15px 0;
+  border-top: 1px solid #222;
+  border-bottom: 1px solid #222;
+}
+
+nav .holder {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+}
+
+nav .holder li a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+nav .holder li a:hover {
+  background-color: #111;
+  color: #00ff88;
+}
+
+nav .holder li a.activo {
+  color: #00ff88;
+}
+
+/* ================================
+   HEADER + NAV FIJOS
+================================ */
+.fixed-header-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: black;
+}
+
+.fixed-header-nav header {
+  background-color: black;
+}
+
+.fixed-header-nav nav {
+  background-color: black;
+}
+
+/* ================================
+   CONTENIDO PRINCIPAL
+================================ */
+.main-content {
+  margin-top: 120px;
+  width: 100%;
+  min-height: 100vh;
+  background-color: black;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+/* ================================
+   HERO
+================================ */
+.hero {
+  min-height: auto;
+
+  padding-top: 20px;
+  padding-bottom: 40px;
+
+  background: black;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: flex-start;
+  align-items: center;
+
+  overflow: hidden;
+  text-align: center;
+}
+.hero h1 {
+  margin-top: 10px;
+}
+/* ================================
+   TITULO CON EFECTO
+================================ */
+.hero h1 {
+  position: relative;
+  display: inline-block;
+
+  font-size: clamp(4rem, 11vw, 9rem);
+  font-weight: 900;
+  text-transform: uppercase;
+
+  color: white;
+
+  letter-spacing: -0.08em;
+  line-height: 0.9;
+
+  font-family: 'Red Hat Display', sans-serif;
+
+  margin-bottom: 20px;
+
+  overflow: hidden;
+
+  text-shadow:
+          0 0 10px rgba(255,255,255,0.08),
+          0 0 25px rgba(255,255,255,0.04);
+}
+/* ================================
+   CAPA SUPERIOR
+================================ */
+.hero h1::before {
+  content: "CodeWork Digital";
+
+  position: absolute;
+  inset: 0;
+
+  color: rgba(255,255,255,0.95);
+
+  clip-path: polygon(
+          0 0,
+          100% 0,
+          100% 18%,
+          0 18%,
+
+          0 32%,
+          100% 32%,
+          100% 48%,
+          0 48%,
+
+          0 62%,
+          100% 62%,
+          100% 78%,
+          0 78%
+  );
+
+  animation: glitchTop 6s infinite ease-in-out;
+}
+/* ================================
+   CAPA INFERIOR
+================================ */
+.hero h1::after {
+  content: "CodeWork Digital";
+
+  position: absolute;
+  inset: 0;
+
+  color: rgba(255,255,255,0.55);
+
+  clip-path: polygon(
+          0 20%,
+          100% 20%,
+          100% 30%,
+          0 30%,
+
+          0 50%,
+          100% 50%,
+          100% 60%,
+          0 60%,
+
+          0 80%,
+          100% 80%,
+          100% 100%,
+          0 100%
+  );
+
+  animation: glitchBottom 8s infinite ease-in-out;
+}
+/* ================================
+   TERCERA CAPA
+================================ */
+.hero h1 span {
+  position: absolute;
+  inset: 0;
+
+  color: rgba(255,255,255,0.25);
+
+  clip-path: polygon(
+          0 10%,
+          100% 10%,
+          100% 26%,
+          0 26%,
+
+          0 42%,
+          100% 42%,
+          100% 58%,
+          0 58%,
+
+          0 72%,
+          100% 72%,
+          100% 88%,
+          0 88%
+  );
+
+  animation: glitchThird 10s infinite ease-in-out;
+}
+/* ================================
+   ANIMACIONES GLITCH
+================================ */
+@keyframes glitchTop {
+
+  0% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(4px);
+  }
+
+  40% {
+    transform: translateX(-3px);
+  }
+
+  60% {
+    transform: translateX(6px);
+  }
+
+  80% {
+    transform: translateX(-2px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes glitchBottom {
+
+  0% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-4px);
+  }
+
+  40% {
+    transform: translateX(3px);
+  }
+
+  60% {
+    transform: translateX(-6px);
+  }
+
+  80% {
+    transform: translateX(2px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes glitchThird {
+
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(2px);
+  }
+
+  50% {
+    transform: translateX(-4px);
+  }
+
+  75% {
+    transform: translateX(3px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* ================================
+   TEXTO CARRUSEL
+================================ */
+.carousel-text {
+  font-size: 1.3rem;
+  color: #FF0077;
+  height: 30px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* ================================
+   SECCIONES
+================================ */
+section {
+  padding: 80px 0;
+  background-color: black;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+/* ================================
+   TITULOS
+================================ */
+h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.subtitulo {
+  font-size: 1.1rem;
+  color: var(--color-gray);
+  max-width: 700px;
+  margin: 0 auto;
+}
+/* ================================
+   HERO GRID PREMIUM
+================================ */
+.hero-section {
+  padding: 120px 7vw;
+  background: black;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 80px;
+  align-items: center;
+}
+
+/* ================================
+   TEXTO IZQUIERDO
+================================ */
+.hero-left h2 {
+  font-size: clamp(3rem, 5vw, 6rem);
+
+  font-weight: 900;
+
+  line-height: 0.95;
+
+  letter-spacing: -0.05em;
+
+  color: white;
+
+  text-align: left;
+
+  max-width: 900px;
+}
+
+/* ================================
+   TEXTO DERECHO
+================================ */
+.hero-right p {
+  font-size: 1.15rem;
+
+  font-weight: 300;
+
+  line-height: 1.9;
+
+  color: rgba(255,255,255,0.72);
+
+  text-align: left;
+
+  max-width: 420px;
+}
+
+/* ================================
+   ANIMACIONES
+================================ */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-80px);
+
+  animation: revealLeft 1.4s ease forwards;
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(80px);
+
+  animation: revealRight 1.6s ease forwards;
+}
+
+@keyframes revealLeft {
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes revealRight {
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 900px) {
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .hero-left h2 {
+    text-align: center;
+  }
+
+  .hero-right p {
+    text-align: center;
+    margin: 0 auto;
+  }
+}
+/* ================================
+  carousel
+================================ */
+
+.premium-carousel {
+  position: relative;
+  width: min(1300px, 92%);
+  height: 650px;
+  margin: 100px auto;
+  overflow: hidden;
+  border-radius: 32px;
+  background: #000;
+  box-shadow: 0 30px 100px rgba(0,0,0,.45);
+}
+
+.premium-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.premium-slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+.premium-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+}
+
+.premium-dots {
+  position: absolute;
+  left: 8%;
+  bottom: 40px;
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+}
+
+.premium-dots button {
+  width: 40px;
+  height: 4px;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  background: rgba(255,255,255,.25);
+  transition: .3s;
+}
+
+.premium-dots button.active {
+  width: 80px;
+  background: white;
+}
+.premium-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+@media (max-width:768px) {
+
+  .premium-carousel {
+    height: 520px;
+    margin: 70px auto;
+  }
+ }
+/* ================================
+   BENEFICIOS
+================================ */
+.beneficios-layout {
+  display: grid;
+  grid-template-columns: 2fr .8fr;
+  gap: 70px;
+  align-items: start;
+}
+
+.beneficios-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(380px, 1fr));
+  gap: 32px;
+}
+
+.beneficio-card {
+  position: relative;
+
+  width: 100%;
+  min-height: 480px;
+
+  border-radius: 30px;
+  overflow: hidden;
+  cursor: pointer;
+
+  background: #0f172a;
+
+  box-shadow:
+          0 20px 60px rgba(0,0,0,.35);
+
+  transition:
+          transform .35s ease,
+          box-shadow .35s ease;
+}
+
+.beneficio-card:hover {
+  transform: translateY(-8px);
+  box-shadow:
+          0 30px 80px rgba(0,0,0,.5);
+}
+
+.beneficio-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 30px 80px rgba(0,0,0,.5);
+}
+
+.beneficio-img,
+.beneficio-front,
+.beneficio-back {
+  position: absolute;
+  inset: 0;
+}
+
+.beneficio-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Hover image transition */
+.beneficio-front,
+.beneficio-back {
+  transition: opacity .45s ease, transform .45s ease;
+}
+
+.beneficio-back {
+  opacity: 0;
+  transform: scale(1.04);
+}
+
+.beneficio-card:hover .beneficio-front {
+  opacity: 0;
+  transform: scale(.98);
+}
+
+.beneficio-card:hover .beneficio-back {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Texto grande derecha */
+.beneficios-texto {
+  position: sticky;
+  top: 120px;
+
+  height: calc(100vh - 160px);
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.beneficios-texto span,
+.beneficios-texto strong {
+  display: block;
+  line-height: .85;
+  letter-spacing: -0.06em;
+}
+
+.beneficios-texto span {
+  font-size: clamp(4.8rem, 7vw, 8rem);
+  font-weight: 500;
+}
+
+.beneficios-texto strong {
+  font-size: clamp(5.6rem, 8vw, 9.5rem);
+  font-weight: 900;
+}
+
+.beneficios-texto > div {
+  transform: rotate(-90deg) translateY(-80px);
+  white-space: nowrap;
+}
+.beneficios-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+/* Responsive */
+@media (max-width: 1200px) {
+  .beneficios-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .beneficios-texto {
+    order: -1;
+    position: static;
+  }
+}
+
+@media (max-width: 850px) {
+  .beneficios-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .beneficio-card {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 520px) {
+  .beneficios {
+    padding: 80px 0;
+  }
+
+  .beneficio-card {
+    min-height: 260px;
+    border-radius: 22px;
+  }
+}
+     /* ================================
+        SERVICES
+     ================================ */
+
+   .services-clean {
+     position: relative;
+     background: #000;
+
+     min-height: 220vh;
+
+     overflow: visible;
+   }
+
+/* ===================================
+   TITULO FIJO SOLO EN ESTA SECCION
+=================================== */
+
+.services-fixed-title {
+  position: sticky;
+
+  top: 0;
+
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform: translateY(120px);
+
+  z-index: 1;
+  pointer-events: none;
+}
+
+.services-fixed-title h1 {
+  font-size: clamp(5rem, 16vw, 16rem);
+  font-weight: 900;
+
+  color: white;
+
+  letter-spacing: 12px;
+  text-align: center;
+
+  user-select: none;
+}
+
+/* ===================================
+   LISTA
+=================================== */
+
+.services-list {
+  position: relative;
+
+  width: min(1200px, 92%);
+  margin: auto;
+
+  margin-top: -80vh;
+
+  z-index: 50;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 40px;
+}
+
+/* ===================================
+   CARDS
+=================================== */
+
+.service-item {
+  position: relative;
+  z-index: 100;
+
+  width: 420px;
+  max-width: 100%;
+
+  padding: 45px;
+
+  border-radius: 0;
+
+  color: white;
+
+  border: 2px solid rgba(255,255,255,.08);
+
+  box-shadow:
+          0 20px 60px rgba(0,0,0,.35);
+
+  transition:
+          transform .35s ease,
+          box-shadow .35s ease;
+}
+
+/* POSICIONES */
+
+.service-item.left {
+  align-self: flex-start;
+}
+
+.service-item.right {
+  align-self: flex-end;
+}
+
+/* COLORES + POSICION */
+
+.service-item:nth-child(1) {
+  margin-top: 65vh;
+  background: #FF3B30;
+}
+
+.service-item:nth-child(2) {
+  background: #0A84FF;
+}
+
+.service-item:nth-child(3) {
+  background: #30D158;
+}
+
+.service-item:nth-child(4) {
+  background: mediumblue;
+}
+
+/* HOVER */
+
+.service-item:hover {
+  transform: translateY(-10px);
+
+  box-shadow:
+          0 30px 80px rgba(0,0,0,.45);
+}
+
+/* NUMERO */
+
+.service-item span {
+  display: block;
+
+  font-size: 5rem;
+  font-weight: 900;
+
+  color: rgba(255,255,255,.2);
+
+  margin-bottom: 20px;
+}
+
+/* TITULO */
+
+.service-item h3 {
+  font-size: 2rem;
+  color: white;
+  margin-bottom: 14px;
+}
+
+/* TEXTO */
+
+.service-item p {
+  color: rgba(255,255,255,.92);
+  line-height: 1.7;
+}
+
+/* ===================================
+   MOBILE
+=================================== */
+
+@media (max-width: 768px) {
+
+  .services-clean {
+    min-height: auto;
+    padding: 140px 0;
+  }
+
+  .services-list {
+    margin-top: 0;
+    gap: 30px;
+  }
+
+  .service-item {
+    width: 100%;
+    padding: 35px;
+
+    margin: 0 auto !important;
+  }
+
+  .service-item.left,
+  .service-item.right {
+    align-self: center;
+  }
+
+  .services-fixed-title {
+    position: absolute;
+    inset: 0;
+
+    transform: none;
+  }
+
+  .services-fixed-title h1 {
+    font-size: 4rem;
+    letter-spacing: 6px;
+  }
+}
+```
+
+/* ================================
+   CTA FINAL
+================================ */
+.cta-final {
+  background: black;
+}
+
+.cta-final h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.cta-final p {
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  color: #cfcfcf;
+}
+
+/* ================================
+   BOTÓN
+================================ */
+.btn-primary.btn-contactar {
+  background: linear-gradient(#0A84FF,#FF0077);
+  color: white;
+  padding: 14px 30px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+  display: inline-block;
+}
+
+.btn-primary.btn-contactar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* ================================
+   FOOTER
+================================ */
+footer {
+  background-color: black;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid #222;
+}
+
+footer p {
+  color: white;
+  margin: 0;
+}
+
+/* ================================
+   BOTON HAMBURGUESA
+================================ */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 25px;
+  height: 25px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.menu-toggle .bar {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  border-radius: 2px;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 900px) {
+
+  .services .container {
+    grid-template-columns: 1fr;
+  }
+
+  .services h2 {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  section {
+    padding: 60px 0;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 13vw, 4rem);
+  }
+
+  .carousel-text {
+    font-size: 1.1rem;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  .btn-primary.btn-contactar {
+    width: 80%;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  nav .holder {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    top: 80px;
+    left: 0;
+    padding: 15px;
+    background-color: black;
+    z-index: 1001;
+  }
+
+  nav .holder.open {
+    display: flex;
+  }
+
+  .main-content {
+    margin-top: 170px;
+  }
+}
