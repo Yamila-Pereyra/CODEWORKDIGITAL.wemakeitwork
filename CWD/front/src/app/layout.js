@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
                 <div className="logo-container">
                     <Link href="/" className="logo-link">
                         <img
-                            src="/imagenes/logodegradea-v.png"
+                            src="/imagenes/logofondo-neg.png"
                             className="logo-img"
                             alt="Logo Code Work Digital"
                         />

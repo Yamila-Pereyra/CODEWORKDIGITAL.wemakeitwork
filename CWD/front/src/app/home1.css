@@ -150,240 +150,115 @@ nav .holder li a.activo {
    CONTENIDO PRINCIPAL
 ================================ */
 .main-content {
-  margin-top: 120px;
+  margin-top: 0px;
   width: 100%;
   min-height: 100vh;
   background-color: black;
   padding: 20px;
   overflow-x: hidden;
 }
-
 /* ================================
    HERO
 ================================ */
 .hero {
-  min-height: auto;
-
-  padding-top: 20px;
-  padding-bottom: 40px;
-
-  background: black;
-
-  display: flex;
-  flex-direction: column;
-
-  justify-content: flex-start;
-  align-items: center;
-
-  overflow: hidden;
+  margin-top: 25px;
+  padding-bottom: 60px;
   text-align: center;
+  overflow: hidden;
+  background: black;
 }
-.hero h1 {
-  margin-top: 10px;
-}
-/* ================================
-   TITULO CON EFECTO
-================================ */
-.hero h1 {
-  position: relative;
+
+.hero-title {
   display: inline-block;
+  margin: 0;
 
   font-size: clamp(4rem, 11vw, 9rem);
   font-weight: 900;
   text-transform: uppercase;
-
-  color: white;
-
-  letter-spacing: -0.08em;
-  line-height: 0.9;
-
   font-family: 'Red Hat Display', sans-serif;
 
-  margin-bottom: 20px;
+  letter-spacing: -0.08em;
+  line-height: 0.72;
+  color: white;
+}
 
-  overflow: hidden;
+.glitch-line {
+  position: relative;
+  display: block;
+  color: white;
 
   text-shadow:
-          0 0 10px rgba(255,255,255,0.08),
-          0 0 25px rgba(255,255,255,0.04);
+          0 0 10px rgba(255,255,255,.08),
+          0 0 25px rgba(255,255,255,.04);
 }
-/* ================================
-   CAPA SUPERIOR
-================================ */
-.hero h1::before {
-  content: "CodeWork Digital";
-
-  position: absolute;
-  inset: 0;
-
-  color: rgba(255,255,255,0.95);
-
-  clip-path: polygon(
-          0 0,
-          100% 0,
-          100% 18%,
-          0 18%,
-
-          0 32%,
-          100% 32%,
-          100% 48%,
-          0 48%,
-
-          0 62%,
-          100% 62%,
-          100% 78%,
-          0 78%
-  );
-
-  animation: glitchTop 6s infinite ease-in-out;
+.hero-title .line2 {
+  margin-top: 0.08em;
+  margin-left: 800px;
 }
-/* ================================
-   CAPA INFERIOR
-================================ */
-.hero h1::after {
-  content: "CodeWork Digital";
-
-  position: absolute;
-  inset: 0;
-
-  color: rgba(255,255,255,0.55);
-
-  clip-path: polygon(
-          0 20%,
-          100% 20%,
-          100% 30%,
-          0 30%,
-
-          0 50%,
-          100% 50%,
-          100% 60%,
-          0 60%,
-
-          0 80%,
-          100% 80%,
-          100% 100%,
-          0 100%
-  );
-
-  animation: glitchBottom 8s infinite ease-in-out;
-}
-/* ================================
-   TERCERA CAPA
-================================ */
-.hero h1 span {
-  position: absolute;
-  inset: 0;
-
-  color: rgba(255,255,255,0.25);
-
-  clip-path: polygon(
-          0 10%,
-          100% 10%,
-          100% 26%,
-          0 26%,
-
-          0 42%,
-          100% 42%,
-          100% 58%,
-          0 58%,
-
-          0 72%,
-          100% 72%,
-          100% 88%,
-          0 88%
-  );
-
-  animation: glitchThird 10s infinite ease-in-out;
-}
-/* ================================
-   ANIMACIONES GLITCH
-================================ */
-@keyframes glitchTop {
-
-  0% {
-    transform: translateX(0);
-  }
-
-  20% {
-    transform: translateX(4px);
-  }
-
-  40% {
-    transform: translateX(-3px);
-  }
-
-  60% {
-    transform: translateX(6px);
-  }
-
-  80% {
-    transform: translateX(-2px);
-  }
-
-  100% {
-    transform: translateX(0);
-  }
-}
-
-@keyframes glitchBottom {
-
-  0% {
-    transform: translateX(0);
-  }
-
-  20% {
-    transform: translateX(-4px);
-  }
-
-  40% {
-    transform: translateX(3px);
-  }
-
-  60% {
-    transform: translateX(-6px);
-  }
-
-  80% {
-    transform: translateX(2px);
-  }
-
-  100% {
-    transform: translateX(0);
-  }
-}
-
-@keyframes glitchThird {
-
-  0% {
-    transform: translateX(0);
-  }
-
-  25% {
-    transform: translateX(2px);
-  }
-
-  50% {
-    transform: translateX(-4px);
-  }
-
-  75% {
-    transform: translateX(3px);
-  }
-
-  100% {
-    transform: translateX(0);
-  }
-}
-
-/* ================================
-   TEXTO CARRUSEL
-================================ */
 .carousel-text {
+  margin-top: 20px;
+  margin-left: 800px;
+
   font-size: 1.3rem;
   color: #FF0077;
   height: 30px;
+
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
+
+/* GLITCH */
+
+.glitch-line::before,
+.glitch-line::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.glitch-line::before {
+  color: rgba(255,255,255,0.95);
+
+  clip-path: polygon(
+          0 0, 100% 0, 100% 18%, 0 18%,
+          0 32%, 100% 32%, 100% 48%, 0 48%,
+          0 62%, 100% 62%, 100% 78%, 0 78%
+  );
+
+  animation: glitchTop 1.8s infinite ease-in-out;
+}
+
+.glitch-line::after {
+  color: rgba(255,255,255,0.55);
+
+  clip-path: polygon(
+          0 20%, 100% 20%, 100% 30%, 0 30%,
+          0 50%, 100% 50%, 100% 60%, 0 60%,
+          0 80%, 100% 80%, 100% 100%, 0 100%
+  );
+
+  animation: glitchBottom 2.2s infinite ease-in-out;
+}
+
+@keyframes glitchTop {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(4px); }
+  40% { transform: translateX(-3px); }
+  60% { transform: translateX(6px); }
+  80% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes glitchBottom {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+/* CARRUSEL TEXTO */
 
 .fade-in {
   opacity: 1;
@@ -396,34 +271,101 @@ nav .holder li a.activo {
 }
 
 /* ================================
-   SECCIONES
+   HERO GRID PREMIUM
 ================================ */
-section {
-  padding: 80px 0;
-  background-color: black;
+
+.hero-section {
+  padding: 120px 7vw;
+  background: black;
 }
 
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 20px;
-  text-align: center;
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 80px;
+  align-items: center;
 }
 
-/* ================================
-   TITULOS
-================================ */
-h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
+/* TEXTO IZQUIERDO */
+
+.hero-left h2 {
+  font-size: clamp(3rem, 5vw, 6rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
   color: white;
+  text-align: left;
+  max-width: 900px;
 }
 
-.subtitulo {
-  font-size: 1.1rem;
-  color: var(--color-gray);
-  max-width: 700px;
-  margin: 0 auto;
+/* TEXTO DERECHO */
+
+.hero-right p {
+  font-size: 1.15rem;
+  font-weight: 300;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.72);
+  text-align: left;
+  max-width: 420px;
+}
+
+/* ANIMACIONES HERO GRID */
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-80px);
+  animation: revealLeft 1.4s ease forwards;
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(80px);
+  animation: revealRight 1.6s ease forwards;
+}
+
+@keyframes revealLeft {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes revealRight {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* RESPONSIVE HERO GRID */
+
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .hero-left h2 {
+    text-align: center;
+  }
+
+  .hero-right p {
+    text-align: center;
+    margin: 0 auto;
+  }
+}
+/* ================================
+   CARRUSEL TEXTO
+================================ */
+
+.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateY(10px);
 }
 /* ================================
    HERO GRID PREMIUM

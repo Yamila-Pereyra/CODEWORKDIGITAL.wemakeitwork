@@ -243,15 +243,16 @@ export default function Home() {
               content="Contáctanos para impulsar tu negocio con soluciones web"
           />
         </Head>
-
-        {/* ================= HERO ================= */}
-
+        {/* ================= HERO SECTION ================= */}
         <section className="hero">
-
-          <h1>
-            CodeWork Digital
+          <h1 className="hero-title">
+  <span className="line1 glitch-line" data-text="CodeWork">
+    CodeWork
+  </span>
+            <span className="line2 glitch-line" data-text="Digital">
+    Digital
+  </span>
           </h1>
-
           <p
               className={`carousel-text ${
                   fade ? "fade-in" : "fade-out"
@@ -259,35 +260,6 @@ export default function Home() {
           >
             {frases[index]}
           </p>
-
-        </section>
-
-        {/* ================= HERO SECTION ================= */}
-
-        <section className="hero-section">
-
-          <div className="hero-grid">
-
-            <div className="hero-left reveal-left">
-
-              <h2>
-                Creamos sitios web y aplicaciones móviles
-                profesionales que impulsan tu negocio.
-              </h2>
-
-            </div>
-
-            <div className="hero-right reveal-right">
-
-              <p>
-                En <strong>CodeWork Digital</strong>
-                combinamos diseño, tecnología y estrategia para crear sitios web y aplicaciones móviles modernas, funcionales y alineadas con las necesidades de cada negocio.
-              </p>
-
-            </div>
-
-          </div>
-
         </section>
 
         {/* ================= SHOWCASE ================= */}
