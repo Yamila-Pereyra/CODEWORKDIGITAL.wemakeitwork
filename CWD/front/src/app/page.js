@@ -261,8 +261,6 @@ export default function Home() {
             {frases[index]}
           </p>
         </section>
-
-        {/* ================= SHOWCASE ================= */}
           {/* ================= SHOWCASE ================= */}
 
           <section className="premium-carousel">
@@ -309,7 +307,6 @@ export default function Home() {
               ))}
 
           </div>
-        {/* ================= BENEFICIOS / NOSOTROS ================= */}
           {/* ================= BENEFICIOS / NOSOTROS ================= */}
           <section className="beneficios" ref={beneficiosRef}>
               <div className="beneficios-layout">

@@ -1,13 +1,11 @@
 /* ================================
    RESET
 ================================ */
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
 html,
 body {
   width: 100%;
@@ -16,42 +14,45 @@ body {
   color: #fff;
   overflow-x: hidden;
 }
-
 a {
   color: inherit;
   text-decoration: none;
 }
-
 img {
   max-width: 100%;
   display: block;
 }
-
 /* ================================
-   HEADER
+   HEADER FIJO
 ================================ */
-
 .top-header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  width: min(1440px, calc(100% - 40px));
+  height: 88px;
+
   display: grid;
   grid-template-columns: 320px 1fr 180px;
-
   align-items: center;
 
-  width: calc(100% - 80px);
-  margin: 0 auto;
+  padding: 0 24px;
 
-  height: 95px;
+  background: rgba(0,0,0,.72);
 
-  background: #000;
-  border-bottom: 1px solid #222;
+  border: 1px solid rgba(255,255,255,.08);
+  border-top: 0;
 
-  padding: 0 20px;
-
-  z-index: 1000;
+  z-index: 9999;
 }
+
 .logo-container {
   justify-self: start;
 }
+
 .logo-link {
   display: flex;
   align-items: center;
@@ -59,15 +60,155 @@ img {
 }
 
 .logo-img {
-  width: 130px;
+  width: 120px;
   height: auto;
 }
 
 .slogan-img {
-  width: 260px;
+  width: 230px;
   height: auto;
 }
 
+.nav-container {
+  justify-self: center;
+  transform: none;
+}
+
+nav .holder {
+  list-style: none;
+
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+
+  padding: 10px 30px;
+}
+
+nav .holder li a {
+  color: rgba(255,255,255,.72);
+
+  font-size: .92rem;
+  font-weight: 800;
+
+  padding: 9px 14px;
+
+  border-radius: 999px;
+
+  transition: .3s ease;
+}
+nav .holder li a.activo {
+  color: #38bdf8;
+  background: transparent;
+  position: relative;
+}
+
+nav .holder li a.activo::after {
+  content: "";
+
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -4px;
+
+  height: 2px;
+
+  background: #38bdf8;
+  border-radius: 999px;
+}
+
+/* ================================
+   IDIOMAS PREMIUM
+================================ */
+
+.language-selector {
+  justify-self: end;
+  position: relative;
+
+  color: white;
+
+  z-index: 99999;
+}
+
+.language-title {
+  padding: 10px 16px;
+
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 999px;
+
+  color: white;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition: .3s ease;
+}
+
+.language-title:hover {
+  background: rgba(255,255,255,.1);
+}
+
+.language-title span {
+  font-size: .9rem;
+  margin-left: 6px;
+}
+
+.language-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+
+  width: 160px;
+
+  padding: 8px;
+
+  background: rgba(10,10,10,.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 16px;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translateY(-8px);
+
+  transition: .25s ease;
+
+  z-index: 99999;
+}
+
+.language-selector:hover .language-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.language-option {
+  padding: 12px 14px;
+
+  border-radius: 12px;
+
+  color: rgba(255,255,255,.72);
+
+  cursor: pointer;
+
+  transition: .25s ease;
+}
+
+.language-option:hover,
+.language-option.active-lang {
+  background: rgba(255,255,255,.08);
+  color: white;
+}
+
+/* ================================
+   ESPACIO PARA HEADER FIJO
+================================ */
+.main-content {
+  padding-top: 40px;
+}
 /* ================================
    NAV
 ================================ */
@@ -145,37 +286,94 @@ nav .holder li a.activo {
 ================================ */
 
 footer {
-  background: #000;
-  color: white;
+  background: #fff;
+  color: #000;
+
   text-align: center;
-  padding: 20px;
-  border-top: 1px solid #222;
+
+  padding: 70px 20px;
+
+  border-top: 1px solid rgba(0,0,0,.08);
 }
 
-footer p {
-  margin: 0;
+.footer-socials {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 24px;
+
+  margin-bottom: 35px;
+}
+
+.footer-socials a {
+  color: rgba(0,0,0,.65);
+
+  font-size: 1.5rem;
+
+  transition: .3s ease;
+}
+
+.footer-socials a:hover {
+  color: #000;
+  transform: translateY(-3px);
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+
+  margin-bottom: 35px;
+}
+
+.footer-info h3 {
+  color: #000;
+
+  font-size: 2rem;
+  font-weight: 900;
+
+  letter-spacing: -.04em;
+}
+
+.footer-info a {
+  color: rgba(0,0,0,.7);
+
+  text-decoration: none;
+
+  transition: .3s ease;
+}
+
+.footer-info a:hover {
+  color: #000;
+}
+
+.footer-copy {
+  color: rgba(0,0,0,.5);
+
+  font-size: .9rem;
 }
 
 /* ================================
-   MENU MOBILE
+   MOBILE
 ================================ */
 
-.menu-toggle {
-  display: none;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-}
+@media (max-width: 768px) {
 
-.bar {
-  display: block;
-  width: 28px;
-  height: 3px;
-  background: white;
-  margin: 5px 0;
-  border-radius: 999px;
-}
+  footer {
+    padding: 50px 20px;
+  }
 
+  .footer-info h3 {
+    font-size: 1.6rem;
+  }
+
+  .footer-socials {
+    gap: 20px;
+  }
+
+}
 /* ================================
    TABLET
 ================================ */
@@ -201,19 +399,56 @@ footer p {
 /* ================================
    MOBILE
 ================================ */
+@media (max-width: 1024px) {
+  .top-header {
+    width: calc(100% - 24px);
+    grid-template-columns: 220px 1fr 120px;
+    height: 82px;
+    padding: 0 16px;
+  }
+
+  .logo-img {
+    width: 90px;
+  }
+
+  .slogan-img {
+    width: 150px;
+  }
+
+  nav .holder {
+    gap: 1rem;
+    padding: 8px 16px;
+  }
+
+  nav .holder li a {
+    font-size: .85rem;
+    padding: 8px 10px;
+  }
+
+  .main-content {
+    padding-top: 82px;
+  }
+}
 
 @media (max-width: 768px) {
   .top-header {
-    width: calc(100% - 20px);
+    position: fixed;
 
+    width: calc(100% - 20px);
     height: auto;
 
-    flex-direction: column;
-    justify-content: center;
-
+    grid-template-columns: 1fr;
     gap: 14px;
 
-    padding: 16px;
+    padding: 14px;
+
+    border-radius: 0 0 22px 22px;
+  }
+
+  .logo-container,
+  .nav-container,
+  .language-selector {
+    justify-self: center;
   }
 
   .logo-img {
@@ -221,22 +456,12 @@ footer p {
   }
 
   .slogan-img {
-    width: 140px;
-  }
-
-  .nav-container {
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
+    width: 135px;
   }
 
   nav {
     width: 100%;
     text-align: center;
-  }
-
-  .menu-toggle {
-    display: inline-block;
   }
 
   nav .holder {
@@ -246,85 +471,16 @@ footer p {
   nav .holder.open {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    margin-top: 14px;
+    gap: 12px;
     width: 100%;
+    margin-top: 10px;
   }
 
-  .language-selector {
-    justify-content: center;
+  .menu-toggle {
+    display: inline-flex;
   }
-}
-/* ==========================
-   LANGUAGE DROPDOWN
-========================== */
-/* ==========================
-   LANGUAGE SELECTOR
-========================== */
 
-.top-header,
-.nav-container,
-.language-selector {
-  overflow: visible;
-}
-
-.language-selector {
-  position: relative;
-  cursor: pointer;
-  color: white;
-  font-weight: 600;
-  z-index: 99999;
-}
-
-.language-title {
-  padding: 10px 16px;
-  color: white;
-  user-select: none;
-}
-
-.language-title span {
-  font-size: 0.9rem;
-  margin-left: 6px;
-}
-
-.language-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-
-  width: 150px;
-
-  background: #111;
-  border: 1px solid #222;
-  border-radius: 10px;
-
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-8px);
-
-  transition: 0.25s ease;
-
-  z-index: 99999;
-}
-
-.language-selector:hover .language-dropdown {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.language-option {
-  padding: 12px 16px;
-  color: white;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-.language-option:hover {
-  background: #1a1a1a;
-  color: #00ff88;
-}
-
-.language-option.active-lang {
-  color: #00ff88;
+  .main-content {
+    padding-top: 160px;
+  }
 }

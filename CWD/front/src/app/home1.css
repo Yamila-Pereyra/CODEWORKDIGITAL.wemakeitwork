@@ -147,17 +147,6 @@ nav .holder li a.activo {
 }
 
 /* ================================
-   CONTENIDO PRINCIPAL
-================================ */
-.main-content {
-  margin-top: 0px;
-  width: 100%;
-  min-height: 100vh;
-  background-color: black;
-  padding: 20px;
-  overflow-x: hidden;
-}
-/* ================================
    HERO
 ================================ */
 .hero {
@@ -554,7 +543,7 @@ nav .holder li a.activo {
 ================================ */
 .beneficios {
   position: relative;
-  padding: 120px 0;
+  padding: 80px 0 90px;
   background: #000;
 }
 
@@ -710,7 +699,7 @@ nav .holder li a.activo {
 .services-clean {
   position: relative;
   background: #000;
-  padding: 60px 0 120px;
+  padding: 20px 0 90px;
   overflow: hidden;
 }
 
@@ -905,7 +894,7 @@ nav .holder li a.activo {
 .cta-final {
   position: relative;
 
-  padding: 180px 0;
+  padding: 110px 0;
 
   background: #000;
 
@@ -926,7 +915,6 @@ nav .holder li a.activo {
   background: radial-gradient(
           circle,
           rgba(56,189,248,.18),
-          rgba(255,0,119,.12),
           transparent 70%
   );
 
@@ -1031,22 +1019,6 @@ nav .holder li a.activo {
   }
 
 }
-/* ================================
-   FOOTER
-================================ */
-footer {
-  background-color: black;
-  color: white;
-  text-align: center;
-  padding: 20px;
-  border-top: 1px solid #222;
-}
-
-footer p {
-  color: white;
-  margin: 0;
-}
-
 /* ================================
    BOTON HAMBURGUESA
 ================================ */
@@ -1177,4 +1149,251 @@ footer p {
 
   font-size: 1.35rem;
   line-height: 1.6;
+}
+/* ================================
+   RESPONSIVE GENERAL
+================================ */
+
+@media (max-width: 1024px) {
+  .top-header {
+    width: calc(100% - 24px);
+    grid-template-columns: 1fr;
+    height: auto;
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .logo-container,
+  .nav-container,
+  .language-selector {
+    justify-self: center;
+  }
+
+  .logo-link {
+    justify-content: center;
+  }
+
+  .logo-img {
+    width: 80px;
+  }
+
+  .slogan-img {
+    width: 160px;
+  }
+
+  nav .holder {
+    gap: 1rem;
+    padding: 8px 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .main-content {
+    padding-top: 190px;
+  }
+
+  .hero-title {
+    font-size: clamp(3.2rem, 14vw, 7rem);
+  }
+
+  .hero-title .line2,
+  .carousel-text {
+    margin-left: 0;
+  }
+
+  .premium-carousel {
+    width: calc(100% - 32px);
+    height: 520px;
+    margin: 60px auto;
+  }
+
+  .slide-content {
+    left: 32px;
+    max-width: calc(100% - 64px);
+  }
+
+  .slide-content h2 {
+    font-size: 2.2rem;
+  }
+
+  .slide-content p {
+    font-size: 1rem;
+  }
+
+  .beneficios-layout {
+    grid-template-columns: 1fr;
+    width: calc(100% - 32px);
+    gap: 40px;
+  }
+
+  .beneficios-header {
+    position: static;
+    max-width: none;
+  }
+
+  .beneficios-header h2 {
+    font-size: clamp(2.6rem, 9vw, 4rem);
+  }
+
+  .beneficios-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .services-bg-title h1 {
+    font-size: clamp(3.4rem, 14vw, 7rem);
+  }
+
+  .service-item {
+    width: min(100%, 520px);
+  }
+
+  .service-item.left,
+  .service-item.right {
+    align-self: center;
+  }
+
+  .cta-content h2 {
+    font-size: clamp(2.6rem, 10vw, 4.2rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 210px;
+  }
+
+  .hero {
+    margin-top: 0;
+    padding-bottom: 40px;
+  }
+
+  .carousel-text {
+    font-size: 1rem;
+    height: auto;
+    padding: 0 20px;
+  }
+
+  .premium-carousel {
+    height: 430px;
+    border-radius: 22px;
+  }
+
+  .outside-dots {
+    margin-top: -35px;
+  }
+
+  .beneficios {
+    padding: 70px 0;
+  }
+
+  .beneficio-card-img {
+    height: 190px;
+  }
+
+  .services-clean {
+    padding: 70px 0;
+  }
+
+  .services-bg-title {
+    top: 48%;
+  }
+
+  .services-bg-title h1 {
+    opacity: .35;
+  }
+
+  .service-item {
+    min-height: 230px;
+    padding: 32px;
+    margin-top: 28px !important;
+  }
+
+  .service-item h3 {
+    font-size: 1.9rem;
+  }
+
+  .cta-final {
+    padding: 100px 0;
+  }
+
+  .cta-content p {
+    font-size: 1rem;
+  }
+
+  .whatsapp-float {
+    width: 56px;
+    height: 56px;
+    right: 18px;
+    bottom: 18px;
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding-top: 220px;
+  }
+
+  nav .holder {
+    gap: .5rem;
+  }
+
+  nav .holder li a {
+    font-size: .8rem;
+    padding: 7px 10px;
+  }
+
+  .logo-link {
+    gap: 10px;
+  }
+
+  .logo-img {
+    width: 64px;
+  }
+
+  .slogan-img {
+    width: 125px;
+  }
+
+  .hero-title {
+    font-size: clamp(2.8rem, 18vw, 4.5rem);
+    line-height: .8;
+  }
+
+  .premium-carousel {
+    height: 360px;
+  }
+
+  .slide-content {
+    left: 22px;
+    max-width: calc(100% - 44px);
+  }
+
+  .slide-content h2 {
+    font-size: 1.7rem;
+  }
+
+  .slide-content p {
+    font-size: .92rem;
+  }
+
+  .beneficios-header h2 {
+    font-size: 2.5rem;
+  }
+
+  .service-item {
+    padding: 28px;
+  }
+
+  .services-bg-title h1 {
+    font-size: 3.4rem;
+  }
+
+  .cta-content h2 {
+    font-size: 2.4rem;
+  }
+
+  footer {
+    padding-bottom: 90px;
+  }
 }
