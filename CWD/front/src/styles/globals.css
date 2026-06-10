@@ -32,8 +32,10 @@ img {
 ================================ */
 
 .top-header {
-  position: sticky;
-  top: 0;
+  display: grid;
+  grid-template-columns: 320px 1fr 180px;
+
+  align-items: center;
 
   width: calc(100% - 80px);
   margin: 0 auto;
@@ -43,19 +45,13 @@ img {
   background: #000;
   border-bottom: 1px solid #222;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
   padding: 0 20px;
 
   z-index: 1000;
 }
-
 .logo-container {
-  flex-shrink: 0;
+  justify-self: start;
 }
-
 .logo-link {
   display: flex;
   align-items: center;
@@ -76,10 +72,8 @@ img {
    NAV
 ================================ */
 .nav-container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  transform: translateX(-50px);
+  justify-self: center;
+  transform: none;
 }
 nav .holder {
   list-style: none;
@@ -106,13 +100,9 @@ nav .holder li a.activo {
 /* ================================
    IDIOMAS
 ================================ */
-
 .language-selector {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  justify-self: end;
 }
-
 .language-selector button {
   background: transparent;
   border: 1px solid #444;

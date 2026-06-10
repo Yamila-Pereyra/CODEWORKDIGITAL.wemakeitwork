@@ -14,7 +14,7 @@ export default function Home() {
 
   const beneficiosRef = useRef(null);
 
-  const slides = [{image: "/imagenes/carrucel-1.png",title: "Creamos experiencias visuales",text: "Que transmiten confianza, modernidad y credibilidad para tu marca."},{image: "/imagenes/carrucel-2.png",title: "Apps móviles que conectan con tus usuarios",text: "Desarrollamos aplicaciones para Android e iOS con experiencias intuitivas, rápidas y escalables."},{image: "/imagenes/carrucel-3.png",title: "Más visibilidad. Más clientes. Más resultados.",text: "Optimizamos tu presencia digital para atraer más tráfico, mejorar tu posicionamiento y convertir visitas en oportunidades."}];
+  const slides = [{image: "/imagenes/CARROUSEL-1.png",title: "Creamos experiencias visuales",text: "Que transmiten confianza, modernidad y credibilidad para tu marca."},{image: "/imagenes/CARROUSEL-2.png",title: "Apps móviles que conectan con tus usuarios",text: "Desarrollamos aplicaciones para Android e iOS con experiencias intuitivas, rápidas y escalables."},{image: "/imagenes/CARROUSEL-3.png",title: "Más visibilidad. Más clientes. Más resultados.",text: "Optimizamos tu presencia digital para atraer más tráfico, mejorar tu posicionamiento y convertir visitas en oportunidades."}];
 
   const [slideIndex, setSlideIndex] = useState(0);
 
@@ -263,185 +263,185 @@ export default function Home() {
         </section>
 
         {/* ================= SHOWCASE ================= */}
+          {/* ================= SHOWCASE ================= */}
 
-        <section className="premium-carousel">
+          <section className="premium-carousel">
 
-          {slides.map((slide, i) => (
+              {slides.map((slide, i) => (
 
-              <div
-                  key={i}
-                  className={`premium-slide ${
-                      i === slideIndex ? "active" : ""
-                  }`}
-              >
+                  <div
+                      key={i}
+                      className={`premium-slide ${
+                          i === slideIndex ? "active" : ""
+                      }`}
+                  >
 
-                <img
-                    src={slide.image}
-                    alt={slide.title}
-                />
+                      <img
+                          src={slide.image}
+                          alt={slide.title}
+                      />
 
-              </div>
+                      <div className={`slide-content slide-${i}`}>
+                          <h2>{slide.title}</h2>
+                          <p>{slide.text}</p>
+                      </div>
 
-          ))}
-
-          <div className="premium-dots">
-
-            {slides.map((_, i) => (
-
-                <button
-                    key={i}
-                    onClick={() =>
-                        setSlideIndex(i)
-                    }
-                    className={
-                      i === slideIndex
-                          ? "active"
-                          : ""
-                    }
-                />
-
-            ))}
-
-          </div>
-
-        </section>
-
-        {/* ================= NOSOTROS ================= */}
-        {/* ================= BENEFICIOS / NOSOTROS ================= */}
-
-        <section className="beneficios">
-          <div className="container beneficios-layout">
-
-            <div className="beneficios-grid" ref={beneficiosRef}>
-
-              {[
-                {
-                  front: "/imagenes/diseno-front.png",
-                  back: "/imagenes/diseno-back.png",
-                  alt: "Diseño moderno",
-                },
-                {
-                  front: "/imagenes/rendimiento-front.png",
-                  back: "/imagenes/rendimiento-back.png",
-                  alt: "Mayor rendimiento",
-                },
-                {
-                  front: "/imagenes/proteccion-front.png",
-                  back: "/imagenes/proteccion-back.png",
-                  alt: "Protección avanzada",
-                },
-                {
-                  front: "/imagenes/responsive-front.png",
-                  back: "/imagenes/responsive-back.png",
-                  alt: "Diseño responsive",
-                },
-                {
-                  front: "/imagenes/seo-front-cortado.png",
-                  back: "/imagenes/seo-back-cortado.png",
-                  alt: "SEO & E-commerce",
-                },
-                {
-                  front: "/imagenes/acompanamiento-front-codework.png",
-                  back: "/imagenes/acompanamiento-back-codework.png",
-                  alt: "Acompañamiento",
-                },
-              ].map((item, index) => (
-                  <div className="beneficio-card" key={index}>
-                    <div className="beneficio-img beneficio-front">
-                      <img src={item.front} alt={item.alt} />
-                    </div>
-
-                    <div className="beneficio-img beneficio-back">
-                      <img src={item.back} alt={item.alt} />
-                    </div>
                   </div>
+
               ))}
 
-            </div>
-            <div className="beneficios-texto">
-              <div>
-                <span>Por qué</span>
-                <strong>elegirnos</strong>
+          </section>
+
+          <div className="premium-dots outside-dots">
+
+              {slides.map((_, i) => (
+
+                  <button
+                      key={i}
+                      onClick={() => setSlideIndex(i)}
+                      className={
+                          i === slideIndex
+                              ? "active"
+                              : ""
+                      }
+                  />
+
+              ))}
+
+          </div>
+        {/* ================= BENEFICIOS / NOSOTROS ================= */}
+          {/* ================= BENEFICIOS / NOSOTROS ================= */}
+          <section className="beneficios" ref={beneficiosRef}>
+              <div className="beneficios-layout">
+
+                  <div className="beneficios-grid">
+                      {[
+                          {
+                              image: "/imagenes/cards1.jpeg",
+                              title: "Websites que convierten",
+                              text: "Diseñamos y desarrollamos sitios web rápidos, claros y preparados para crecer."
+                          },
+                          {
+                              image: "/imagenes/cards2.jpeg",
+                              title: "Apps mobile a medida",
+                              text: "Creamos aplicaciones móviles pensadas para resolver problemas reales."
+                          },
+                          {
+                              image: "/imagenes/cards3.jpeg",
+                              title: "Backend robusto",
+                              text: "Construimos APIs, servicios y lógica de negocio."
+                          },
+                          {
+                              image: "/imagenes/cards4.jpeg",
+                              title: "Integraciones inteligentes",
+                              text: "Conectamos sistemas, plataformas y servicios externos."
+                          },
+                          {
+                              image: "/imagenes/cards5.jpeg",
+                              title: "Performance y estabilidad",
+                              text: "Optimizamos aplicaciones para que respondan mejor."
+                          },
+                          {
+                              image: "/imagenes/cards6.jpeg",
+                              title: "Evolución continua",
+                              text: "Acompañamos mejoras y nuevas funcionalidades."
+                          }
+                      ].map((item, index) => (
+                          <article className="beneficio-card" key={index}>
+                              <div className="beneficio-card-img">
+                                  <img src={item.image} alt={item.title} />
+                              </div>
+
+                              <div className="beneficio-card-text">
+                                  <span>{String(index + 1).padStart(2, "0")}</span>
+                                  <h3>{item.title}</h3>
+                                  <p>{item.text}</p>
+                              </div>
+                          </article>
+                      ))}
+                  </div>
+
+                  <div className="beneficios-header">
+                      <span>Por qué elegirnos</span>
+                      <h2>
+                          Tecnología pensada para crear,
+                          crecer y evolucionar.
+                      </h2>
+                  </div>
+
               </div>
-            </div>
-
-          </div>
-        </section>
+          </section>
         {/* ================= SERVICIOS ================= */}
-        <section className="services-clean">
+          <section className="services-clean">
 
-          <div className="services-fixed-title">
-            <h1>SERVICIOS</h1>
-          </div>
+              <div className="services-bg-title">
+                  <h1>SERVICIOS</h1>
+              </div>
 
-          <div className="services-list">
+              <div className="services-list">
 
-            <div className="service-item left">
+                  <div className="service-item left">
+                      <span>01</span>
+                      <h3>Desarrollo Web</h3>
+                      <p>
+                          Sitios modernos y optimizados.
+                      </p>
+                  </div>
 
-              <h3>Desarrollo Web</h3>
-              <p>
-                Sitios modernos y optimizados.
-              </p>
-            </div>
+                  <div className="service-item right">
+                      <span>02</span>
+                      <h3>E-Commerce</h3>
+                      <p>
+                          Tiendas online enfocadas en ventas.
+                      </p>
+                  </div>
 
-            <div className="service-item right">
+                  <div className="service-item left">
+                      <span>03</span>
+                      <h3>SEO & Optimización</h3>
+                      <p>
+                          Velocidad y posicionamiento.
+                      </p>
+                  </div>
 
-              <h3>E-Commerce</h3>
-              <p>
-                Tiendas online enfocadas en ventas.
-              </p>
-            </div>
+                  <div className="service-item right">
+                      <span>04</span>
+                      <h3>Desarrollo de Apps Mobile</h3>
+                      <p>
+                          Aplicaciones móviles personalizadas para Android y iOS.
+                      </p>
+                  </div>
 
-            <div className="service-item left">
+              </div>
 
-              <h3>SEO & Optimización</h3>
-              <p>
-                Velocidad y posicionamiento.
-              </p>
-            </div>
-
-            <div className="service-item right">
-
-              <h3> Desarrollo de Apps Mobile</h3>
-              <p>
-                Aplicaciones móviles personalizadas para Android y iOS.
-              </p>
-            </div>
-
-          </div>
-
-        </section>
+          </section>
         {/* ================= CTA FINAL ================= */}
+          <section className="cta-final">
 
-        <section className="cta-final">
+              <div className="cta-glow" />
 
-          <div className="container">
+              <div className="cta-content">
 
-            <h2>
-              ¡Llevemos tu proyecto al siguiente nivel!
-            </h2>
+                  <span>HABLEMOS DE TU PROYECTO</span>
 
-            <p>
-              Contanos tu idea y creamos una solución digital pensada para hacer crecer tu negocio.
-            </p>
+                  <h2>
+                      Transformemos tu idea en una experiencia digital que genere resultados.
+                  </h2>
 
-            <Link
-                href="/contacto"
-                className="btn-primary btn-contactar"
-            >
-              Contactar ahora
-            </Link>
+                  <p>
+                      Desarrollo web, aplicaciones móviles, optimización y soluciones tecnológicas pensadas para crecer junto a tu negocio.
+                  </p>
 
-          </div>
+                  <Link
+                      href="/contacto"
+                      className="btn-contactar"
+                  >
+                      Iniciar proyecto
+                  </Link>
 
-        </section>
+              </div>
 
-        {/* ================= FORM =================
-
-    <ContactForm
-        postUrl={`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/contacto`}
-    />*/
-        }
+          </section>
       </main>
 
   );}
