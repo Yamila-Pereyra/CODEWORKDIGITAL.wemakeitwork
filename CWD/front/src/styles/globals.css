@@ -117,93 +117,6 @@ nav .holder li a.activo::after {
 }
 
 /* ================================
-   IDIOMAS PREMIUM
-================================ */
-
-.language-selector {
-  justify-self: end;
-  position: relative;
-
-  color: white;
-
-  z-index: 99999;
-}
-
-.language-title {
-  padding: 10px 16px;
-
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 999px;
-
-  color: white;
-
-  cursor: pointer;
-  user-select: none;
-
-  transition: .3s ease;
-}
-
-.language-title:hover {
-  background: rgba(255,255,255,.1);
-}
-
-.language-title span {
-  font-size: .9rem;
-  margin-left: 6px;
-}
-
-.language-dropdown {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-
-  width: 160px;
-
-  padding: 8px;
-
-  background: rgba(10,10,10,.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 16px;
-
-  opacity: 0;
-  visibility: hidden;
-
-  transform: translateY(-8px);
-
-  transition: .25s ease;
-
-  z-index: 99999;
-}
-
-.language-selector:hover .language-dropdown {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.language-option {
-  padding: 12px 14px;
-
-  border-radius: 12px;
-
-  color: rgba(255,255,255,.72);
-
-  cursor: pointer;
-
-  transition: .25s ease;
-}
-
-.language-option:hover,
-.language-option.active-lang {
-  background: rgba(255,255,255,.08);
-  color: white;
-}
-
-/* ================================
    ESPACIO PARA HEADER FIJO
 ================================ */
 .main-content {
@@ -237,61 +150,25 @@ nav .holder li a:hover,
 nav .holder li a.activo {
   color: #38bdf8;
 }
-
-/* ================================
-   IDIOMAS
-================================ */
-.language-selector {
-  justify-self: end;
-}
-.language-selector button {
-  background: transparent;
-  border: 1px solid #444;
-  color: #fff;
-
-  width: 56px;
-  height: 42px;
-
-  border-radius: 999px;
-
-  font-size: 0.85rem;
-  font-weight: 700;
-
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.language-selector button:hover {
-  border-color: #38bdf8;
-}
-.language-selector button.active-lang {
-  background: #fff;
-  color: #000;
-}
-
-
 /* ================================
    CONTENIDO
 ================================ */
-
 .main-content {
   width: 100%;
   min-height: 100vh;
   background: #000;
   overflow-x: hidden;
 }
-
 /* ================================
    FOOTER
 ================================ */
-
 footer {
   background: #fff;
   color: #000;
 
   text-align: center;
 
-  padding: 70px 20px;
+  padding: 20px 20px;
 
   border-top: 1px solid rgba(0,0,0,.08);
 }
@@ -358,7 +235,6 @@ footer {
 /* ================================
    MOBILE
 ================================ */
-
 @media (max-width: 768px) {
 
   footer {
@@ -377,7 +253,6 @@ footer {
 /* ================================
    TABLET
 ================================ */
-
 @media (max-width: 1024px) {
   .top-header {
     width: calc(100% - 40px);
@@ -423,10 +298,6 @@ footer {
   nav .holder li a {
     font-size: .85rem;
     padding: 8px 10px;
-  }
-
-  .main-content {
-    padding-top: 82px;
   }
 }
 
@@ -480,7 +351,309 @@ footer {
     display: inline-flex;
   }
 
+}
+@media (max-width: 768px) {
+
+  .top-header {
+    height: 64px !important;
+    min-height: 64px !important;
+    padding: 6px 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+
+  .logo-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .logo-img {
+    width: 42px !important;
+    height: auto !important;
+  }
+
+  .slogan-img {
+    width: 95px !important;
+    height: auto !important;
+  }
+
+  .nav-container {
+    display: flex;
+    align-items: center;
+  }
+
+  nav {
+    padding: 0 !important;
+  }
+
+  nav .holder {
+    gap: 6px !important;
+    padding: 0 !important;
+  }
+
+  nav .holder li a {
+    font-size: 0.7rem !important;
+    padding: 3px 5px !important;
+    line-height: 1 !important;
+  }
+
   .main-content {
-    padding-top: 160px;
+    padding-top: 75px !important;
+    margin-top: 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .top-header {
+    height: 58px !important;
+    min-height: 58px !important;
+  }
+
+  .logo-img {
+    width: 36px !important;
+  }
+
+  .slogan-img {
+    width: 82px !important;
+  }
+
+  .main-content {
+    padding-top: 68px !important;
+  }
+}
+.language-selector {
+  position: relative;
+  z-index: 3000;
+}
+
+.language-btn {
+  background: black;
+  border: 1px solid #333;
+  color: white;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.language-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: black;
+  border: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  min-width: 70px;
+  z-index: 4000;
+}
+
+.language-dropdown button {
+  background: black;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.language-dropdown button:hover {
+  background: #111;
+  color: #00ff88;
+}
+/* ================================
+   LANGUAGE SELECTOR NUEVO
+================================ */
+
+.language-selector {
+  position: relative;
+  justify-self: end;
+  z-index: 10000;
+}
+
+.language-btn {
+  background: transparent;
+  border: 1px solid #444;
+  color: #fff;
+  width: 60px;
+  height: 40px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.language-btn:hover {
+  border-color: #38bdf8;
+}
+
+.language-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 12px;
+
+  min-width: 80px;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  z-index: 10001;
+}
+
+.language-dropdown button {
+  background: transparent;
+  border: none;
+  color: white;
+
+  padding: 10px 12px;
+
+  cursor: pointer;
+  text-align: left;
+}
+
+.language-dropdown button:hover {
+  background: #222;
+  color: #38bdf8;
+}
+
+/* ================================
+   HAMBURGUESA PREMIUM
+================================ */
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.menu-toggle .bar {
+  height: 3px;
+  background: white;
+  border-radius: 999px;
+}
+
+.menu-toggle .bar:nth-child(1) {
+  width: 30px;
+}
+
+.menu-toggle .bar:nth-child(2) {
+  width: 22px;
+}
+
+.menu-toggle .bar:nth-child(3) {
+  width: 14px;
+}
+
+@media (max-width:768px) {
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  nav .holder.open {
+    display: flex !important;
+    flex-direction: column;
+  }
+}
+@media (max-width: 768px) {
+  .top-header {
+    overflow: visible !important;
+  }
+
+  .nav-container,
+  nav {
+    position: static !important;
+  }
+
+  nav .holder {
+    display: none !important;
+  }
+  nav .holder.open {
+    display: flex !important;
+    position: fixed !important;
+
+    top: 75px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+
+    width: fit-content !important;
+
+    flex-direction: column !important;
+    align-items: center !important;
+
+    gap: 4px !important;
+    padding: 8px 12px !important;
+
+    background: #000 !important;
+    border: 1px solid #333 !important;
+    border-radius: 12px !important;
+
+    z-index: 999999 !important;
+  }
+  .menu-toggle {
+    display: flex !important;
+    position: relative !important;
+    z-index: 1000000 !important;
+  }
+
+  .language-selector {
+    position: relative !important;
+    z-index: 1000000 !important;
+  }
+
+  .language-dropdown {
+    display: none !important;
+  }
+
+  .language-dropdown.open {
+    display: flex !important;
+    position: absolute !important;
+    top: 44px !important;
+    right: 0 !important;
+    z-index: 1000001 !important;
+  }
+}
+@media (max-width: 768px) {
+  .language-selector {
+    position: relative !important;
+    z-index: 1000000 !important;
+  }
+
+  .language-dropdown {
+    display: flex !important;
+    position: absolute !important;
+
+    top: 42px !important;
+    right: 0 !important;
+
+    flex-direction: column !important;
+
+    background: #000 !important;
+    border: 1px solid #333 !important;
+    border-radius: 10px !important;
+
+    min-width: 62px !important;
+    overflow: hidden !important;
+
+    z-index: 1000001 !important;
+  }
+
+  .language-dropdown button {
+    padding: 7px 10px !important;
+    font-size: 0.78rem !important;
   }
 }

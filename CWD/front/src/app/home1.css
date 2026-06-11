@@ -147,6 +147,17 @@ nav .holder li a.activo {
 }
 
 /* ================================
+   CONTENIDO PRINCIPAL
+================================ */
+.main-content {
+  width: 100%;
+  min-height: 100vh;
+  background: #000;
+  overflow-x: hidden;
+
+  padding-top: 120px;
+}
+/* ================================
    HERO
 ================================ */
 .hero {
@@ -1019,6 +1030,7 @@ nav .holder li a.activo {
   }
 
 }
+
 /* ================================
    BOTON HAMBURGUESA
 ================================ */
@@ -1099,9 +1111,6 @@ nav .holder li a.activo {
     display: flex;
   }
 
-  .main-content {
-    margin-top: 170px;
-  }
 }
 /* <<--- TEXTO CARROUSEL --->>*/
 .slide-content {
@@ -1188,10 +1197,6 @@ nav .holder li a.activo {
     justify-content: center;
   }
 
-  .main-content {
-    padding-top: 190px;
-  }
-
   .hero-title {
     font-size: clamp(3.2rem, 14vw, 7rem);
   }
@@ -1258,11 +1263,7 @@ nav .holder li a.activo {
 }
 
 @media (max-width: 768px) {
-  .main-content {
-    padding-top: 210px;
-  }
-
-  .hero {
+   .hero {
     margin-top: 0;
     padding-bottom: 40px;
   }
@@ -1330,9 +1331,6 @@ nav .holder li a.activo {
 }
 
 @media (max-width: 480px) {
-  .main-content {
-    padding-top: 220px;
-  }
 
   nav .holder {
     gap: .5rem;
@@ -1395,5 +1393,31 @@ nav .holder li a.activo {
 
   footer {
     padding-bottom: 90px;
+  }
+}
+@media (max-width: 768px) {
+  .slide-content.slide-2 {
+    left: 50% !important;
+    right: auto !important;
+    top: 17% !important;
+    bottom: auto !important;
+
+    transform: translate(-50%, -50%) !important;
+
+    width: 86% !important;
+    max-width: 320px !important;
+
+    text-align: center !important;
+  }
+
+  .slide-content.slide-2 h2 {
+    font-size: 1.35rem !important;
+    line-height: 1.1 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .slide-content.slide-2 p {
+    font-size: 0.85rem !important;
+    line-height: 1.35 !important;
   }
 }

@@ -42,9 +42,13 @@ export default function Nav() {
       <nav>
         {/* Botón hamburguesa */}
         <button
+            type="button"
             className="menu-toggle"
             aria-label="Toggle menu"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => {
+              console.log("MENU");
+              setIsOpen(!isOpen);
+            }}
         >
           <span className="bar"></span>
           <span className="bar"></span>

@@ -1,35 +1,45 @@
 "use client";
 
+import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function LanguageSelector() {
+    const [open, setOpen] = useState(false);
     const { language, setLanguage } = useLanguage();
 
-    const languages = [
-        { code: "es", label: "Español" },
-        { code: "it", label: "Italiano" },
-        { code: "en", label: "Inglés" },
-    ];
+    const changeLanguage = (lang) => {
+        setLanguage(lang);
+        setOpen(false);
+    };
 
     return (
         <div className="language-selector">
-            <div className="language-title">
-                Idiomas <span>⌄</span>
-            </div>
+            <button
+                className="language-btn"
+                type="button"
+                onClick={() => {
+                    console.log("CLICK IDIOMA");
+                    setOpen((prev) => !prev);
+                }}
+            >
+                {language?.toUpperCase() || "ES"} ▾
+            </button>
 
-            <div className="language-dropdown">
-                {languages.map((item) => (
-                    <div
-                        key={item.code}
-                        onClick={() => setLanguage(item.code)}
-                        className={`language-option ${
-                            language === item.code ? "active-lang" : ""
-                        }`}
-                    >
-                        {item.label}
-                    </div>
-                ))}
-            </div>
+            {open && (
+                <div className="language-dropdown">
+                    <button type="button" onClick={() => changeLanguage("es")}>
+                        ES
+                    </button>
+
+                    <button type="button" onClick={() => changeLanguage("en")}>
+                        EN
+                    </button>
+
+                    <button type="button" onClick={() => changeLanguage("it")}>
+                        IT
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
