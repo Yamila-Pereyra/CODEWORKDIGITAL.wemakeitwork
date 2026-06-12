@@ -5,16 +5,22 @@ import Head from "next/head";import "@/app/home1.css";import "@/styles/contacto.
 import Link from "next/link";import ContactForm from "@/components/ContactForm";
 
 import {useEffect,useState,useRef} from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translations } from "@/translations";
 
 export default function Home() {
-
-  const frases = ["Desarrollo Web Profesional","Tiendas Online y E-commerce","Optimización y SEO","Aplicaciones Web y Móviles","Diseño que convierte"];
+    const { language } = useLanguage();
+    const t = translations[language];
+    const frases = t.homePage.frases;
+    const slides = t.homePage.carousel;
+    const beneficios = t.homePage.beneficios;
+    const beneficiosHeader = t.homePage.beneficiosHeader;
+    const servicios = t.homePage.servicios;
+    const cta = t.homePage.cta;
 
   const [index, setIndex] = useState(0);const [fade, setFade] = useState(true);
 
   const beneficiosRef = useRef(null);
-
-  const slides = [{image: "/imagenes/CARROUSEL-1.png",title: "Creamos experiencias visuales",text: "Que transmiten confianza, modernidad y credibilidad para tu marca."},{image: "/imagenes/CARROUSEL-2.png",title: "Apps móviles que conectan con tus usuarios",text: "Desarrollamos aplicaciones para Android e iOS con experiencias intuitivas, rápidas y escalables."},{image: "/imagenes/CARROUSEL-3.png",title: "Más visibilidad. Más clientes. Más resultados.",text: "Optimizamos tu presencia digital para atraer más tráfico, mejorar tu posicionamiento y convertir visitas en oportunidades."}];
 
   const [slideIndex, setSlideIndex] = useState(0);
 
@@ -312,38 +318,7 @@ export default function Home() {
               <div className="beneficios-layout">
 
                   <div className="beneficios-grid">
-                      {[
-                          {
-                              image: "/imagenes/cards1.jpeg",
-                              title: "Websites que convierten",
-                              text: "Diseñamos y desarrollamos sitios web rápidos, claros y preparados para crecer."
-                          },
-                          {
-                              image: "/imagenes/cards2.jpeg",
-                              title: "Apps mobile a medida",
-                              text: "Creamos aplicaciones móviles pensadas para resolver problemas reales."
-                          },
-                          {
-                              image: "/imagenes/cards3.jpeg",
-                              title: "Backend robusto",
-                              text: "Construimos APIs, servicios y lógica de negocio."
-                          },
-                          {
-                              image: "/imagenes/cards4.jpeg",
-                              title: "Integraciones inteligentes",
-                              text: "Conectamos sistemas, plataformas y servicios externos."
-                          },
-                          {
-                              image: "/imagenes/cards5.jpeg",
-                              title: "Performance y estabilidad",
-                              text: "Optimizamos aplicaciones para que respondan mejor."
-                          },
-                          {
-                              image: "/imagenes/cards6.jpeg",
-                              title: "Evolución continua",
-                              text: "Acompañamos mejoras y nuevas funcionalidades."
-                          }
-                      ].map((item, index) => (
+                      {beneficios.map((item, index) => (
                           <article className="beneficio-card" key={index}>
                               <div className="beneficio-card-img">
                                   <img src={item.image} alt={item.title} />
@@ -359,55 +334,38 @@ export default function Home() {
                   </div>
 
                   <div className="beneficios-header">
-                      <span>Por qué elegirnos</span>
+                      <span>{beneficiosHeader.subtitulo}</span>
+
                       <h2>
-                          Tecnología pensada para crear,
-                          crecer y evolucionar.
+                          {beneficiosHeader.titulo}
                       </h2>
                   </div>
 
               </div>
           </section>
-        {/* ================= SERVICIOS ================= */}
+          {/* ================= SERVICIOS ================= */}
           <section className="services-clean">
 
               <div className="services-bg-title">
-                  <h1>SERVICIOS</h1>
+                  <h1>{servicios.titulo}</h1>
               </div>
 
               <div className="services-list">
 
-                  <div className="service-item left">
-                      <span>01</span>
-                      <h3>Desarrollo Web</h3>
-                      <p>
-                          Sitios modernos y optimizados.
-                      </p>
-                  </div>
+                  {servicios.items.map((item, index) => (
+                      <div
+                          key={index}
+                          className={`service-item ${
+                              index % 2 === 0 ? "left" : "right"
+                          }`}
+                      >
+                          <span>{item.numero}</span>
 
-                  <div className="service-item right">
-                      <span>02</span>
-                      <h3>E-Commerce</h3>
-                      <p>
-                          Tiendas online enfocadas en ventas.
-                      </p>
-                  </div>
+                          <h3>{item.titulo}</h3>
 
-                  <div className="service-item left">
-                      <span>03</span>
-                      <h3>SEO & Optimización</h3>
-                      <p>
-                          Velocidad y posicionamiento.
-                      </p>
-                  </div>
-
-                  <div className="service-item right">
-                      <span>04</span>
-                      <h3>Desarrollo de Apps Mobile</h3>
-                      <p>
-                          Aplicaciones móviles personalizadas para Android y iOS.
-                      </p>
-                  </div>
+                          <p>{item.texto}</p>
+                      </div>
+                  ))}
 
               </div>
 
@@ -419,21 +377,17 @@ export default function Home() {
 
               <div className="cta-content">
 
-                  <span>HABLEMOS DE TU PROYECTO</span>
+                  <span>{cta.badge}</span>
 
-                  <h2>
-                      Transformemos tu idea en una experiencia digital que genere resultados.
-                  </h2>
+                  <h2>{cta.titulo}</h2>
 
-                  <p>
-                      Desarrollo web, aplicaciones móviles, optimización y soluciones tecnológicas pensadas para crecer junto a tu negocio.
-                  </p>
+                  <p>{cta.texto}</p>
 
                   <Link
                       href="/contacto"
                       className="btn-contactar"
                   >
-                      Iniciar proyecto
+                      {cta.boton}
                   </Link>
 
               </div>

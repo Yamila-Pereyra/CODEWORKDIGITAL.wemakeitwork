@@ -10,6 +10,10 @@ export default function LanguageSelector() {
     const changeLanguage = (lang) => {
         setLanguage(lang);
         setOpen(false);
+
+        localStorage.setItem("language", lang);
+
+        document.documentElement.lang = lang;
     };
 
     return (
@@ -17,27 +21,16 @@ export default function LanguageSelector() {
             <button
                 className="language-btn"
                 type="button"
-                onClick={() => {
-                    console.log("CLICK IDIOMA");
-                    setOpen((prev) => !prev);
-                }}
+                onClick={() => setOpen((prev) => !prev)}
             >
                 {language?.toUpperCase() || "ES"} ▾
             </button>
 
             {open && (
                 <div className="language-dropdown">
-                    <button type="button" onClick={() => changeLanguage("es")}>
-                        ES
-                    </button>
-
-                    <button type="button" onClick={() => changeLanguage("en")}>
-                        EN
-                    </button>
-
-                    <button type="button" onClick={() => changeLanguage("it")}>
-                        IT
-                    </button>
+                    <button onClick={() => changeLanguage("es")}>ES</button>
+                    <button onClick={() => changeLanguage("en")}>EN</button>
+                    <button onClick={() => changeLanguage("it")}>IT</button>
                 </div>
             )}
         </div>
