@@ -103,6 +103,54 @@ export const translations = {
                 boton: "Iniciar proyecto"
             },
         },
+        footer: {
+            title: "CodeWork Digital",
+            email: "contact@codeworkdigital.com",
+            phone: "+39 XXX XXX XXXX",
+            copy: "© 2025 Code Work Digital — Todos los derechos reservados."
+        },
+        quienesSomosPage: {
+            label: "Quiénes somos",
+
+            titulo: `Creamos sitios web,
+aplicaciones y experiencias
+digitales que generan resultados.`,
+
+            descripcion:
+                "Creamos sitios web, aplicaciones y soluciones digitales que combinan diseño, tecnología y estrategia para impulsar marcas, mejorar experiencias y generar resultados reales.",
+
+            botonProyecto: "Hablemos de tu proyecto",
+            botonServicios: "Ver servicios",
+
+            manifiestoTexto:
+                "Cada proyecto comienza escuchando tus necesidades y entendiendo tus objetivos. Combinamos diseño, desarrollo y estrategia para crear soluciones claras, efectivas y pensadas para crecer junto a tu negocio.",
+
+            manifiestoLabel: "Nuestra forma de trabajar",
+
+            manifiestoTitulo:
+                "Tecnología, diseño y estrategia trabajando juntos.",
+
+            valores: [
+                {
+                    numero: "01",
+                    titulo: "Diseño con propósito",
+                    texto:
+                        "Creamos interfaces modernas que reflejan la identidad de tu marca y generan confianza desde el primer vistazo.",
+                },
+                {
+                    numero: "02",
+                    titulo: "Tecnología sólida",
+                    texto:
+                        "Desarrollamos sitios rápidos, seguros y optimizados para ofrecer una experiencia fluida en cualquier dispositivo.",
+                },
+                {
+                    numero: "03",
+                    titulo: "Acompañamiento real",
+                    texto:
+                        "Te acompañamos durante todo el proceso, desde la planificación inicial hasta la publicación y evolución del proyecto.",
+                },
+            ],
+        },
     },
 
     en: {
@@ -211,6 +259,54 @@ export const translations = {
                 boton: "Start project"
             },
         },
+        footer: {
+            title: "CodeWork Digital",
+            email: "contact@codeworkdigital.com",
+            phone: "+39 XXX XXX XXXX",
+            copy: "© 2025 Code Work Digital — All rights reserved."
+        },
+        quienesSomosPage: {
+            label: "About us",
+
+            titulo: `We create websites,
+applications and digital
+experiences that deliver results.`,
+
+            descripcion:
+                "We create websites, applications and digital solutions that combine design, technology and strategy to boost brands, improve experiences and generate real results.",
+
+            botonProyecto: "Let's talk about your project",
+            botonServicios: "View services",
+
+            manifiestoTexto:
+                "Every project begins by listening to your needs and understanding your goals. We combine design, development and strategy to create clear, effective solutions designed to grow with your business.",
+
+            manifiestoLabel: "How we work",
+
+            manifiestoTitulo:
+                "Technology, design and strategy working together.",
+
+            valores: [
+                {
+                    numero: "01",
+                    titulo: "Purpose-driven design",
+                    texto:
+                        "We create modern interfaces that reflect your brand identity and build trust from the very first glance.",
+                },
+                {
+                    numero: "02",
+                    titulo: "Solid technology",
+                    texto:
+                        "We develop fast, secure and optimized websites to offer a smooth experience on any device.",
+                },
+                {
+                    numero: "03",
+                    titulo: "Real support",
+                    texto:
+                        "We support you throughout the entire process, from initial planning to launch and project evolution.",
+                },
+            ],
+        },
     },
     it: {
         nav: {
@@ -315,6 +411,54 @@ export const translations = {
                 texto: "Sviluppo web, applicazioni mobile, ottimizzazione e soluzioni tecnologiche pensate per crescere insieme al tuo business.",
                 boton: "Inizia il progetto"
             },
+        },
+        footer: {
+            title: "CodeWork Digital",
+            email: "contact@codeworkdigital.com",
+            phone: "+39 XXX XXX XXXX",
+            copy: "© 2025 Code Work Digital — Tutti i diritti riservati."
+        },
+        quienesSomosPage: {
+            label: "Chi siamo",
+
+            titulo: `Creiamo siti web,
+applicazioni ed esperienze
+digitali che generano risultati.`,
+
+            descripcion:
+                "Creiamo siti web, applicazioni e soluzioni digitali che combinano design, tecnologia e strategia per far crescere i brand, migliorare le esperienze e generare risultati reali.",
+
+            botonProyecto: "Parliamo del tuo progetto",
+            botonServicios: "Vedi i servizi",
+
+            manifiestoTexto:
+                "Ogni progetto inizia ascoltando le tue esigenze e comprendendo i tuoi obiettivi. Combiniamo design, sviluppo e strategia per creare soluzioni chiare, efficaci e pensate per crescere insieme al tuo business.",
+
+            manifiestoLabel: "Il nostro modo di lavorare",
+
+            manifiestoTitulo:
+                "Tecnologia, design e strategia che lavorano insieme.",
+
+            valores: [
+                {
+                    numero: "01",
+                    titulo: "Design con uno scopo",
+                    texto:
+                        "Creiamo interfacce moderne che riflettono l'identità del tuo brand e generano fiducia fin dal primo sguardo.",
+                },
+                {
+                    numero: "02",
+                    titulo: "Tecnologia solida",
+                    texto:
+                        "Sviluppiamo siti veloci, sicuri e ottimizzati per offrire un'esperienza fluida su qualsiasi dispositivo.",
+                },
+                {
+                    numero: "03",
+                    titulo: "Supporto reale",
+                    texto:
+                        "Ti accompagniamo durante tutto il processo, dalla pianificazione iniziale alla pubblicazione e all'evoluzione del progetto.",
+                },
+            ],
         },
     },
 };

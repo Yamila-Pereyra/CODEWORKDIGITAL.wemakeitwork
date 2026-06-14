@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import LanguageSelector from "@/components/LanguageSelector";
 import { Red_Hat_Display } from "next/font/google";
 import { FaInstagram, FaFacebookF, FaWhatsapp } from "react-icons/fa";
+import Footer from "@/components/Footer";
 const redHat = Red_Hat_Display({
     subsets: ["latin"],
     weight: ["400", "500", "700", "800", "900"],
@@ -48,47 +49,7 @@ export default function RootLayout({ children }) {
             </header>
 
             <div className="main-content">{children}</div>
-            <footer>
-
-                <div className="footer-socials">
-
-                    <a
-                        href="https://instagram.com/TUUSUARIO"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <FaInstagram />
-                    </a>
-
-                    <a
-                        href="https://facebook.com/TUPAGINA"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <FaFacebookF />
-                    </a>
-
-                </div>
-
-                <div className="footer-info">
-
-                    <h3>CodeWork Digital</h3>
-
-                    <a href="mailto:contact@codeworkdigital.com">
-                        contact@codeworkdigital.com
-                    </a>
-
-                    <a href="tel:+39XXXXXXXXX">
-                        +39 XXX XXX XXXX
-                    </a>
-
-                </div>
-
-                <p className="footer-copy">
-                    © 2025 Code Work Digital — Todos los derechos reservados.
-                </p>
-
-            </footer>
+            <Footer />
             <a
                 href="https://wa.me/549XXXXXXXXXX"
                 target="_blank"
