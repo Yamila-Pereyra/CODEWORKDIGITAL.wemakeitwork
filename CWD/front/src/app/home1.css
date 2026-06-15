@@ -709,8 +709,11 @@ nav .holder li a.activo {
 
 .services-clean {
   position: relative;
+  isolation: isolate;
   background: #000;
-  padding: 20px 0 90px;
+  height: 100vh;
+  min-height: 720px;
+  padding: 0;
   overflow: hidden;
 }
 
@@ -726,7 +729,7 @@ nav .holder li a.activo {
 
   transform: translate(-50%, -50%);
 
-  z-index: 1;
+  z-index: 0 !important;
   pointer-events: none;
 }
 
@@ -749,15 +752,28 @@ nav .holder li a.activo {
    LISTA
 =================================== */
 
+.services-cards-scroll {
+  position: absolute;
+  inset: 0;
+  z-index: 10 !important;
+  overflow: hidden;
+  will-change: opacity;
+}
+
 .services-list {
-  position: relative;
-  z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 10 !important;
 
   width: min(1200px, 92%);
-  margin: 0 auto;
+  margin: 0;
+  padding: 0 0 160px;
 
   display: flex;
   flex-direction: column;
+  transform: translateX(-50%);
+  will-change: transform;
 }
 
 /* ===================================
@@ -765,6 +781,8 @@ nav .holder li a.activo {
 =================================== */
 
 .service-item {
+  position: relative;
+  z-index: 2;
   width: 500px;
   max-width: 100%;
 
@@ -772,28 +790,25 @@ nav .holder li a.activo {
 
   padding: 40px;
 
-  background: linear-gradient(
-          145deg,
-          rgba(255,255,255,.12),
-          rgba(255,255,255,.03)
-  );
+  background:
+          linear-gradient(145deg, rgba(13, 18, 28, .78), rgba(13, 18, 28, .52)),
+          linear-gradient(145deg, rgba(255,255,255,.16), rgba(255,255,255,.04));
 
-  border: 1px solid rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
 
-  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(46px) saturate(170%);
+  backdrop-filter: blur(46px) saturate(170%);
+  overflow: hidden;
 
   box-shadow:
           0 20px 80px rgba(0,0,0,.45);
 
   transition:
-          transform .35s ease,
           box-shadow .35s ease,
           border-color .35s ease;
 }
 
 .service-item:hover {
-  transform: translateY(-10px);
-
   border-color: rgba(56,189,248,.5);
 
   box-shadow:
@@ -874,7 +889,8 @@ nav .holder li a.activo {
 @media (max-width: 768px) {
 
   .services-clean {
-    padding: 80px 0;
+    min-height: 640px;
+    padding: 0;
   }
 
   .services-bg-title h1 {
@@ -882,7 +898,8 @@ nav .holder li a.activo {
   }
 
   .services-list {
-    gap: 24px;
+    width: calc(100% - 32px);
+    padding-bottom: 120px;
   }
 
   .service-item,
@@ -1292,21 +1309,21 @@ nav .holder li a.activo {
   }
 
   .services-clean {
-    padding: 70px 0;
+    min-height: 640px;
+    padding: 0;
   }
 
   .services-bg-title {
-    top: 48%;
+    top: 50%;
   }
 
   .services-bg-title h1 {
-    opacity: .35;
+    opacity: 1;
   }
 
   .service-item {
     min-height: 230px;
     padding: 32px;
-    margin-top: 28px !important;
   }
 
   .service-item h3 {

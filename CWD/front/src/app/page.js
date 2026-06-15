@@ -5,8 +5,12 @@ import Head from "next/head";import "@/app/home1.css";import "@/styles/contacto.
 import Link from "next/link";import ContactForm from "@/components/ContactForm";
 
 import {useEffect,useState,useRef} from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/translations";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
     const { language } = useLanguage();
@@ -169,69 +173,75 @@ export default function Home() {
 
   useEffect(() => {
 
-    const cards =
-        document.querySelectorAll(
-            ".cinematic-card"
-        );
+    const section =
+        sectionRef.current;
 
-    const handleScroll = () => {
+    if (!section) return;
 
-      const section =
-          sectionRef.current;
+    const ctx = gsap.context(() => {
 
-      if (!section) return;
+      const cardsScroll =
+          section.querySelector(".services-cards-scroll");
 
-      const rect =
-          section.getBoundingClientRect();
+      const list =
+          section.querySelector(".services-list");
 
-      const scrollProgress =
-          -rect.top;
+      const items =
+          gsap.utils.toArray(".service-item", section);
 
-      cards.forEach((card, index) => {
+      if (!cardsScroll || !list || !items.length) return;
 
-        const start =
-            index * 500;
-
-        const end =
-            start + 700;
-
-        let progress =
-            (scrollProgress - start) /
-            (end - start);
-
-        progress =
-            Math.max(0, Math.min(progress, 1));
-
-        const y =
-            300 - (progress * 600);
-
-        const opacity =
-            progress < 0.5
-                ? progress * 2
-                : (1 - progress) * 2;
-
-        card.style.transform =
-            `translate(-50%, ${y}px)`;
-
-        card.style.opacity =
-            opacity;
-
+      gsap.set(cardsScroll, {
+        autoAlpha: 0,
       });
 
-    };
+      gsap.set(items, {
+        autoAlpha: 0,
+        y: 80,
+      });
 
-    window.addEventListener(
-        "scroll",
-        handleScroll
-    );
+      gsap.set(list, {
+        xPercent: -50,
+        y: () => window.innerHeight * 0.78,
+      });
 
-    handleScroll();
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${window.innerHeight * 3.2}`,
+          pin: true,
+          scrub: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
 
-    return () =>
-        window.removeEventListener(
-            "scroll",
-            handleScroll
-        );
+      tl.to({}, {
+        duration: 0.18,
+      })
+          .to(cardsScroll, {
+            autoAlpha: 1,
+            duration: 0.12,
+          })
+          .to(items, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.28,
+            stagger: 0.06,
+          }, "<")
+          .to(list, {
+            y: () => -Math.max(
+                list.scrollHeight - window.innerHeight * 0.36,
+                window.innerHeight * 0.9
+            ),
+            ease: "none",
+            duration: 1,
+          });
+
+    }, section);
+
+    return () => ctx.revert();
 
   }, []);
 
@@ -344,11 +354,13 @@ export default function Home() {
               </div>
           </section>
           {/* ================= SERVICIOS ================= */}
-          <section className="services-clean">
+          <section className="services-clean" ref={sectionRef}>
 
               <div className="services-bg-title">
                   <h1>{servicios.titulo}</h1>
               </div>
+
+              <div className="services-cards-scroll">
 
               <div className="services-list">
 
@@ -366,6 +378,8 @@ export default function Home() {
                           <p>{item.texto}</p>
                       </div>
                   ))}
+
+              </div>
 
               </div>
 
