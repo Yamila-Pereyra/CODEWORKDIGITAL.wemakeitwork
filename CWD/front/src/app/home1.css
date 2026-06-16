@@ -512,13 +512,13 @@ nav .holder li a.activo {
 
 }
 .outside-dots {
+  width: min(1300px, 92%);
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 12px;
 
-  margin-top: -80px;
-  margin-bottom: 50px;
+  margin: -56px auto 50px;
 }
 
 .premium-dots {
@@ -1396,7 +1396,8 @@ nav .holder li a.activo {
   }
 
   .outside-dots {
-    margin-top: -35px;
+    width: calc(100% - 32px);
+    margin: -18px auto 50px;
   }
 
   .beneficios {
