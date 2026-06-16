@@ -645,11 +645,63 @@ nav .holder li a.activo {
 }
 
 .beneficio-card {
+  position: relative;
   padding: 18px;
   background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
   border: 1px solid rgba(255,255,255,.1);
   box-shadow: 0 30px 90px rgba(0,0,0,.45);
   transition: .35s ease;
+  overflow: hidden;
+  outline: none;
+}
+
+.beneficio-card:focus-visible {
+  border-color: rgba(56,189,248,.55);
+  box-shadow:
+          0 30px 90px rgba(0,0,0,.45),
+          0 0 0 3px rgba(56,189,248,.2);
+}
+
+.beneficio-card-front,
+.beneficio-card-back {
+  transition:
+          opacity .32s ease,
+          transform .32s ease;
+}
+
+.beneficio-card-front {
+  position: relative;
+  z-index: 1;
+}
+
+.beneficio-card-back {
+  position: absolute;
+  inset: 18px;
+  z-index: 2;
+  padding: 6px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  overflow-y: auto;
+  background:
+          linear-gradient(145deg, rgba(7, 12, 20, .34), rgba(7, 12, 20, .08));
+}
+
+.beneficio-card:hover .beneficio-card-front,
+.beneficio-card:focus .beneficio-card-front,
+.beneficio-card:focus-within .beneficio-card-front {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.beneficio-card:hover .beneficio-card-back,
+.beneficio-card:focus .beneficio-card-back,
+.beneficio-card:focus-within .beneficio-card-back {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .beneficio-card-img {
@@ -676,14 +728,35 @@ nav .holder li a.activo {
   font-weight: 900;
 }
 
+.beneficio-card-back span {
+  color: #38bdf8;
+  font-weight: 900;
+  letter-spacing: .14em;
+}
+
 .beneficio-card-text h3 {
   color: #fff;
   font-size: 1.45rem;
 }
 
+.beneficio-card-back h3 {
+  margin: 16px 0 16px;
+  color: #fff;
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  line-height: 1.05;
+  letter-spacing: -.03em;
+}
+
 .beneficio-card-text p {
   color: rgba(255,255,255,.68);
   line-height: 1.65;
+}
+
+.beneficio-card-back p {
+  margin: 0;
+  color: rgba(255,255,255,.78);
+  font-size: .95rem;
+  line-height: 1.62;
 }
 .beneficios-layout{
   display:grid;

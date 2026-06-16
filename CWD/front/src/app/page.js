@@ -12,6 +12,33 @@ import { translations } from "@/translations";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const beneficiosExtended = [
+  {
+    title: "Websites que convierten",
+    text: "Diseñamos y desarrollamos sitios web rápidos, claros y preparados para crecer. Cuidamos la experiencia visual, la estructura técnica y el rendimiento para que tu presencia digital no sea solo atractiva, sino también funcional, medible y efectiva.",
+  },
+  {
+    title: "Apps mobile a medida",
+    text: "Creamos aplicaciones móviles pensadas para resolver problemas reales. Desde la idea inicial hasta una versión funcional, priorizamos interfaces simples, flujos claros y una base técnica sólida para que la app pueda evolucionar sin perder estabilidad.",
+  },
+  {
+    title: "Backend robusto",
+    text: "Construimos APIs, servicios y lógica de negocio con foco en seguridad, escalabilidad y mantenibilidad. Nos importa que el sistema funcione bien por dentro: contratos claros, datos consistentes, integraciones confiables y código preparado para crecer.",
+  },
+  {
+    title: "Integraciones inteligentes",
+    text: "Conectamos sistemas, plataformas, bases de datos y servicios externos para que trabajen como una unidad. Reducimos procesos manuales, mejoramos la trazabilidad y ayudamos a que la tecnología acompañe el flujo real de tu negocio.",
+  },
+  {
+    title: "Performance y estabilidad",
+    text: "Optimizamos aplicaciones para que respondan mejor, fallen menos y sean más fáciles de monitorear. Analizamos cuellos de botella, tiempos de carga, errores recurrentes y puntos críticos para mejorar la experiencia del usuario final.",
+  },
+  {
+    title: "Evolución continua",
+    text: "No pensamos el software como algo estático. Acompañamos mejoras, nuevas funcionalidades, mantenimiento y ajustes técnicos para que tu producto digital pueda adaptarse al mercado, a tus usuarios y a nuevas oportunidades de negocio.",
+  },
+];
+
 export default function Home() {
     const { language } = useLanguage();
     const t = translations[language];
@@ -509,19 +536,35 @@ export default function Home() {
               <div className="beneficios-layout">
 
                   <div className="beneficios-grid">
-                      {beneficios.map((item, index) => (
-                          <article className="beneficio-card" key={index}>
-                              <div className="beneficio-card-img">
-                                  <img src={item.image} alt={item.title} />
+                      {beneficios.map((item, index) => {
+                          const expanded =
+                              beneficiosExtended[index] || {
+                                  title: item.title,
+                                  text: item.text,
+                              };
+
+                          return (
+                          <article className="beneficio-card" key={index} tabIndex={0}>
+                              <div className="beneficio-card-front">
+                                  <div className="beneficio-card-img">
+                                      <img src={item.image} alt={item.title} />
+                                  </div>
+
+                                  <div className="beneficio-card-text">
+                                      <span>{String(index + 1).padStart(2, "0")}</span>
+                                      <h3>{item.title}</h3>
+                                      <p>{item.text}</p>
+                                  </div>
                               </div>
 
-                              <div className="beneficio-card-text">
+                              <div className="beneficio-card-back">
                                   <span>{String(index + 1).padStart(2, "0")}</span>
-                                  <h3>{item.title}</h3>
-                                  <p>{item.text}</p>
+                                  <h3>{expanded.title}</h3>
+                                  <p>{expanded.text}</p>
                               </div>
                           </article>
-                      ))}
+                          );
+                      })}
                   </div>
 
                   <div className="beneficios-header" ref={beneficiosHeaderRef}>

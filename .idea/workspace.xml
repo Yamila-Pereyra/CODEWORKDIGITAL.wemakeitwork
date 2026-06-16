@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8d936f58-ad7f-4b28-bbc5-f490d51099a7" name="Changes" comment="first commit">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -20,7 +19,7 @@
     <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/SERVICIOS-GSAP-ScrollTrigger" />
+        <entry key="$PROJECT_DIR$" value="feature/why-section-sticky-handoff" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -50,8 +49,8 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "feature/why-section-sticky-handoff",
-    "git.auto.fetch.suggestion.counter": "2",
+    "git-widget-placeholder": "feature/services-card-hover-details",
+    "git.auto.fetch.suggestion.counter": "3",
     "ignore.virus.scanning.warn.message": "true",
     "javascript.preferred.runtime.type.id": "node",
     "last_opened_file_path": "C:/Dev/Spaces/CODEWORKDIGITAL.wemakeitwork",
@@ -91,7 +90,7 @@
       <workItem from="1779091477809" duration="13573000" />
       <workItem from="1779144070315" duration="2179000" />
       <workItem from="1781487688847" duration="6433000" />
-      <workItem from="1781610267989" duration="5253000" />
+      <workItem from="1781610267989" duration="7050000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <option name="closed" value="true" />
