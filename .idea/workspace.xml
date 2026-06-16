@@ -19,7 +19,7 @@
     <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/hero-horizontal-carousel" />
+        <entry key="$PROJECT_DIR$" value="feature/hero-indicators-left-aligned" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -49,7 +49,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "fix/services-initial-scroll-lag",
+    "git-widget-placeholder": "feature/hero-right-alignment",
     "git.auto.fetch.suggestion.counter": "3",
     "ignore.virus.scanning.warn.message": "true",
     "javascript.preferred.runtime.type.id": "node",
@@ -90,7 +90,7 @@
       <workItem from="1779091477809" duration="13573000" />
       <workItem from="1779144070315" duration="2179000" />
       <workItem from="1781487688847" duration="6433000" />
-      <workItem from="1781610267989" duration="11512000" />
+      <workItem from="1781610267989" duration="12348000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <option name="closed" value="true" />

@@ -162,8 +162,11 @@ nav .holder li a.activo {
 ================================ */
 .hero {
   margin-top: 25px;
+  width: min(1300px, 92%);
+  margin-left: auto;
+  margin-right: auto;
   padding-bottom: 60px;
-  text-align: center;
+  text-align: right;
   overflow: hidden;
   background: black;
 }
@@ -1311,6 +1314,11 @@ nav .holder li a.activo {
     padding: 8px 14px;
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  .hero {
+    width: 100%;
+    text-align: center;
   }
 
   .hero-title {
