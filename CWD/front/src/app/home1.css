@@ -1127,6 +1127,81 @@ nav .holder li a.activo {
           0 20px 60px rgba(255,255,255,.15);
 }
 
+.cta-optical-divider {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+
+  width: 100%;
+  height: 6px;
+
+  overflow: hidden;
+  background: transparent;
+}
+
+.cta-optical-divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+
+  width: 100%;
+  height: 1px;
+
+  background: rgba(79,195,255,.22);
+  transform: translateY(-50%);
+}
+
+.cta-optical-divider::after {
+  content: "";
+  position: absolute;
+  top: calc(50% + 1px);
+  left: 0;
+
+  width: 112px;
+  height: 2px;
+
+  background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(79,195,255,0) 12%,
+          rgba(79,195,255,.35) 28%,
+          rgba(180,235,255,.85) 42%,
+          rgba(255,255,255,.98) 50%,
+          rgba(180,235,255,.85) 58%,
+          rgba(79,195,255,.35) 72%,
+          rgba(79,195,255,0) 88%,
+          transparent 100%
+  );
+
+  opacity: 1;
+  box-shadow:
+          0 0 6px rgba(255,255,255,.22),
+          0 0 14px rgba(79,195,255,.30);
+  transform: translate(-120%, -50%);
+
+  animation: ctaOpticalPulse 7.5s linear infinite;
+}
+
+@keyframes ctaOpticalPulse {
+  from {
+    transform: translate(-120%, -50%);
+  }
+
+  to {
+    transform: translate(100vw, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-optical-divider::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 /* ===================================
    MOBILE
 =================================== */

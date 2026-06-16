@@ -734,7 +734,6 @@ export default function Home() {
               </div>
 
               </div>
-
           </section>
         {/* ================= CTA FINAL ================= */}
           <section className="cta-final">
@@ -757,6 +756,8 @@ export default function Home() {
                   </Link>
 
               </div>
+
+              <div className="cta-optical-divider" aria-hidden="true" />
 
           </section>
       </main>
