@@ -467,12 +467,12 @@ export default function Home() {
       if (!cardsScroll || !list || !items.length) return;
 
       gsap.set(cardsScroll, {
-        autoAlpha: 0,
+        autoAlpha: 1,
       });
 
       gsap.set(items, {
         autoAlpha: 0,
-        y: 80,
+        y: 32,
       });
 
       gsap.set(list, {
@@ -492,19 +492,12 @@ export default function Home() {
         },
       });
 
-      tl.to({}, {
-        duration: 0.18,
-      })
-          .to(cardsScroll, {
-            autoAlpha: 1,
-            duration: 0.12,
-          })
-          .to(items, {
+      tl.to(items, {
             autoAlpha: 1,
             y: 0,
-            duration: 0.28,
-            stagger: 0.06,
-          }, "<")
+            duration: 0.16,
+            stagger: 0.03,
+          }, 0)
           .to(list, {
             y: () => -Math.max(
                 list.scrollHeight - window.innerHeight * 0.36,
@@ -512,7 +505,7 @@ export default function Home() {
             ),
             ease: "none",
             duration: 1,
-          });
+          }, 0);
 
     }, section);
 
