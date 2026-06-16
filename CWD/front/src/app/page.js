@@ -122,6 +122,26 @@ export default function Home() {
 
     gsap.killTweensOf([track, ...carouselSlides]);
 
+    if (carouselIndex > slides.length + 1) {
+      carouselResetRef.current = false;
+
+      gsap.set(track, {
+        xPercent: -100,
+      });
+
+      carouselSlides.forEach((slide, index) => {
+        gsap.set(slide, {
+          scale: index === 1 ? 1 : 0.985,
+          opacity: index === 1 ? 1 : 0.92,
+        });
+      });
+
+      setSlideIndex(0);
+      setCarouselIndex(1);
+
+      return undefined;
+    }
+
     if (carouselResetRef.current) {
       carouselResetRef.current = false;
 
@@ -144,7 +164,7 @@ export default function Home() {
       duration: 0.55,
       ease: "power2.inOut",
       onComplete: () => {
-        if (carouselIndex === slides.length + 1) {
+        if (carouselIndex >= slides.length + 1) {
           carouselResetRef.current = true;
 
           gsap.set(track, {
