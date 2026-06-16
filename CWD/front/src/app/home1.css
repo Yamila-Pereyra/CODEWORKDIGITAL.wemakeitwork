@@ -580,6 +580,8 @@ nav .holder li a.activo {
 
 .beneficios-header {
   max-width: 420px;
+  align-self: start;
+  will-change: transform, opacity;
 }
 
 .beneficios-header.is-fixed {
@@ -596,7 +598,7 @@ nav .holder li a.activo {
   right: 0;
 }
 
-.beneficios-header span {
+.beneficios-eyebrow {
   display: inline-block;
   margin-bottom: 18px;
   color: #38bdf8;
@@ -618,6 +620,22 @@ nav .holder li a.activo {
   background-clip: text;
   color: transparent;
   animation: textoBrillo 5s ease-in-out infinite;
+}
+
+.why-title-line {
+  display: block;
+  margin: 0;
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-transform: none;
+  background: linear-gradient(90deg, #fff, #38bdf8, #fff);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: textoBrillo 5s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 @keyframes textoBrillo {
@@ -675,8 +693,7 @@ nav .holder li a.activo {
 }
 
 .beneficios-header{
-  position:sticky;
-  top:120px;
+  position:relative;
   align-self:start;
 }
 
@@ -691,6 +708,7 @@ nav .holder li a.activo {
   .beneficios-header.is-end {
     position: static;
     width: auto;
+    will-change: auto;
   }
 }
 
