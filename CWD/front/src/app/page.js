@@ -54,6 +54,7 @@ export default function Home() {
   const beneficiosHeaderRef = useRef(null);
 
   const [slideIndex, setSlideIndex] = useState(0);
+  const [carouselIndex, setCarouselIndex] = useState(1);
 
   /* =========================NOSOTROS========================= */
 
@@ -64,6 +65,8 @@ export default function Home() {
   /* =========================SERVICIOS========================= */
 
   const sectionRef = useRef(null);
+  const carouselTrackRef = useRef(null);
+  const carouselResetRef = useRef(false);
 
   /* =========================HERO CARRUSEL========================= */
 
@@ -97,11 +100,75 @@ export default function Home() {
           (prev + 1) % slides.length
       );
 
-    }, 5000);
+      setCarouselIndex((prev) =>
+          prev + 1
+      );
+
+    }, 3500);
 
     return () => clearInterval(interval);
 
   }, []);
+
+  useEffect(() => {
+
+    const track =
+        carouselTrackRef.current;
+
+    if (!track) return;
+
+    const carouselSlides =
+        gsap.utils.toArray(".hero-slide", track);
+
+    gsap.killTweensOf([track, ...carouselSlides]);
+
+    if (carouselResetRef.current) {
+      carouselResetRef.current = false;
+
+      gsap.set(track, {
+        xPercent: -100,
+      });
+
+      carouselSlides.forEach((slide, index) => {
+        gsap.set(slide, {
+          scale: index === 1 ? 1 : 0.985,
+          opacity: index === 1 ? 1 : 0.92,
+        });
+      });
+
+      return undefined;
+    }
+
+    gsap.to(track, {
+      xPercent: -(carouselIndex * 100),
+      duration: 0.55,
+      ease: "power2.inOut",
+      onComplete: () => {
+        if (carouselIndex === slides.length + 1) {
+          carouselResetRef.current = true;
+
+          gsap.set(track, {
+            xPercent: -100,
+          });
+
+          setCarouselIndex(1);
+        }
+      },
+    });
+
+    carouselSlides.forEach((slide, index) => {
+      gsap.to(slide, {
+        scale: index === carouselIndex ? 1 : 0.985,
+        opacity: index === carouselIndex ? 1 : 0.92,
+        duration: 0.55,
+        ease: "power2.inOut",
+      });
+    });
+
+    return () =>
+        gsap.killTweensOf([track, ...carouselSlides]);
+
+  }, [carouselIndex, slides.length]);
 
   /* =========================BENEFICIOS========================= */
 
@@ -453,6 +520,27 @@ export default function Home() {
 
   }, []);
 
+  const heroCarouselSlides =
+      slides.length
+          ? [
+              {
+                slide: slides[slides.length - 1],
+                realIndex: slides.length - 1,
+                key: "clone-last",
+              },
+              ...slides.map((slide, index) => ({
+                slide,
+                realIndex: index,
+                key: `slide-${index}`,
+              })),
+              {
+                slide: slides[0],
+                realIndex: 0,
+                key: "clone-first",
+              },
+            ]
+          : [];
+
   return (
 
       <main>
@@ -487,14 +575,20 @@ export default function Home() {
         </section>
           {/* ================= SHOWCASE ================= */}
 
-          <section className="premium-carousel">
+          <section className="premium-carousel hero-carousel">
 
-              {slides.map((slide, i) => (
+              <div
+                  className="hero-track"
+                  ref={carouselTrackRef}
+                  style={{ transform: "translateX(-100%)" }}
+              >
+
+              {heroCarouselSlides.map(({ slide, realIndex, key }, i) => (
 
                   <div
-                      key={i}
-                      className={`premium-slide ${
-                          i === slideIndex ? "active" : ""
+                      key={key}
+                      className={`premium-slide hero-slide ${
+                          i === carouselIndex ? "active" : ""
                       }`}
                   >
 
@@ -503,7 +597,7 @@ export default function Home() {
                           alt={slide.title}
                       />
 
-                      <div className={`slide-content slide-${i}`}>
+                      <div className={`slide-content slide-${realIndex}`}>
                           <h2>{slide.title}</h2>
                           <p>{slide.text}</p>
                       </div>
@@ -511,6 +605,8 @@ export default function Home() {
                   </div>
 
               ))}
+
+              </div>
 
           </section>
 
@@ -520,7 +616,10 @@ export default function Home() {
 
                   <button
                       key={i}
-                      onClick={() => setSlideIndex(i)}
+                      onClick={() => {
+                          setSlideIndex(i);
+                          setCarouselIndex(i + 1);
+                      }}
                       className={
                           i === slideIndex
                               ? "active"
