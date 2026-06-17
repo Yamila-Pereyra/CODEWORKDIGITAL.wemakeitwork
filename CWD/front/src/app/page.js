@@ -75,6 +75,63 @@ export default function Home() {
     return () => clearInterval(interval);
 
   }, []);
+    /* ========================= HERO GLITCH SCROLL ========================== */
+    useEffect(() => {
+
+        const section = document.querySelector(".glitch-scroll-section");
+        const left = document.querySelector(".glitch-from-left");
+        const right = document.querySelector(".glitch-from-right");
+
+        if (!section || !left || !right) return;
+
+        const handleScroll = () => {
+
+            const rect = section.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            const isMobile = window.innerWidth <= 768;
+
+            const distance = isMobile ? 45 : 130;
+
+            const start = windowHeight * 0.95;
+            const end = -rect.height * 0.4;
+
+            const progress =
+                (start - rect.top) / (start - end);
+
+            const p =
+                Math.max(0, Math.min(1, progress));
+
+            let move;
+
+            if (p < 0.5) {
+                move = distance - p * distance * 2;
+            } else {
+                move = (p - 0.5) * distance * 2;
+            }
+
+            left.style.transform = `translateX(${-move}vw)`;
+            right.style.transform = `translateX(${move}vw)`;
+
+            const visible = isMobile
+                ? p > 0.02 && p < 0.98
+                : p > 0.12 && p < 0.88;
+
+            left.style.opacity = visible ? "1" : "0";
+            right.style.opacity = visible ? "1" : "0";
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("resize", handleScroll);
+
+        handleScroll();
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("resize", handleScroll);
+        };
+
+    }, []);
 
   /* =========================BENEFICIOS========================= */
 
@@ -259,7 +316,8 @@ export default function Home() {
               content="Contáctanos para impulsar tu negocio con soluciones web"
           />
         </Head>
-        {/* ================= HERO SECTION ================= */}
+
+          {/* ================= HERO SECTION ================= */}
         <section className="hero">
           <h1 className="hero-title">
   <span className="line1 glitch-line" data-text="CodeWork">
@@ -277,6 +335,37 @@ export default function Home() {
             {frases[index]}
           </p>
         </section>
+
+
+          {/* ================= HERO SECTION ================= */}
+          <section className="hero-section glitch-scroll-section">
+
+              <div className="hero-grid">
+
+                  <div className="hero-left glitch-from-left">
+
+                      <h2>
+                          Creamos sitios web profesionales
+                          que impulsan tu negocio
+                      </h2>
+
+                  </div>
+
+                  <div className="hero-right glitch-from-right">
+
+                      <p>
+                          En <strong>CodeWork Digital </strong>
+                           desarrollamos páginas web modernas,
+                          seguras y optimizadas para que tu
+                          marca tenga una presencia profesional
+                          y atraiga más clientes.
+                      </p>
+
+                  </div>
+
+              </div>
+
+          </section>
           {/* ================= SHOWCASE ================= */}
 
           <section className="premium-carousel">

@@ -119,11 +119,11 @@ nav .holder li a {
 
 nav .holder li a:hover {
   background-color: #111;
-  color: #00ff88;
+  color: #FF0077;
 }
 
 nav .holder li a.activo {
-  color: #00ff88;
+  color: #FF0077;
 }
 
 /* ================================
@@ -273,86 +273,63 @@ nav .holder li a.activo {
 /* ================================
    HERO GRID PREMIUM
 ================================ */
-
-.hero-section {
-  padding: 120px 7vw;
-  background: black;
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: #fff;
+  pointer-events: none;
+  opacity: 0.75;
 }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 80px;
-  align-items: center;
+.glitch-text::before {
+  transform: translate(-4px, -2px);
+  animation: glitchA 0.35s infinite linear alternate-reverse;
 }
 
-/* TEXTO IZQUIERDO */
-
-.hero-left h2 {
-  font-size: clamp(3rem, 5vw, 6rem);
-  font-weight: 900;
-  line-height: 0.95;
-  letter-spacing: -0.05em;
-  color: white;
-  text-align: left;
-  max-width: 900px;
+.glitch-text::after {
+  transform: translate(4px, 2px);
+  animation: glitchB 0.28s infinite linear alternate-reverse;
+}
+@keyframes glitchA {
+  0% { clip-path: inset(0 0 85% 0); }
+  25% { clip-path: inset(20% 0 45% 0); }
+  50% { clip-path: inset(60% 0 15% 0); }
+  75% { clip-path: inset(10% 0 60% 0); }
+  100% { clip-path: inset(80% 0 0 0); }
 }
 
-/* TEXTO DERECHO */
-
-.hero-right p {
-  font-size: 1.15rem;
-  font-weight: 300;
-  line-height: 1.9;
-  color: rgba(255,255,255,0.72);
-  text-align: left;
-  max-width: 420px;
+@keyframes glitchB {
+  0% { clip-path: inset(80% 0 0 0); }
+  25% { clip-path: inset(55% 0 20% 0); }
+  50% { clip-path: inset(10% 0 70% 0); }
+  75% { clip-path: inset(35% 0 35% 0); }
+  100% { clip-path: inset(0 0 80% 0); }
 }
+/*-----<<RESPONSIVE>>------*/
+@media (max-width: 768px) {
 
-/* ANIMACIONES HERO GRID */
-
-.reveal-left {
-  opacity: 0;
-  transform: translateX(-80px);
-  animation: revealLeft 1.4s ease forwards;
-}
-
-.reveal-right {
-  opacity: 0;
-  transform: translateX(80px);
-  animation: revealRight 1.6s ease forwards;
-}
-
-@keyframes revealLeft {
-  to {
-    opacity: 1;
-    transform: translateX(0);
+  .glitch-scroll-section {
+    overflow: hidden;
   }
-}
 
-@keyframes revealRight {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* RESPONSIVE HERO GRID */
-
-@media (max-width: 900px) {
   .hero-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
+    padding-left: 18px;
+    padding-right: 18px;
+    overflow: visible;
   }
 
   .hero-left h2 {
-    text-align: center;
+    font-size: clamp(2.55rem, 12vw, 3.45rem);
+    line-height: .92;
+    max-width: 92%;
   }
 
   .hero-right p {
-    text-align: center;
-    margin: 0 auto;
+    max-width: 92%;
   }
+
 }
 /* ================================
    CARRUSEL TEXTO
@@ -1004,28 +981,83 @@ nav .holder li a.activo {
    BOTON
 =================================== */
 .btn-contactar {
+  position: relative;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
   padding: 18px 40px;
 
-  background: white;
-  color: black;
+  border-radius: 999px;
+
+  background: #000;
+  color: #fff;
 
   text-decoration: none;
-
   font-weight: 800;
   letter-spacing: -.02em;
 
+  overflow: hidden;
+
   transition: .35s ease;
+
+  z-index: 1;
+}
+
+/* Borde giratorio */
+.btn-contactar::before {
+  content: "";
+
+  position: absolute;
+  width: 250%;
+  height: 250%;
+
+  background: conic-gradient(
+          transparent 0deg,
+          transparent 220deg,
+          #0099ff 260deg,
+          #66ccff 290deg,
+          #0099ff 320deg,
+          transparent 360deg
+  );
+
+  animation: rotateBorder 3s linear infinite;
+
+  z-index: -2;
+}
+
+/* Fondo negro interno */
+.btn-contactar::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 2px;
+
+  background: #000;
+
+  border-radius: 999px;
+
+  z-index: -1;
 }
 
 .btn-contactar:hover {
   transform: translateY(-4px);
 
   box-shadow:
-          0 20px 60px rgba(255,255,255,.15);
+          0 0 20px rgba(0,170,255,.4),
+          0 0 40px rgba(0,170,255,.25);
+}
+
+@keyframes rotateBorder {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ===================================
@@ -1437,4 +1469,35 @@ nav .holder li a.activo {
     font-size: 0.85rem !important;
     line-height: 1.35 !important;
   }
+}
+@media (max-width: 768px) {
+
+  .hero {
+    min-height: 42vh;
+    padding-bottom: 0;
+  }
+
+  .hero-section {
+    margin-top: -35px;
+    padding-top: 0;
+  }
+
+  .hero-grid {
+    gap: 24px;
+    overflow: visible;
+  }
+
+  .hero-left h2 {
+    font-size: clamp(2.65rem, 12.5vw, 3.6rem);
+    line-height: .92;
+    letter-spacing: -0.06em;
+    max-width: 96%;
+  }
+
+  .hero-right p {
+    font-size: 1rem;
+    line-height: 1.55;
+    max-width: 96%;
+  }
+
 }

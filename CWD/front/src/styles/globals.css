@@ -163,8 +163,8 @@ nav .holder li a.activo {
    FOOTER
 ================================ */
 footer {
-  background: #fff;
-  color: #000;
+  background:gray;
+  color: #fff;
 
   text-align: center;
 
@@ -227,7 +227,7 @@ footer {
 }
 
 .footer-copy {
-  color: rgba(0,0,0,.5);
+  color: rgb(255 255 255);
 
   font-size: .9rem;
 }
