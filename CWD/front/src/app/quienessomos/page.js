@@ -2,6 +2,7 @@
 
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/translations";
+import OpticalDivider from "@/components/OpticalDivider";
 
 export default function QuienesSomos() {
   const { language } = useLanguage();
@@ -52,7 +53,7 @@ export default function QuienesSomos() {
           </div>
         </section>
 
-        <section className="qs-valores">
+        <section className="qs-valores optical-divider-host">
           <div className="qs-valores-grid">
             {qs.valores.map((item, index) => (
                 <article className="qs-card" key={index}>
@@ -64,6 +65,7 @@ export default function QuienesSomos() {
                 </article>
             ))}
           </div>
+          <OpticalDivider />
         </section>
       </main>
   );

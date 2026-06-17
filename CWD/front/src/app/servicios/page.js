@@ -5,6 +5,7 @@ import {
   FaChartLine,
   FaMobileAlt,
 } from "react-icons/fa";
+import OpticalDivider from "@/components/OpticalDivider";
 
 export const metadata = {
   title: "Code Work Digital - Servicios",
@@ -139,7 +140,7 @@ export default function Servicios() {
 
         {/* CTA */}
 
-        <section className="servicios-cta">
+        <section className="servicios-cta optical-divider-host">
           <div className="servicios-container">
             <h2>
               Tu próximo cliente puede estar buscando exactamente
@@ -158,6 +159,7 @@ export default function Servicios() {
               Empezar mi proyecto
             </Link>
           </div>
+          <OpticalDivider />
         </section>
       </main>
   );

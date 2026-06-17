@@ -9,6 +9,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/translations";
+import OpticalDivider from "@/components/OpticalDivider";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -757,7 +758,7 @@ export default function Home() {
 
               </div>
 
-              <div className="cta-optical-divider" aria-hidden="true" />
+              <OpticalDivider />
 
           </section>
       </main>
