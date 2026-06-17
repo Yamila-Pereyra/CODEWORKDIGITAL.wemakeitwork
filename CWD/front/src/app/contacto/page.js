@@ -1,4 +1,5 @@
 import ContactForm from "@/components/ContactForm";
+import OpticalDivider from "@/components/OpticalDivider";
 import {
   FaWhatsapp,
   FaInstagram,
@@ -13,7 +14,7 @@ export const metadata = {
 export default function Contacto() {
   return (
       <main className="contacto-page">
-        <section id="contacto" className="contacto-section">
+        <section id="contacto" className="contacto-section optical-divider-host">
           <div className="contacto-container">
 
             {/* REDES SOCIALES ARRIBA */}
@@ -127,6 +128,7 @@ export default function Contacto() {
             </div>
 
           </div>
+          <OpticalDivider />
         </section>
       </main>
   );
