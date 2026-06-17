@@ -11,22 +11,14 @@ const GLOBE_CANDIDATE_POINT_COUNT = 60000;
 const EARTH_AXIAL_TILT = THREE.MathUtils.degToRad(23.4);
 const LAND_FEATURE = feature(landTopology, landTopology.objects.land);
 const LAND_POLYGONS = prepareLandPolygons(LAND_FEATURE);
-const X_WEIGHT = 1;
-const Y_WEIGHT = 1;
-const Z_WEIGHT = 1;
-const X_NEGATIVE_COLOR = new THREE.Color(0x00172f);
-const X_POSITIVE_COLOR = new THREE.Color(0x7c3cff);
-const Y_NEGATIVE_COLOR = new THREE.Color(0x000000);
-const Y_POSITIVE_COLOR = new THREE.Color(0xffffff);
-const Z_NEGATIVE_COLOR = new THREE.Color(0x00aaff);
-const Z_POSITIVE_COLOR = new THREE.Color(0xff3355);
-const GRADIENT_BISECTOR = new THREE.Vector3(1, 1, 1).normalize();
-const GLOBE_ROTATION_AXIS = new THREE.Vector3(0, 1, 0);
-const GRADIENT_AXES_QUATERNION = new THREE.Quaternion().setFromUnitVectors(
-  GRADIENT_BISECTOR,
-  GLOBE_ROTATION_AXIS,
-);
-const GRADIENT_COORDINATES_QUATERNION = GRADIENT_AXES_QUATERNION.clone().invert();
+const GLOBE_PALETTE = [
+  new THREE.Color(0xff8a1c),
+  new THREE.Color(0xff5a5f),
+  new THREE.Color(0xff4fcf),
+  new THREE.Color(0xa855f7),
+  new THREE.Color(0x7c3cff),
+  new THREE.Color(0xffd36a),
+];
 
 function getRingsBBox(rings) {
   let minLon = Infinity;
@@ -163,24 +155,40 @@ function lonLatToSphere(longitude, latitude, radius) {
   };
 }
 
-function getAxisGradientColor(point) {
-  // Three.js uses a right-handed coordinate system: +X right, +Y up, +Z toward the camera.
-  // The visual XYZ gradient frame is tilted so its (1, 1, 1) bisector matches the globe's local +Y rotation axis.
-  const gradientPoint = new THREE.Vector3(point.x, point.y, point.z)
-    .applyQuaternion(GRADIENT_COORDINATES_QUATERNION);
-  const tx = (gradientPoint.x + 1) / 2;
-  const ty = (gradientPoint.y + 1) / 2;
-  const tz = (gradientPoint.z + 1) / 2;
-  const colorX = X_NEGATIVE_COLOR.clone().lerp(X_POSITIVE_COLOR, tx);
-  const colorY = Y_NEGATIVE_COLOR.clone().lerp(Y_POSITIVE_COLOR, ty);
-  const colorZ = Z_NEGATIVE_COLOR.clone().lerp(Z_POSITIVE_COLOR, tz);
-  const weightTotal = X_WEIGHT + Y_WEIGHT + Z_WEIGHT;
+function samplePalette(stops, progress) {
+  const clampedProgress = THREE.MathUtils.clamp(progress, 0, 1);
+  const scaledProgress = clampedProgress * (stops.length - 1);
+  const colorIndex = Math.min(Math.floor(scaledProgress), stops.length - 2);
+  const localProgress = scaledProgress - colorIndex;
 
-  return new THREE.Color(
-    (colorX.r * X_WEIGHT + colorY.r * Y_WEIGHT + colorZ.r * Z_WEIGHT) / weightTotal,
-    (colorX.g * X_WEIGHT + colorY.g * Y_WEIGHT + colorZ.g * Z_WEIGHT) / weightTotal,
-    (colorX.b * X_WEIGHT + colorY.b * Y_WEIGHT + colorZ.b * Z_WEIGHT) / weightTotal,
+  return stops[colorIndex].clone().lerp(stops[colorIndex + 1], localProgress);
+}
+
+function getWarmNeonColor(point) {
+  const latitudeFactor = (point.y + 1) / 2;
+  const longitudeWave = (Math.sin(point.longitude * 0.035) + 1) / 2;
+  const depthFactor = (point.z + 1) / 2;
+  const angularFactor = (
+    Math.sin(point.x * 3.2 + point.z * 2.4 + point.y * 1.6)
+    + 1
+  ) / 2;
+  const paletteProgress = THREE.MathUtils.clamp(
+    latitudeFactor * 0.34
+      + longitudeWave * 0.26
+      + depthFactor * 0.24
+      + angularFactor * 0.16,
+    0,
+    1,
   );
+  const color = samplePalette(GLOBE_PALETTE, paletteProgress);
+  const highlight = samplePalette(GLOBE_PALETTE, (paletteProgress + 0.18) % 1);
+  const highlightAmount = THREE.MathUtils.clamp(
+    0.08 + depthFactor * 0.08 + Math.abs(point.y) * 0.05,
+    0,
+    0.18,
+  );
+
+  return color.lerp(highlight, highlightAmount);
 }
 
 function pushGlobePoint(positions, colors, point) {
@@ -190,7 +198,7 @@ function pushGlobePoint(positions, colors, point) {
     point.z * point.radius,
   );
 
-  const color = getAxisGradientColor(point);
+  const color = getWarmNeonColor(point);
   colors.push(color.r, color.g, color.b);
 }
 
