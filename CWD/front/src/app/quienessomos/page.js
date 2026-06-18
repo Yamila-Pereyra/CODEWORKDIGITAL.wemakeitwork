@@ -1,8 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/translations";
 import OpticalDivider from "@/components/OpticalDivider";
+
+const GlobeLab = dynamic(() => import("@/components/labs/globe/GlobeLab"), {
+  ssr: false,
+});
 
 export default function QuienesSomos() {
   const { language } = useLanguage();
@@ -13,6 +18,19 @@ export default function QuienesSomos() {
       <main className="qs-page">
         <section className="qs-hero">
           <div className="qs-hero-layout">
+            <div className="qs-hero-globe-layer" aria-hidden="true">
+              <GlobeLab
+                  wrapper="div"
+                  className="qs-hero-globe"
+                  stageClassName="qs-hero-globe__stage"
+                  ariaLabel="Globo internacional de Code Work Digital"
+                  candidatePointCount={22000}
+                  pixelRatioCap={1.25}
+                  routeSegments={32}
+                  useBloom
+              />
+            </div>
+
             <div className="qs-hero-content">
               <span className="qs-label">{qs.label}</span>
 
@@ -29,14 +47,6 @@ export default function QuienesSomos() {
                   {qs.botonServicios}
                 </a>
               </div>
-            </div>
-
-            <div className="qs-hero-image">
-              <img
-                  src="/imagenes/quienes-somos-hero.png"
-                  alt="Oficina de Code Work Digital"
-                  loading="eager"
-              />
             </div>
           </div>
         </section>
