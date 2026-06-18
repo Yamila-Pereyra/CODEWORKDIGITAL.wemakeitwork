@@ -13,22 +13,39 @@
 /* HERO */
 
 .qs-hero {
+    position: relative;
     width: 100%;
     background: #000;
     padding: 90px 0 110px;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.qs-hero::before {
+    content: none;
+    pointer-events: none;
+}
+
+.qs-hero::after {
+    content: none;
+    pointer-events: none;
 }
 
 .qs-hero-layout {
+    position: relative;
+    z-index: 2;
     width: min(1280px, calc(100% - 80px));
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
-    gap: 80px;
-    align-items: center;
+    min-height: 690px;
+    overflow: visible;
 }
 
 .qs-hero-content {
+    position: relative;
+    z-index: 2;
     min-width: 0;
+    max-width: 760px;
+    padding: 0 0 72px;
 }
 
 .qs-label {
@@ -48,6 +65,7 @@
     line-height: 0.92;
     letter-spacing: -0.075em;
     font-weight: 900;
+    overflow-wrap: anywhere;
 }
 
 .qs-hero-content p {
@@ -56,6 +74,7 @@
     color: rgba(255, 255, 255, 0.72);
     font-size: 1.15rem;
     line-height: 1.65;
+    overflow-wrap: anywhere;
 }
 
 .qs-actions {
@@ -98,35 +117,46 @@
     background: rgba(255, 255, 255, 0.08);
 }
 
-/* IMAGEN / BLOQUE DERECHO */
+/* GLOBO HERO */
 
-.qs-hero-image {
-    position: relative;
-    width: 100%;
-    height: 520px;
-    border-radius: 38px;
-    overflow: hidden;
-    background:
-            linear-gradient(145deg, rgba(56, 189, 248, 0.18), rgba(255,255,255,0.04)),
-            #111;
-    box-shadow: 0 30px 100px rgba(0, 0, 0, 0.55);
+.qs-hero-globe-layer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: visible;
 }
 
-.qs-hero-image::after {
-    content: "";
+.qs-hero-globe {
+    position: absolute;
+    top: 20px;
+    right: -260px;
+    width: clamp(860px, 78vw, 1180px);
+    height: clamp(860px, 78vw, 1180px);
+    overflow: hidden;
+    opacity: 0.74;
+    background:
+            radial-gradient(circle at 50% 48%, rgba(255, 79, 207, 0.12), transparent 34%),
+            radial-gradient(circle at 50% 50%, rgba(8, 126, 164, 0.06), transparent 48%);
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.34) 14%, rgba(0, 0, 0, 0.82) 38%, #000 58%);
+    mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.34) 14%, rgba(0, 0, 0, 0.82) 38%, #000 58%);
+}
+
+.qs-hero-globe__stage {
     position: absolute;
     inset: 0;
-    background:
-            linear-gradient(to top, rgba(0, 0, 0, 0.72), transparent 55%),
-            radial-gradient(circle at 30% 20%, rgba(56, 189, 248, 0.22), transparent 35%);
-    pointer-events: none;
-}
-
-.qs-hero-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+}
+
+.qs-hero-globe__stage canvas {
     display: block;
+    width: 100%;
+    height: 100%;
 }
 
 /* MANIFIESTO */
@@ -245,12 +275,18 @@
     }
 
     .qs-hero-layout {
-        grid-template-columns: 1fr;
-        gap: 50px;
+        width: calc(100% - 48px);
+        min-height: 620px;
     }
 
-    .qs-hero-image {
-        height: 430px;
+    .qs-hero-globe {
+        top: 72px;
+        right: -360px;
+        width: 840px;
+        height: 840px;
+        min-width: 620px;
+        min-height: 620px;
+        opacity: 0.48;
     }
 
     .qs-manifiesto-grid {
@@ -288,6 +324,15 @@
         width: calc(100% - 32px);
     }
 
+    .qs-hero-layout {
+        min-height: 0;
+        overflow: visible;
+    }
+
+    .qs-hero-content {
+        padding-bottom: 0;
+    }
+
     .qs-hero-content h1 {
         font-size: clamp(3rem, 16vw, 4.7rem);
         letter-spacing: -0.06em;
@@ -298,9 +343,8 @@
         font-size: 1rem;
     }
 
-    .qs-hero-image {
-        height: 340px;
-        border-radius: 28px;
+    .qs-hero-globe-layer {
+        display: none;
     }
 
     .qs-manifiesto {
@@ -327,6 +371,6 @@
     }
 
     .qs-hero-content h1 {
-        font-size: 3rem;
+        font-size: 2.18rem;
     }
 }
