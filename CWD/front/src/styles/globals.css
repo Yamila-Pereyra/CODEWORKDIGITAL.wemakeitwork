@@ -6,6 +6,9 @@
   padding: 0;
   box-sizing: border-box;
 }
+:root {
+  --cwd-accent: #FF0077;
+}
 html,
 body {
   width: 100%;
@@ -56,17 +59,34 @@ img {
 .logo-link {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
 }
 
 .logo-img {
-  width: 120px;
-  height: auto;
+  width: 92px;
+  height: 64px;
+  object-fit: contain;
+  flex: 0 0 auto;
 }
 
-.slogan-img {
-  width: 230px;
-  height: auto;
+.brand-copy {
+  display: block;
+  min-width: 0;
+  line-height: 1;
+}
+
+.brand-slogan {
+  display: inline-flex;
+  align-items: center;
+  color: var(--cwd-accent);
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.brand-slogan-mark {
+  color: #fff;
 }
 
 .nav-container {
@@ -97,7 +117,7 @@ nav .holder li a {
   transition: .3s ease;
 }
 nav .holder li a.activo {
-  color: #38bdf8;
+  color: var(--cwd-accent);
   background: transparent;
   position: relative;
 }
@@ -112,7 +132,7 @@ nav .holder li a.activo::after {
 
   height: 2px;
 
-  background: #38bdf8;
+  background: #fff;
   border-radius: 999px;
 }
 
@@ -148,7 +168,7 @@ nav .holder li a {
 
 nav .holder li a:hover,
 nav .holder li a.activo {
-  color: #38bdf8;
+  color: var(--cwd-accent);
 }
 /* ================================
    CONTENIDO
@@ -341,11 +361,12 @@ footer {
   }
 
   .logo-img {
-    width: 100px;
+    width: 76px;
+    height: 52px;
   }
 
-  .slogan-img {
-    width: 200px;
+  .brand-slogan {
+    font-size: 0.82rem;
   }
 
   nav .holder {
@@ -365,11 +386,12 @@ footer {
   }
 
   .logo-img {
-    width: 90px;
+    width: 68px;
+    height: 48px;
   }
 
-  .slogan-img {
-    width: 150px;
+  .brand-slogan {
+    font-size: 0.72rem;
   }
 
   nav .holder {
@@ -405,11 +427,12 @@ footer {
   }
 
   .logo-img {
-    width: 70px;
+    width: 56px;
+    height: 40px;
   }
 
-  .slogan-img {
-    width: 135px;
+  .brand-slogan {
+    font-size: 0.64rem;
   }
 
   nav {
@@ -449,17 +472,17 @@ footer {
   .logo-link {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
   }
 
   .logo-img {
     width: 42px !important;
-    height: auto !important;
+    height: 30px !important;
   }
 
-  .slogan-img {
-    width: 95px !important;
-    height: auto !important;
+  .brand-slogan {
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
   }
 
   .nav-container {
@@ -497,10 +520,11 @@ footer {
 
   .logo-img {
     width: 36px !important;
+    height: 26px !important;
   }
 
-  .slogan-img {
-    width: 82px !important;
+  .brand-slogan {
+    font-size: 0.52rem;
   }
 
   .main-content {
@@ -544,7 +568,7 @@ footer {
 
 .language-dropdown button:hover {
   background: #111;
-  color: #00ff88;
+  color: var(--cwd-accent);
 }
 /* ================================
    LANGUAGE SELECTOR NUEVO
@@ -569,7 +593,7 @@ footer {
 }
 
 .language-btn:hover {
-  border-color: #38bdf8;
+  border-color: var(--cwd-accent);
 }
 
 .language-dropdown {
@@ -604,7 +628,7 @@ footer {
 
 .language-dropdown button:hover {
   background: #222;
-  color: #38bdf8;
+  color: var(--cwd-accent);
 }
 
 /* ================================
@@ -768,4 +792,147 @@ footer {
   overflow: hidden !important;
 
   z-index: 1000001 !important;
+}
+
+.top-header nav .holder li a:hover,
+.top-header nav .holder li a.activo {
+  color: var(--cwd-accent) !important;
+}
+
+.top-header nav .holder li a.activo::after {
+  background: #fff !important;
+}
+
+/* ================================
+   HEADER PROPORTIONS
+================================ */
+.top-header {
+  left: 0 !important;
+  transform: none !important;
+  width: 100% !important;
+  height: 68px !important;
+  min-height: 68px !important;
+  display: grid !important;
+  grid-template-columns: minmax(250px, 1fr) auto minmax(120px, 1fr) !important;
+  align-items: center !important;
+  gap: 24px !important;
+  padding: 0 max(24px, calc((100vw - 1440px) / 2 + 24px)) !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 0 !important;
+}
+
+.top-header .logo-container {
+  justify-self: start !important;
+}
+
+.top-header .logo-link {
+  gap: 14px !important;
+}
+
+.top-header .logo-img {
+  width: 68px !important;
+  height: 48px !important;
+  object-fit: contain !important;
+}
+
+.top-header .brand-slogan {
+  font-size: 0.86rem !important;
+}
+
+.top-header .nav-container {
+  justify-self: center !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.top-header nav {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.top-header nav .holder {
+  display: flex;
+  align-items: center;
+  gap: 2.65rem !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.top-header nav .holder li a {
+  padding: 8px 0 !important;
+  border-radius: 0 !important;
+}
+
+.top-header nav .holder li a:hover,
+.top-header nav .holder li a.activo {
+  color: var(--cwd-accent) !important;
+}
+
+.top-header nav .holder li a.activo::after {
+  left: 0 !important;
+  right: 0 !important;
+  bottom: -7px !important;
+  background: var(--cwd-accent) !important;
+}
+
+.top-header .language-selector {
+  justify-self: end !important;
+}
+
+.main-content {
+  padding-top: 68px !important;
+}
+
+@media (max-width: 1024px) {
+  .top-header {
+    grid-template-columns: minmax(190px, 1fr) auto minmax(90px, 1fr) !important;
+    gap: 18px !important;
+    padding: 0 20px !important;
+  }
+
+  .top-header nav .holder {
+    gap: 1.45rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-header {
+    height: 58px !important;
+    min-height: 58px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    padding: 0 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  }
+
+  .top-header .logo-link {
+    gap: 8px !important;
+  }
+
+  .top-header .logo-img {
+    width: 38px !important;
+    height: 28px !important;
+  }
+
+  .top-header .brand-slogan {
+    font-size: 0.54rem !important;
+  }
+
+  .top-header nav .holder.open {
+    top: 64px !important;
+  }
+
+  .main-content {
+    padding-top: 58px !important;
+  }
 }

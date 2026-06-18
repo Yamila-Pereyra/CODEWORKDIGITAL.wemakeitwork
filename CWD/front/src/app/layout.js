@@ -28,16 +28,16 @@ export default function RootLayout({ children }) {
                 <div className="logo-container">
                     <Link href="/" className="logo-link">
                         <img
-                            src="/imagenes/logofondo-neg.png"
+                            src="/icon.png"
                             className="logo-img"
-                            alt="Logo Code Work Digital"
+                            alt="Isotipo Code Work Digital"
                         />
 
-                        <img
-                            src="/imagenes/Sloganazul-verde.png"
-                            className="slogan-img"
-                            alt="We make it work"
-                        />
+                        <span className="brand-copy">
+                            <span className="brand-slogan">
+                                <span className="brand-slogan-mark">_</span>we make it work
+                            </span>
+                        </span>
                     </Link>
                 </div>
 
