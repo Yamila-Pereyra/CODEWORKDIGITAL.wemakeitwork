@@ -32,12 +32,6 @@ export default function RootLayout({ children }) {
                             className="logo-img"
                             alt="Isotipo Code Work Digital"
                         />
-
-                        <span className="brand-copy">
-                            <span className="brand-slogan">
-                                <span className="brand-slogan-mark">_</span>we make it work
-                            </span>
-                        </span>
                     </Link>
                 </div>
 

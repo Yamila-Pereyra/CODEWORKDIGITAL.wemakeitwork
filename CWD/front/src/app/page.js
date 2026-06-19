@@ -10,6 +10,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/translations";
 import OpticalDivider from "@/components/OpticalDivider";
+import CodeCascade from "@/components/CodeCascade";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -40,16 +41,35 @@ const beneficiosExtended = [
   },
 ];
 
+const HERO_CAROUSEL_MOTION_PRESETS = {
+  balanced: {
+    gapPx: 22,
+    durationMs: 960,
+    easing: "cubic-bezier(0.11, 0.95, 0.18, 1)",
+  },
+  noticeableBrake: {
+    gapPx: 28,
+    durationMs: 1550,
+    easing: "linear(0, 0.2 7%, 0.46 16%, 0.68 30%, 0.82 46%, 0.92 64%, 0.98 86%, 1)",
+  },
+  cinematicBrake: {
+    gapPx: 32,
+    durationMs: 1480,
+    easing: "cubic-bezier(0.06, 0.76, 0.1, 1)",
+  },
+};
+
+const HERO_CAROUSEL_MOTION = HERO_CAROUSEL_MOTION_PRESETS.noticeableBrake;
+const HERO_CAROUSEL_GAP = HERO_CAROUSEL_MOTION.gapPx;
+const HERO_CAROUSEL_RESET_MS = HERO_CAROUSEL_MOTION.durationMs + 80;
+
 export default function Home() {
     const { language } = useLanguage();
     const t = translations[language];
-    const frases = t.homePage.frases;
     const slides = t.homePage.carousel;
     const beneficios = t.homePage.beneficios;
     const servicios = t.homePage.servicios;
     const cta = t.homePage.cta;
-
-  const [index, setIndex] = useState(0);const [fade, setFade] = useState(true);
 
   const beneficiosRef = useRef(null);
   const beneficiosHeaderRef = useRef(null);
@@ -67,33 +87,13 @@ export default function Home() {
 
   const sectionRef = useRef(null);
   const carouselTrackRef = useRef(null);
-  const carouselResetRef = useRef(false);
+  const carouselResetTimeoutRef = useRef(null);
+  const [isCarouselResetting, setIsCarouselResetting] = useState(false);
 
   /* =========================HERO CARRUSEL========================= */
 
   useEffect(() => {
-
-    const intervalo = setInterval(() => {
-
-      setFade(false);
-
-      setTimeout(() => {
-
-        setIndex((prev) =>
-            (prev + 1) % frases.length
-        );
-
-        setFade(true);
-
-      }, 300);
-
-    }, 2500);
-
-    return () => clearInterval(intervalo);
-
-  }, []);
-
-  useEffect(() => {
+    if (!slides.length) return undefined;
 
     const interval = setInterval(() => {
 
@@ -101,95 +101,71 @@ export default function Home() {
           (prev + 1) % slides.length
       );
 
-      setCarouselIndex((prev) =>
-          prev + 1
-      );
+      setCarouselIndex((prev) => {
+          if (prev >= slides.length + 1) return prev;
+          return prev + 1;
+      });
 
     }, 3500);
 
     return () => clearInterval(interval);
 
-  }, []);
+  }, [slides.length]);
 
   useEffect(() => {
+    setIsCarouselResetting(true);
+    setCarouselIndex(1);
+    setSlideIndex(0);
+  }, [slides.length]);
 
-    const track =
-        carouselTrackRef.current;
+  useEffect(() => {
+    if (!isCarouselResetting) return undefined;
 
-    if (!track) return;
-
-    const carouselSlides =
-        gsap.utils.toArray(".hero-slide", track);
-
-    gsap.killTweensOf([track, ...carouselSlides]);
-
-    if (carouselIndex > slides.length + 1) {
-      carouselResetRef.current = false;
-
-      gsap.set(track, {
-        xPercent: -100,
-      });
-
-      carouselSlides.forEach((slide, index) => {
-        gsap.set(slide, {
-          scale: index === 1 ? 1 : 0.985,
-          opacity: index === 1 ? 1 : 0.92,
-        });
-      });
-
-      setSlideIndex(0);
-      setCarouselIndex(1);
-
-      return undefined;
-    }
-
-    if (carouselResetRef.current) {
-      carouselResetRef.current = false;
-
-      gsap.set(track, {
-        xPercent: -100,
-      });
-
-      carouselSlides.forEach((slide, index) => {
-        gsap.set(slide, {
-          scale: index === 1 ? 1 : 0.985,
-          opacity: index === 1 ? 1 : 0.92,
-        });
-      });
-
-      return undefined;
-    }
-
-    gsap.to(track, {
-      xPercent: -(carouselIndex * 100),
-      duration: 0.55,
-      ease: "power2.inOut",
-      onComplete: () => {
-        if (carouselIndex >= slides.length + 1) {
-          carouselResetRef.current = true;
-
-          gsap.set(track, {
-            xPercent: -100,
-          });
-
-          setCarouselIndex(1);
-        }
-      },
+    const frame = requestAnimationFrame(() => {
+      setIsCarouselResetting(false);
     });
 
-    carouselSlides.forEach((slide, index) => {
-      gsap.to(slide, {
-        scale: index === carouselIndex ? 1 : 0.985,
-        opacity: index === carouselIndex ? 1 : 0.92,
-        duration: 0.55,
-        ease: "power2.inOut",
-      });
-    });
+    return () => cancelAnimationFrame(frame);
+  }, [isCarouselResetting]);
 
-    return () =>
-        gsap.killTweensOf([track, ...carouselSlides]);
+  useEffect(() => {
+    if (carouselIndex <= slides.length + 1) return undefined;
 
+    setIsCarouselResetting(true);
+    setCarouselIndex(1);
+    setSlideIndex(0);
+
+    return undefined;
   }, [carouselIndex, slides.length]);
+
+  useEffect(() => {
+    if (carouselIndex !== slides.length + 1) return undefined;
+
+    carouselResetTimeoutRef.current = setTimeout(() => {
+      setIsCarouselResetting(true);
+      setCarouselIndex(1);
+      setSlideIndex(0);
+    }, HERO_CAROUSEL_RESET_MS);
+
+    return () => {
+      if (carouselResetTimeoutRef.current) {
+        clearTimeout(carouselResetTimeoutRef.current);
+      }
+    };
+  }, [carouselIndex, slides.length]);
+
+  const handleHeroCarouselTransitionEnd = (event) => {
+    if (event.target !== carouselTrackRef.current) return;
+    if (carouselIndex !== slides.length + 1) return;
+
+    if (carouselResetTimeoutRef.current) {
+      clearTimeout(carouselResetTimeoutRef.current);
+    }
+
+    setIsCarouselResetting(true);
+    setCarouselIndex(1);
+    setSlideIndex(0);
+  };
 
   /* =========================BENEFICIOS========================= */
 
@@ -570,31 +546,46 @@ export default function Home() {
           />
         </Head>
         {/* ================= HERO SECTION ================= */}
-        <section className="hero">
-          <h1 className="hero-title">
-  <span className="line1 glitch-line" data-text="CodeWork">
-    CodeWork
-  </span>
-            <span className="line2 glitch-line" data-text="Digital">
-    Digital
-  </span>
-          </h1>
-          <p
-              className={`carousel-text ${
-                  fade ? "fade-in" : "fade-out"
-              }`}
-          >
-            {frases[index]}
-          </p>
-        </section>
-          {/* ================= SHOWCASE ================= */}
+        <div className="hero-showcase-composition">
+          <CodeCascade />
 
-          <section className="premium-carousel hero-carousel">
+          <section className="hero">
+            <div className="hero-layout">
+              <div className="hero-brand-lockup">
+                <h1 className="hero-title">
+                  <span className="line1 glitch-line" data-text="CodeWork">
+                    CodeWork
+                  </span>
+                  <span className="line2 glitch-line" data-text="Digital">
+                    Digital
+                  </span>
+                </h1>
+                <p className="carousel-text hero-slogan">
+                  <span className="hero-slogan-mark">_</span>we make it work
+                </p>
+              </div>
+            </div>
+          </section>
+            {/* ================= SHOWCASE ================= */}
+
+            <section
+                className="premium-carousel hero-carousel"
+                style={{
+                    "--hero-carousel-gap": `${HERO_CAROUSEL_MOTION.gapPx}px`,
+                    "--hero-carousel-duration": `${HERO_CAROUSEL_MOTION.durationMs}ms`,
+                    "--hero-carousel-easing": HERO_CAROUSEL_MOTION.easing,
+                }}
+            >
 
               <div
-                  className="hero-track"
+                  className={`hero-track ${
+                      isCarouselResetting ? "is-resetting" : ""
+                  }`}
                   ref={carouselTrackRef}
-                  style={{ transform: "translateX(-100%)" }}
+                  style={{
+                      transform: `translate3d(calc(-${carouselIndex * 100}% - ${carouselIndex * HERO_CAROUSEL_GAP}px), 0, 0)`,
+                  }}
+                  onTransitionEnd={handleHeroCarouselTransitionEnd}
               >
 
               {heroCarouselSlides.map(({ slide, realIndex, key }, i) => (
@@ -609,6 +600,8 @@ export default function Home() {
                       <img
                           src={slide.image}
                           alt={slide.title}
+                          loading="eager"
+                          decoding="async"
                       />
 
                       <div className={`slide-content slide-${realIndex}`}>
@@ -622,28 +615,36 @@ export default function Home() {
 
               </div>
 
-          </section>
+            </section>
 
-          <div className="premium-dots outside-dots">
+            <div className="hero-carousel-progress outside-dots" aria-label="Progreso del carrusel principal">
 
               {slides.map((_, i) => (
 
                   <button
                       key={i}
+                      type="button"
                       onClick={() => {
                           setSlideIndex(i);
                           setCarouselIndex(i + 1);
                       }}
-                      className={
-                          i === slideIndex
-                              ? "active"
-                              : ""
-                      }
-                  />
+                      className={`hero-carousel-progress__segment ${
+                          i < slideIndex
+                              ? "is-filled"
+                              : i === slideIndex
+                                  ? "is-active"
+                                  : "is-pending"
+                      }`}
+                      aria-label={`Ir al slide ${i + 1} de ${slides.length}`}
+                      aria-current={i === slideIndex ? "true" : undefined}
+                  >
+                    <span className="hero-carousel-progress__fill" />
+                  </button>
 
               ))}
 
-          </div>
+            </div>
+        </div>
           {/* ================= BENEFICIOS / NOSOTROS ================= */}
           <section className="beneficios" ref={beneficiosRef}>
               <div className="beneficios-layout">
@@ -751,7 +752,7 @@ export default function Home() {
 
                   <Link
                       href="/contacto"
-                      className="btn-contactar"
+                      className="btn-contactar cta-final-comet-button"
                   >
                       {cta.boton}
                   </Link>

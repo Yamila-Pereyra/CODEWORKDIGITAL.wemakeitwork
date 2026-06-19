@@ -69,25 +69,6 @@ img {
   flex: 0 0 auto;
 }
 
-.brand-copy {
-  display: block;
-  min-width: 0;
-  line-height: 1;
-}
-
-.brand-slogan {
-  display: inline-flex;
-  align-items: center;
-  color: var(--cwd-accent);
-  font-size: 0.92rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-}
-
-.brand-slogan-mark {
-  color: #fff;
-}
 
 .nav-container {
   justify-self: center;
@@ -365,10 +346,6 @@ footer {
     height: 52px;
   }
 
-  .brand-slogan {
-    font-size: 0.82rem;
-  }
-
   nav .holder {
     gap: 1.5rem;
   }
@@ -388,10 +365,6 @@ footer {
   .logo-img {
     width: 68px;
     height: 48px;
-  }
-
-  .brand-slogan {
-    font-size: 0.72rem;
   }
 
   nav .holder {
@@ -429,10 +402,6 @@ footer {
   .logo-img {
     width: 56px;
     height: 40px;
-  }
-
-  .brand-slogan {
-    font-size: 0.64rem;
   }
 
   nav {
@@ -480,11 +449,6 @@ footer {
     height: 30px !important;
   }
 
-  .brand-slogan {
-    font-size: 0.58rem;
-    letter-spacing: 0.06em;
-  }
-
   .nav-container {
     display: flex;
     align-items: center;
@@ -521,10 +485,6 @@ footer {
   .logo-img {
     width: 36px !important;
     height: 26px !important;
-  }
-
-  .brand-slogan {
-    font-size: 0.52rem;
   }
 
   .main-content {
@@ -808,6 +768,7 @@ footer {
 ================================ */
 .top-header {
   left: 0 !important;
+  top: 22px !important;
   transform: none !important;
   width: 100% !important;
   height: 68px !important;
@@ -817,11 +778,14 @@ footer {
   align-items: center !important;
   gap: 24px !important;
   padding: 0 max(24px, calc((100vw - 1440px) / 2 + 24px)) !important;
-  background: transparent !important;
+  background: rgba(0, 0, 0, 0.42) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(0.72);
+  backdrop-filter: blur(14px) saturate(0.72);
   border: 0 !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16) !important;
   border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 .top-header .logo-container {
@@ -836,10 +800,6 @@ footer {
   width: 68px !important;
   height: 48px !important;
   object-fit: contain !important;
-}
-
-.top-header .brand-slogan {
-  font-size: 0.86rem !important;
 }
 
 .top-header .nav-container {
@@ -858,7 +818,7 @@ footer {
 .top-header nav .holder {
   display: flex;
   align-items: center;
-  gap: 2.65rem !important;
+  gap: 3.25rem !important;
   padding: 0 !important;
   background: transparent !important;
   border: 0 !important;
@@ -866,28 +826,61 @@ footer {
 }
 
 .top-header nav .holder li a {
+  font-size: 1rem !important;
+  font-weight: 800 !important;
   padding: 8px 0 !important;
   border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .top-header nav .holder li a:hover,
+.top-header nav .holder li a:focus,
+.top-header nav .holder li a:focus-visible,
 .top-header nav .holder li a.activo {
   color: var(--cwd-accent) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .top-header nav .holder li a.activo::after {
   left: 0 !important;
   right: 0 !important;
-  bottom: -7px !important;
-  background: var(--cwd-accent) !important;
+  bottom: -8px !important;
+  background: #fff !important;
 }
 
 .top-header .language-selector {
   justify-self: end !important;
 }
 
+.top-header .language-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  width: auto !important;
+  min-width: 86px !important;
+  height: 40px !important;
+  padding: 0 13px !important;
+}
+
+.top-header .language-globe {
+  width: 14px !important;
+  height: 14px !important;
+  color: #fff !important;
+  flex: 0 0 auto !important;
+}
+
+.top-header .language-caret {
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-size: 0.72rem !important;
+  line-height: 1 !important;
+}
+
 .main-content {
-  padding-top: 68px !important;
+  padding-top: 90px !important;
 }
 
 @media (max-width: 1024px) {
@@ -900,10 +893,15 @@ footer {
   .top-header nav .holder {
     gap: 1.45rem !important;
   }
+
+  .top-header nav .holder li a {
+    font-size: .94rem !important;
+  }
 }
 
 @media (max-width: 768px) {
   .top-header {
+    top: 19px !important;
     height: 58px !important;
     min-height: 58px !important;
     display: flex !important;
@@ -911,8 +909,8 @@ footer {
     justify-content: space-between !important;
     gap: 10px !important;
     padding: 0 16px !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16) !important;
   }
 
   .top-header .logo-link {
@@ -924,8 +922,16 @@ footer {
     height: 28px !important;
   }
 
-  .top-header .brand-slogan {
-    font-size: 0.54rem !important;
+  .top-header .language-btn {
+    min-width: 74px !important;
+    height: 34px !important;
+    padding: 0 10px !important;
+    gap: 6px !important;
+  }
+
+  .top-header .language-globe {
+    width: 12px !important;
+    height: 12px !important;
   }
 
   .top-header nav .holder.open {
@@ -933,6 +939,6 @@ footer {
   }
 
   .main-content {
-    padding-top: 58px !important;
+    padding-top: 77px !important;
   }
 }
