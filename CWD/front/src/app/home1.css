@@ -160,12 +160,213 @@ nav .holder li a.activo {
 /* ================================
    HERO
 ================================ */
+.hero-showcase-composition {
+  --hero-carousel-peek-offset: clamp(293px, 22.7vw, 350px);
+  --hero-carousel-after-gap: 170px;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  overflow-anchor: none;
+  background: #000;
+}
+
 .hero {
   margin-top: 25px;
-  padding-bottom: 60px;
+  padding-bottom: 0;
   text-align: center;
+  overflow: visible;
+  overflow-anchor: none;
+  background: transparent;
+}
+
+.hero-layout {
+  position: relative;
+  width: min(1420px, calc(100% - 48px));
+  min-height: clamp(495px, 40vw, 590px);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.hero-brand-lockup {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  max-width: calc(100% - 32px);
+  flex-direction: column;
+  align-items: flex-end;
+  justify-self: end;
+  margin-right: clamp(24px, 4vw, 74px);
+  text-align: right;
+}
+
+.code-cascade {
+  position: absolute;
+  left: max(24px, calc((100% - 1420px) / 2));
+  top: 24px;
+  z-index: 1;
+  display: block;
+  justify-self: start;
+  width: min(460px, calc(100% - 48px));
+  text-align: left;
+  pointer-events: none;
+  overflow-anchor: none;
+}
+
+.code-cascade-card {
+  position: relative;
   overflow: hidden;
-  background: black;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  opacity: .81;
+  transform: translateY(0);
+}
+
+.code-cascade-card.is-typing {
+  box-shadow: none;
+}
+
+.code-cascade-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 0 0 10px;
+  border-bottom: 0;
+  color: rgba(255,255,255,.74);
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.code-cascade-header small {
+  min-width: 0;
+  overflow: hidden;
+  color: rgba(255,255,255,.42);
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-overflow: ellipsis;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.code-cascade-stream {
+  height: var(--code-cascade-height, clamp(680px, 52vw, 780px));
+  overflow-anchor: none;
+}
+
+.code-cascade-viewport {
+  position: relative;
+  height: calc(100% - 41px);
+  overflow: hidden;
+  overflow-anchor: none;
+  -webkit-mask-image: linear-gradient(
+          180deg,
+          #000 0%,
+          #000 calc(100% - var(--code-cascade-fade-height, 262px)),
+          rgba(0,0,0,.48) calc(100% - var(--code-cascade-fade-midpoint, 100px)),
+          transparent 100%
+  );
+  mask-image: linear-gradient(
+          180deg,
+          #000 0%,
+          #000 calc(100% - var(--code-cascade-fade-height, 262px)),
+          rgba(0,0,0,.48) calc(100% - var(--code-cascade-fade-midpoint, 100px)),
+          transparent 100%
+  );
+}
+
+.code-cascade-viewport::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--code-cascade-fade-height, 262px);
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,.28) 72%, rgba(0,0,0,.82));
+  pointer-events: none;
+}
+
+.code-cascade-code {
+  margin: 0;
+  padding: 12px 8px 14px;
+  color: rgba(229,237,247,.74);
+  font-family: "Courier New", monospace;
+  font-size: .72rem;
+  line-height: var(--code-cascade-line-height, 1.62);
+  overflow-anchor: none;
+  white-space: pre-wrap;
+}
+
+.code-cascade-line {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 10px;
+  min-height: var(--code-cascade-line-height, 1.62em);
+  opacity: calc(.9 - (max(var(--line-index) - 16, 0) * .044));
+  transform: translateY(0);
+  transition:
+          opacity 240ms ease,
+          transform 240ms ease;
+}
+
+.code-cascade-line.is-empty {
+  min-height: var(--code-cascade-line-height, 1.62em);
+}
+
+.code-line-number {
+  color: rgba(255,255,255,.25);
+  user-select: none;
+}
+
+.code-line-content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.code-token.is-keyword {
+  color: #FF5DA9;
+}
+
+.code-token.is-string {
+  color: #7dd3fc;
+}
+
+.code-token.is-number {
+  color: #fbbf24;
+}
+
+.code-token.is-symbol {
+  color: rgba(255,255,255,.52);
+}
+
+.code-cursor {
+  display: inline-block;
+  width: 6px;
+  height: 1.05em;
+  margin-left: 2px;
+  transform: translateY(2px);
+  border-radius: 999px;
+  background: #FF0077;
+  box-shadow: 0 0 10px rgba(255,0,119,.45);
+  animation: codeCursorPulse 900ms ease-in-out infinite;
+}
+
+@keyframes codeCursorPulse {
+  0%, 100% { opacity: .28; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .code-cursor {
+    animation: none;
+    opacity: .72;
+  }
 }
 
 .hero-title {
@@ -197,13 +398,18 @@ nav .holder li a.activo {
 }
 
 .carousel-text {
-  margin-top: 20px;
-  margin-left: clamp(80px, 22vw, 320px);
+  margin-top: calc(20px + 1em);
+  margin-left: 0;
   font-size: 1.3rem;
   color: #FF0077;
   height: 30px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-align: right;
+}
 
-  transition: opacity 0.3s ease, transform 0.3s ease;
+.hero-slogan-mark {
+  color: #fff;
 }
 
 /* GLITCH */
@@ -476,9 +682,10 @@ nav .holder li a.activo {
 
 .premium-carousel {
   position: relative;
+  z-index: 4;
   width: min(1300px, 92%);
   height: 650px;
-  margin: 100px auto;
+  margin: var(--hero-carousel-peek-offset) auto 100px;
   overflow: hidden;
   border-radius: 32px;
   background: #000;
@@ -487,22 +694,27 @@ nav .holder li a.activo {
 
 .hero-track {
   display: flex;
+  gap: var(--hero-carousel-gap, 22px);
   height: 100%;
+  transition: transform var(--hero-carousel-duration, 960ms) var(--hero-carousel-easing, cubic-bezier(0.11, 0.95, 0.18, 1));
   will-change: transform;
+}
+
+.hero-track.is-resetting {
+  transition: none;
 }
 
 .premium-slide {
   position: relative;
   flex: 0 0 100%;
   height: 100%;
-  opacity: .92;
-  transform: scale(.985);
-  will-change: transform, opacity;
+  opacity: 1;
+  transform: none;
 }
 
 .premium-slide.active {
   opacity: 1;
-  transform: scale(1);
+  transform: none;
 }
 
 .premium-slide img {
@@ -544,6 +756,90 @@ nav .holder li a.activo {
   width: 80px;
   background: white;
 }
+
+.hero-carousel-progress {
+  --carousel-progress-duration: 3500ms;
+  width: min(520px, calc(100% - 32px));
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  margin: -56px auto var(--hero-carousel-after-gap);
+  margin-left: max(4%, calc((100vw - 1300px) / 2));
+  margin-right: auto;
+  position: relative;
+  z-index: 10;
+}
+
+.hero-carousel-progress__segment {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 42px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.hero-carousel-progress__segment::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.hero-carousel-progress__fill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  border-radius: 999px;
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, rgba(255, 0, 119, 0.58), #FF0077 52%, rgba(255, 130, 190, 0.95));
+  box-shadow:
+          0 0 8px rgba(255, 0, 119, 0.28),
+          0 0 16px rgba(255, 0, 119, 0.12);
+}
+
+.hero-carousel-progress__segment.is-filled .hero-carousel-progress__fill {
+  transform: translateY(-50%) scaleX(1);
+}
+
+.hero-carousel-progress__segment.is-active .hero-carousel-progress__fill {
+  animation: cwdCarouselProgress var(--carousel-progress-duration) linear forwards;
+}
+
+.hero-carousel-progress__segment:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.88);
+  outline-offset: 4px;
+}
+
+@keyframes cwdCarouselProgress {
+  from {
+    transform: translateY(-50%) scaleX(0);
+  }
+
+  to {
+    transform: translateY(-50%) scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-carousel-progress__segment.is-active .hero-carousel-progress__fill {
+    animation: none;
+    transform: translateY(-50%) scaleX(1);
+  }
+}
+
 .premium-slide img {
   width: 100%;
   height: 100%;
@@ -656,7 +952,9 @@ nav .holder li a.activo {
   position: relative;
   padding: 18px;
   background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-  border: 1px solid rgba(255,255,255,.1);
+  border: 0;
+  border-right: 1px solid rgba(255,255,255,.2);
+  border-bottom: 1px solid rgba(255,255,255,.2);
   box-shadow: 0 30px 90px rgba(0,0,0,.45);
   transition: .35s ease;
   overflow: hidden;
@@ -664,7 +962,8 @@ nav .holder li a.activo {
 }
 
 .beneficio-card:focus-visible {
-  border-color: rgba(56,189,248,.55);
+  border-right-color: rgba(255,255,255,.28);
+  border-bottom-color: rgba(255,255,255,.28);
   box-shadow:
           0 30px 90px rgba(0,0,0,.45),
           0 0 0 3px rgba(56,189,248,.2);
@@ -1009,8 +1308,7 @@ nav .holder li a.activo {
     align-self: center;
   }
   @media (max-width: 768px) {
-    .hero-title .line2,
-    .carousel-text {
+    .hero-title .line2 {
       margin-left: 0;
     }
   }
@@ -1125,6 +1423,98 @@ nav .holder li a.activo {
 
   box-shadow:
           0 20px 60px rgba(255,255,255,.15);
+}
+
+.cta-final-comet-button {
+  --cta-comet-angle: 0deg;
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  min-height: 58px;
+  padding: 18px 42px;
+  border-radius: 999px;
+  background: #050505;
+  border: 1px solid rgba(255, 0, 119, .42);
+  color: #fff;
+  box-shadow:
+          inset 0 0 0 1px rgba(255,255,255,.04),
+          0 16px 50px rgba(0,0,0,.46),
+          0 0 14px rgba(255,0,119,.1);
+}
+
+.cta-final-comet-button::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background:
+          conic-gradient(
+                  from var(--cta-comet-angle),
+                  transparent 0deg,
+                  transparent 282deg,
+                  rgba(255, 0, 119, .25) 302deg,
+                  #FF0077 326deg,
+                  rgba(255, 210, 234, .92) 338deg,
+                  rgba(255, 0, 119, .35) 350deg,
+                  transparent 356deg,
+                  transparent 360deg
+          );
+  pointer-events: none;
+  -webkit-mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: ctaCometBorder 3.8s linear infinite;
+}
+
+.cta-final-comet-button:hover {
+  color: #fff;
+  box-shadow:
+          inset 0 0 0 1px rgba(255,255,255,.07),
+          0 20px 60px rgba(0,0,0,.52),
+          0 0 28px rgba(255,0,119,.18);
+}
+
+.cta-final-comet-button > * {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-final-comet-button:focus-visible {
+  outline: 2px solid rgba(255,255,255,.9);
+  outline-offset: 5px;
+}
+
+@property --cta-comet-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes ctaCometBorder {
+  to {
+    --cta-comet-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-final-comet-button::before {
+    animation: none;
+    background:
+            linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,0,119,.72), rgba(255,255,255,.12));
+  }
+}
+
+@supports not ((mask-composite: exclude) or (-webkit-mask-composite: xor)) {
+  .cta-final-comet-button::before {
+    display: none;
+  }
 }
 
 /* ===================================
@@ -1313,8 +1703,9 @@ nav .holder li a.activo {
     justify-content: center;
   }
 
-  .hero-title {
-    font-size: clamp(3.2rem, 14vw, 7rem);
+  .hero .hero-title {
+    font-size: clamp(2.15rem, 10.4vw, 2.6rem);
+    letter-spacing: -0.06em;
   }
 
   .hero-title .line2,
@@ -1397,7 +1788,17 @@ nav .holder li a.activo {
 
   .outside-dots {
     width: calc(100% - 32px);
-    margin: -18px auto 50px;
+    margin: -18px auto var(--hero-carousel-after-gap);
+  }
+
+  .hero-carousel-progress {
+    gap: 8px;
+    margin-left: 16px;
+    margin-right: auto;
+  }
+
+  .hero-carousel-progress__segment {
+    min-width: 28px;
   }
 
   .beneficios {
@@ -1479,6 +1880,22 @@ nav .holder li a.activo {
     height: 360px;
   }
 
+  .hero-brand-lockup {
+    width: calc(100% - 32px);
+    align-items: center;
+  }
+
+  .hero .hero-title {
+    font-size: clamp(2.15rem, 10.4vw, 2.6rem);
+    letter-spacing: -0.06em;
+  }
+
+  .carousel-text {
+    align-self: flex-end;
+    padding-right: 0;
+    text-align: right;
+  }
+
   .slide-content {
     left: 22px;
     max-width: calc(100% - 44px);
@@ -1536,5 +1953,76 @@ nav .holder li a.activo {
   .slide-content.slide-2 p {
     font-size: 0.85rem !important;
     line-height: 1.35 !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero-showcase-composition {
+    --hero-carousel-peek-offset: clamp(139px, 19.5vw, 195px);
+    --hero-carousel-after-gap: 114px;
+    display: grid;
+  }
+
+  .hero {
+    order: 1;
+  }
+
+  .hero-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .hero-brand-lockup {
+    order: 1;
+    margin-right: 0;
+    align-items: center;
+    justify-self: center;
+    text-align: center;
+    transform: none;
+  }
+
+  .code-cascade {
+    position: relative;
+    left: auto;
+    top: auto;
+    order: 2;
+    justify-self: center;
+    width: min(680px, calc(100% - 32px));
+  }
+
+  .code-cascade-stream {
+    height: var(--code-cascade-tablet-height, clamp(360px, 52vw, 460px));
+  }
+
+  .premium-carousel {
+    order: 3;
+  }
+
+  .hero-carousel-progress {
+    order: 4;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-layout {
+    width: calc(100% - 32px);
+    min-height: 0;
+  }
+
+  .code-cascade {
+    width: 100%;
+  }
+
+  .code-cascade-card {
+    border-radius: 0;
+  }
+
+  .code-cascade-stream {
+    height: var(--code-cascade-mobile-height, clamp(260px, 68vw, 340px));
+  }
+
+  .code-cascade-code {
+    font-size: .65rem;
   }
 }

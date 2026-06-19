@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FaGlobeAmericas } from "react-icons/fa";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function LanguageSelector() {
@@ -22,8 +23,12 @@ export default function LanguageSelector() {
                 className="language-btn"
                 type="button"
                 onClick={() => setOpen((prev) => !prev)}
+                aria-label="Cambiar idioma"
+                aria-expanded={open}
             >
-                {language?.toUpperCase() || "ES"} ▾
+                <FaGlobeAmericas className="language-globe" aria-hidden="true" />
+                <span>{language?.toUpperCase() || "ES"}</span>
+                <span className="language-caret" aria-hidden="true">▾</span>
             </button>
 
             {open && (

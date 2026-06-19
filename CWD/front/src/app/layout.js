@@ -28,15 +28,9 @@ export default function RootLayout({ children }) {
                 <div className="logo-container">
                     <Link href="/" className="logo-link">
                         <img
-                            src="/imagenes/logofondo-neg.png"
+                            src="/icon.png"
                             className="logo-img"
-                            alt="Logo Code Work Digital"
-                        />
-
-                        <img
-                            src="/imagenes/Sloganazul-verde.png"
-                            className="slogan-img"
-                            alt="We make it work"
+                            alt="Isotipo Code Work Digital"
                         />
                     </Link>
                 </div>
