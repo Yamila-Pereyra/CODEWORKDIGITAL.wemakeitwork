@@ -24,10 +24,7 @@ export default function QuienesSomos() {
                   className="qs-hero-globe"
                   stageClassName="qs-hero-globe__stage"
                   ariaLabel="Globo internacional de Code Work Digital"
-                  candidatePointCount={22000}
-                  pixelRatioCap={1.25}
-                  routeSegments={32}
-                  useBloom
+                  progressiveReveal
               />
             </div>
 
