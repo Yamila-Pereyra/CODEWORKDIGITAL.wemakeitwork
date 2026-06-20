@@ -5,5 +5,5 @@ export const metadata = {
 };
 
 export default function GlobeLabPage() {
-  return <GlobeLab />;
+  return <GlobeLab progressiveReveal />;
 }
