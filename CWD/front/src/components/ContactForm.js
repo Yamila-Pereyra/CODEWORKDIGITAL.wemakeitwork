@@ -1,14 +1,19 @@
 'use client'
 
 import { useState } from "react";
-import { AiOutlineSend } from 'react-icons/ai';
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translations } from "@/translations";
 
 
 export default function ContactForm({ postUr }) {
+  const { language } = useLanguage();
+  const t = translations[language] || translations.es;
+  const formCopy = t.contactPage.form;
   const initialForm = { nombre: '', email: '', telefono: '', mensaje: '' };
   const [formData, setFormData] = useState(initialForm);
   const [sending, setSending] = useState(false);
   const [msg, setMsg] = useState('');
+  const [isError, setIsError] = useState(false);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -18,6 +23,7 @@ export default function ContactForm({ postUr }) {
   const handleSubmit = async e => {
     e.preventDefault();
     setMsg('');
+    setIsError(false);
     setSending(true);
 
     try {
@@ -30,14 +36,16 @@ export default function ContactForm({ postUr }) {
       if (!rawResponse.ok) throw new Error(`HTTP error! status: ${rawResponse.status}`);
       const response = await rawResponse.json();
 
-      setMsg(response.message || "Mensaje enviado correctamente");
+      setMsg(response.message || formCopy.success);
+      setIsError(Boolean(response.error));
       setSending(false);
 
       if (response.error === false) setFormData(initialForm);
 
     } catch (error) {
       console.error("Error enviando formulario:", error);
-      setMsg("Error enviando mensaje. Intenta nuevamente.");
+      setMsg(formCopy.error);
+      setIsError(true);
       setSending(false);
     }
   }
@@ -45,35 +53,35 @@ export default function ContactForm({ postUr }) {
   return (
     <section className="contacto-section">
       <div className="contacto-form-wrapper">
-        <h3>Formulario de contacto</h3>
+        <h3>{formCopy.title}</h3>
         <form onSubmit={handleSubmit} className="contacto-form">
           <p>
-            <label>Nombre</label>
+            <label>{formCopy.name}</label>
             <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
           </p>
 
           <p>
-            <label>Email</label>
+            <label>{formCopy.email}</label>
             <input type="email" name="email" value={formData.email} onChange={handleChange} required />
           </p>
 
           <p>
-            <label>Teléfono</label>
+            <label>{formCopy.phone}</label>
             <input type="text" name="telefono" value={formData.telefono} onChange={handleChange} />
           </p>
 
           <p>
-            <label>Mensaje</label>
+            <label>{formCopy.message}</label>
             <textarea name="mensaje" rows="4" value={formData.mensaje} onChange={handleChange} required />
           </p>
 
           <button type="submit" className="btn-primary form-btn" disabled={sending}>
-            {sending ? "Enviando..." : <>Enviar mensaje <AiOutlineSend /></>}
+            {sending ? formCopy.sending : formCopy.submit}
           </button>
         </form>
 
         {msg && (
-          <p className={`form-msg ${msg.includes("Error") ? "error" : ""}`}>{msg}</p>
+          <p className={`form-msg ${isError ? "error" : ""}`}>{msg}</p>
         )}
       </div>
     </section>
