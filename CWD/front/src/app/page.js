@@ -14,33 +14,6 @@ import CodeCascade from "@/components/CodeCascade";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const beneficiosExtended = [
-  {
-    title: "Websites que convierten",
-    text: "Diseñamos y desarrollamos sitios web rápidos, claros y preparados para crecer. Cuidamos la experiencia visual, la estructura técnica y el rendimiento para que tu presencia digital no sea solo atractiva, sino también funcional, medible y efectiva.",
-  },
-  {
-    title: "Apps mobile a medida",
-    text: "Creamos aplicaciones móviles pensadas para resolver problemas reales. Desde la idea inicial hasta una versión funcional, priorizamos interfaces simples, flujos claros y una base técnica sólida para que la app pueda evolucionar sin perder estabilidad.",
-  },
-  {
-    title: "Backend robusto",
-    text: "Construimos APIs, servicios y lógica de negocio con foco en seguridad, escalabilidad y mantenibilidad. Nos importa que el sistema funcione bien por dentro: contratos claros, datos consistentes, integraciones confiables y código preparado para crecer.",
-  },
-  {
-    title: "Integraciones inteligentes",
-    text: "Conectamos sistemas, plataformas, bases de datos y servicios externos para que trabajen como una unidad. Reducimos procesos manuales, mejoramos la trazabilidad y ayudamos a que la tecnología acompañe el flujo real de tu negocio.",
-  },
-  {
-    title: "Performance y estabilidad",
-    text: "Optimizamos aplicaciones para que respondan mejor, fallen menos y sean más fáciles de monitorear. Analizamos cuellos de botella, tiempos de carga, errores recurrentes y puntos críticos para mejorar la experiencia del usuario final.",
-  },
-  {
-    title: "Evolución continua",
-    text: "No pensamos el software como algo estático. Acompañamos mejoras, nuevas funcionalidades, mantenimiento y ajustes técnicos para que tu producto digital pueda adaptarse al mercado, a tus usuarios y a nuevas oportunidades de negocio.",
-  },
-];
-
 const HERO_CAROUSEL_MOTION_PRESETS = {
   balanced: {
     gapPx: 22,
@@ -62,8 +35,6 @@ const HERO_CAROUSEL_MOTION_PRESETS = {
 const HERO_CAROUSEL_MOTION = HERO_CAROUSEL_MOTION_PRESETS.noticeableBrake;
 const HERO_CAROUSEL_GAP = HERO_CAROUSEL_MOTION.gapPx;
 const HERO_CAROUSEL_RESET_MS = HERO_CAROUSEL_MOTION.durationMs + 80;
-const HERO_VALUE_PROPOSITION =
-  "Creamos experiencias digitales respaldadas por ingeniería, privacidad y métricas reales.";
 
 const NARRATIVE_TIMING = {
   triadInitialDelayMs: 220,
@@ -78,10 +49,6 @@ const NARRATIVE_TIMING = {
   phraseRevealDurationMs: 420,
 };
 
-const HERO_VALUE_WORDS = HERO_VALUE_PROPOSITION.split(" ");
-const HERO_VALUE_CHAR_COUNT = Array.from(HERO_VALUE_PROPOSITION).filter(
-    (character) => character !== " "
-).length;
 const HERO_MEDIMOS_START_MS =
     NARRATIVE_TIMING.triadInitialDelayMs +
     NARRATIVE_TIMING.triadWordGapMs * 2;
@@ -93,16 +60,27 @@ const HERO_VALUE_START_DELAY_MS =
         HERO_PHRASE_START_AFTER_TRIAD_MS -
         NARRATIVE_TIMING.phraseVisualLeadMs
     );
-const HERO_VALUE_TYPING_MS =
-    HERO_VALUE_CHAR_COUNT * NARRATIVE_TIMING.phraseCharStepMs + 320;
 
 export default function Home() {
     const { language } = useLanguage();
     const t = translations[language];
     const slides = t.homePage.carousel;
     const beneficios = t.homePage.beneficios;
+    const beneficiosExtended = t.homePage.beneficiosExtended || [];
+    const beneficiosHeader = t.homePage.beneficiosHeader;
+    const beneficiosTitleLines = useMemo(
+        () => beneficiosHeader.lineas || [beneficiosHeader.titulo],
+        [beneficiosHeader]
+    );
     const servicios = t.homePage.servicios;
     const cta = t.homePage.cta;
+    const narrative = t.homePage.narrative;
+    const heroValueProposition = narrative.valueProposition;
+    const heroValueCharCount = Array.from(heroValueProposition).filter(
+        (character) => character !== " "
+    ).length;
+    const heroValueTypingMs =
+        heroValueCharCount * NARRATIVE_TIMING.phraseCharStepMs + 320;
 
   const beneficiosRef = useRef(null);
   const beneficiosHeaderRef = useRef(null);
@@ -126,7 +104,7 @@ export default function Home() {
   const valuePropositionWords = useMemo(() => {
     let characterIndex = 0;
 
-    return HERO_VALUE_WORDS.map((word, wordIndex) => ({
+    return heroValueProposition.split(" ").map((word, wordIndex) => ({
       id: `${word}-${wordIndex}`,
       chars: Array.from(word).map((character) => {
         const nextCharacter = {
@@ -137,7 +115,7 @@ export default function Home() {
         return nextCharacter;
       }),
     }));
-  }, []);
+  }, [heroValueProposition]);
 
   /* =========================HERO CARRUSEL========================= */
 
@@ -176,11 +154,11 @@ export default function Home() {
             setValuePropositionPhase("complete");
           }, NARRATIVE_TIMING.phraseRevealDurationMs);
         }, NARRATIVE_TIMING.phraseFadeOutDurationMs + NARRATIVE_TIMING.phraseRevealDelayMs);
-      }, HERO_VALUE_TYPING_MS + NARRATIVE_TIMING.phraseHoldAfterTypingMs);
+      }, heroValueTypingMs + NARRATIVE_TIMING.phraseHoldAfterTypingMs);
     }, HERO_VALUE_START_DELAY_MS);
 
     return () => timers.forEach(clearTimeout);
-  }, []);
+  }, [heroValueTypingMs, heroValueProposition]);
 
   useEffect(() => {
     if (!slides.length) return undefined;
@@ -323,6 +301,8 @@ export default function Home() {
 
     const mm = gsap.matchMedia();
 
+    let refreshFrame;
+
     const ctx = gsap.context(() => {
 
       mm.add("(min-width: 1101px)", () => {
@@ -383,7 +363,7 @@ export default function Home() {
           y: 0,
         });
 
-        ScrollTrigger.create({
+        const pinTrigger = ScrollTrigger.create({
           trigger: beneficiosSection,
           pin: beneficiosHeader,
           start: `top ${WHY_PIN_TOP}px`,
@@ -464,7 +444,7 @@ export default function Home() {
           eyebrowSetters.y(-4 * eyebrowProgress);
         };
 
-        ScrollTrigger.create({
+        const fadeTrigger = ScrollTrigger.create({
           trigger: beneficiosSection,
           start: `top ${WHY_PIN_TOP}px`,
           endTrigger: lastCard,
@@ -479,16 +459,25 @@ export default function Home() {
           onLeaveBack: updateGeometricFade,
         });
 
+        refreshFrame = requestAnimationFrame(() => {
+          pinTrigger.refresh();
+          fadeTrigger.refresh();
+          updateGeometricFade();
+        });
+
       });
 
     }, beneficiosSection);
 
     return () => {
-      mm.revert();
+      if (refreshFrame) {
+        cancelAnimationFrame(refreshFrame);
+      }
       ctx.revert();
+      mm.revert();
     };
 
-  }, []);
+  }, [language, beneficiosTitleLines]);
 
   /* =========================NOSOTROS APPLE EFFECT========================= */
 
@@ -669,13 +658,18 @@ export default function Home() {
                     }}
                 >
                   <h2 className="brutal-triad" id="cwd-narrative-title">
-                    <span className="triad-word">Diseñamos.</span>
-                    <span className="triad-word">Construimos.</span>
-                    <span className="triad-word accent-glow">Medimos.</span>
+                    {narrative.triad.map((word, index) => (
+                        <span
+                            className={`triad-word ${index === narrative.triad.length - 1 ? "accent-glow" : ""}`}
+                            key={word}
+                        >
+                          {word}
+                        </span>
+                    ))}
                   </h2>
                   <p
                       className={`value-proposition is-${valuePropositionPhase}`}
-                      aria-label={HERO_VALUE_PROPOSITION}
+                      aria-label={heroValueProposition}
                   >
                     <span className="value-proposition-visual" aria-hidden="true">
                       {valuePropositionWords.map((word, wordIndex) => (
@@ -815,25 +809,15 @@ export default function Home() {
 
                   <div className="beneficios-header" ref={beneficiosHeaderRef}>
                       <span className="beneficios-eyebrow">
-                          POR QUÉ ELEGIRNOS
+                          {beneficiosHeader.subtitulo}
                       </span>
 
-                      <h2 aria-label="Tecnología pensada para crear, crecer y evolucionar.">
-                          <span className="why-title-line" aria-hidden="true">
-                              Tecnología
-                          </span>
-                          <span className="why-title-line" aria-hidden="true">
-                              pensada
-                          </span>
-                          <span className="why-title-line" aria-hidden="true">
-                              para crear,
-                          </span>
-                          <span className="why-title-line" aria-hidden="true">
-                              crecer y
-                          </span>
-                          <span className="why-title-line" aria-hidden="true">
-                              evolucionar.
-                          </span>
+                      <h2 aria-label={beneficiosHeader.titulo}>
+                          {beneficiosTitleLines.map((line) => (
+                              <span className="why-title-line" aria-hidden="true" key={line}>
+                                  {line}
+                              </span>
+                          ))}
                       </h2>
                   </div>
 

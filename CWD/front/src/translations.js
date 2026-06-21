@@ -8,6 +8,11 @@ export const translations = {
         },
 
         homePage: {
+            narrative: {
+                triad: ["Diseñamos.", "Construimos.", "Medimos."],
+                valueProposition: "Somos creadores de experiencias digitales respaldadas por ingeniería, privacidad y métricas reales.",
+            },
+
             frases: [
                 "Desarrollo Web Profesional",
                 "Tiendas Online y E-commerce",
@@ -66,9 +71,36 @@ export const translations = {
                     text: "Acompañamos mejoras y nuevas funcionalidades.",
                 },
             ],
+            beneficiosExtended: [
+                {
+                    title: "Websites que convierten",
+                    text: "Diseñamos y desarrollamos sitios web rápidos, claros y preparados para crecer. Cuidamos la experiencia visual, la estructura técnica y el rendimiento para que tu presencia digital no sea solo atractiva, sino también funcional, medible y efectiva.",
+                },
+                {
+                    title: "Apps mobile a medida",
+                    text: "Creamos aplicaciones móviles pensadas para resolver problemas reales. Desde la idea inicial hasta una versión funcional, priorizamos interfaces simples, flujos claros y una base técnica sólida para que la app pueda evolucionar sin perder estabilidad.",
+                },
+                {
+                    title: "Backend robusto",
+                    text: "Construimos APIs, servicios y lógica de negocio con foco en seguridad, escalabilidad y mantenibilidad. Nos importa que el sistema funcione bien por dentro: contratos claros, datos consistentes, integraciones confiables y código preparado para crecer.",
+                },
+                {
+                    title: "Integraciones inteligentes",
+                    text: "Conectamos sistemas, plataformas, bases de datos y servicios externos para que trabajen como una unidad. Reducimos procesos manuales, mejoramos la trazabilidad y ayudamos a que la tecnología acompañe el flujo real de tu negocio.",
+                },
+                {
+                    title: "Performance y estabilidad",
+                    text: "Optimizamos aplicaciones para que respondan mejor, fallen menos y sean más fáciles de monitorear. Analizamos cuellos de botella, tiempos de carga, errores recurrentes y puntos críticos para mejorar la experiencia del usuario final.",
+                },
+                {
+                    title: "Evolución continua",
+                    text: "No pensamos el software como algo estático. Acompañamos mejoras, nuevas funcionalidades, mantenimiento y ajustes técnicos para que tu producto digital pueda adaptarse al mercado, a tus usuarios y a nuevas oportunidades de negocio.",
+                },
+            ],
             beneficiosHeader: {
                 subtitulo: "Por qué elegirnos",
-                titulo: "Tecnología pensada para crear, crecer y evolucionar."
+                titulo: "Tecnología pensada para crear, crecer y evolucionar.",
+                lineas: ["Tecnología", "pensada", "para crear,", "crecer y", "evolucionar."],
             },
             servicios: {
                 titulo: "SERVICIOS",
@@ -114,15 +146,90 @@ export const translations = {
             phone: "+39 XXX XXX XXXX",
             copy: "© 2025 Code Work Digital — Todos los derechos reservados."
         },
+        contactPage: {
+            hero: {
+                label: "Contacto",
+                title: "Hablemos sobre tu próximo proyecto digital.",
+                text: "Contanos qué necesitás crear, mejorar o impulsar. Te respondemos a la brevedad para ayudarte a transformar tu idea en una solución digital profesional, moderna y preparada para crecer.",
+            },
+            info: {
+                title: "¿Cómo podemos ayudarte?",
+                text: "Podemos acompañarte en el desarrollo de sitios web, aplicaciones web, aplicaciones móviles, tiendas online y soluciones digitales pensadas para potenciar tu marca, optimizar procesos y generar nuevas oportunidades de negocio.",
+                items: [
+                    "Diseño y desarrollo web profesional",
+                    "Aplicaciones web a medida",
+                    "Aplicaciones móviles (Android e iOS)",
+                    "Tiendas online y e-commerce",
+                    "Landing pages para campañas",
+                    "Optimización y posicionamiento digital",
+                ],
+            },
+            form: {
+                title: "Formulario de contacto",
+                name: "Nombre",
+                email: "Email",
+                phone: "Teléfono",
+                message: "Mensaje",
+                submit: "Solicitar propuesta",
+                sending: "enviando_mensaje...",
+                error: "Error enviando mensaje. Intenta nuevamente.",
+                success: "Mensaje enviado correctamente",
+            },
+            whatsappCta: "Canal directo · WhatsApp →",
+        },
+        serviciosPage: {
+            hero: {
+                label: "Soluciones digitales",
+                title: "Sitios web, aplicaciones y herramientas digitales diseñadas para impulsar tu negocio.",
+                text: "En Code Work Digital combinamos diseño, tecnología y estrategia para crear experiencias digitales modernas, optimizadas y orientadas a resultados. Desarrollamos soluciones que ayudan a empresas, profesionales y emprendedores a crecer, conectar con sus clientes y generar nuevas oportunidades.",
+                cta: "Solicitar presupuesto",
+            },
+            list: {
+                label: "Qué hacemos",
+                title: "Soluciones digitales adaptadas a las necesidades de cada proyecto.",
+                items: [
+                    {
+                        numero: "01",
+                        titulo: "Desarrollo Web Profesional",
+                        texto: "Creamos sitios web institucionales, landing pages, portfolios y plataformas corporativas con diseño moderno, excelente rendimiento y una experiencia de usuario clara, profesional y enfocada en la conversión.",
+                    },
+                    {
+                        numero: "02",
+                        titulo: "Tiendas Online y E-commerce",
+                        texto: "Desarrollamos tiendas digitales preparadas para vender, integrando catálogo de productos, medios de pago, gestión de pedidos y una experiencia optimizada para aumentar las ventas desde cualquier dispositivo.",
+                    },
+                    {
+                        numero: "03",
+                        titulo: "Aplicaciones Web y Móviles",
+                        texto: "Diseñamos y desarrollamos aplicaciones personalizadas para empresas, emprendimientos y proyectos digitales. Soluciones escalables, seguras y adaptadas a las necesidades específicas de cada negocio.",
+                    },
+                    {
+                        numero: "04",
+                        titulo: "Optimización y Presencia Digital",
+                        texto: "Mejoramos rendimiento, velocidad, experiencia de usuario y posicionamiento SEO para que tu sitio cargue más rápido, tenga mayor visibilidad y genere más oportunidades de negocio.",
+                    },
+                    {
+                        numero: "05",
+                        titulo: "Analítica y Decisiones",
+                        texto: "Implementamos métricas centradas en privacidad para transformar datos en decisiones, validar resultados y acompañar el crecimiento de tu negocio con evidencia real.",
+                    },
+                ],
+            },
+            cta: {
+                title: "Tu próximo cliente puede estar buscando exactamente lo que vos ofrecés.",
+                text: "Transformemos tu idea en una solución digital profesional, moderna y preparada para crecer junto a tu negocio.",
+                button: "Empezar mi proyecto",
+            },
+        },
         quienesSomosPage: {
             label: "Quiénes somos",
 
-            titulo: `Creamos sitios web,
+            titulo: `Somos creadores de sitios web,
 aplicaciones y experiencias
 digitales que generan resultados.`,
 
             descripcion:
-                "Creamos sitios web, aplicaciones y soluciones digitales que combinan diseño, tecnología y estrategia para impulsar marcas, mejorar experiencias y generar resultados reales.",
+                "Nuestros productos, sitios web, aplicaciones y soluciones digitales combinan diseño, tecnología y estrategia que impulsan marcas, mejoran experiencias y generan resultados reales.",
 
             botonProyecto: "Hablemos de tu proyecto",
             botonServicios: "Ver servicios",
@@ -167,6 +274,11 @@ digitales que generan resultados.`,
         },
 
         homePage: {
+            narrative: {
+                triad: ["We design.", "We build.", "We measure."],
+                valueProposition: "We are creators of digital experiences backed by engineering, privacy, and real metrics.",
+            },
+
             frases: [
                 "Professional Web Development",
                 "Online Stores and E-commerce",
@@ -225,10 +337,37 @@ digitales que generan resultados.`,
                     text: "We support improvements and new features.",
                 },
             ],
+            beneficiosExtended: [
+                {
+                    title: "Websites that convert",
+                    text: "We design and build fast, clear websites prepared to grow. We take care of the visual experience, technical structure and performance so your digital presence is not only attractive, but also functional, measurable and effective.",
+                },
+                {
+                    title: "Custom mobile apps",
+                    text: "We create mobile applications designed to solve real problems. From the initial idea to a functional version, we prioritize simple interfaces, clear flows and a solid technical base so the app can evolve without losing stability.",
+                },
+                {
+                    title: "Robust backend",
+                    text: "We build APIs, services and business logic with a focus on security, scalability and maintainability. We care that the system works well inside: clear contracts, consistent data, reliable integrations and code prepared to grow.",
+                },
+                {
+                    title: "Smart integrations",
+                    text: "We connect systems, platforms, databases and external services so they work as one. We reduce manual processes, improve traceability and help technology support the real workflow of your business.",
+                },
+                {
+                    title: "Performance and stability",
+                    text: "We optimize applications so they respond better, fail less and are easier to monitor. We analyze bottlenecks, load times, recurring errors and critical points to improve the end-user experience.",
+                },
+                {
+                    title: "Continuous evolution",
+                    text: "We do not think of software as something static. We support improvements, new features, maintenance and technical adjustments so your digital product can adapt to the market, your users and new business opportunities.",
+                },
+            ],
 
             beneficiosHeader: {
                 subtitulo: "Why choose us",
                 titulo: "Technology designed to create, grow and evolve.",
+                lineas: ["Technology", "designed", "to create,", "grow and", "evolve."],
             },
 
             servicios: {
@@ -257,7 +396,7 @@ digitales que generan resultados.`,
                     },
                     {
                         numero: "05",
-                        titulo: "Analytics and Decisions",
+                        titulo: "Analytics & Insights",
                         texto: "Decisions backed by real data.",
                     },
                 ],
@@ -275,15 +414,90 @@ digitales que generan resultados.`,
             phone: "+39 XXX XXX XXXX",
             copy: "© 2025 Code Work Digital — All rights reserved."
         },
+        contactPage: {
+            hero: {
+                label: "Contact",
+                title: "Let's talk about your next digital project.",
+                text: "Tell us what you need to create, improve or grow. We will get back to you shortly to help you turn your idea into a professional, modern digital solution ready to scale.",
+            },
+            info: {
+                title: "How can we help?",
+                text: "We can support you with websites, web applications, mobile applications, online stores and digital solutions designed to strengthen your brand, optimize processes and create new business opportunities.",
+                items: [
+                    "Professional web design and development",
+                    "Custom web applications",
+                    "Mobile applications (Android and iOS)",
+                    "Online stores and e-commerce",
+                    "Landing pages for campaigns",
+                    "Digital optimization and positioning",
+                ],
+            },
+            form: {
+                title: "Contact form",
+                name: "Name",
+                email: "Email",
+                phone: "Phone",
+                message: "Message",
+                submit: "Request proposal",
+                sending: "sending_message...",
+                error: "Error sending message. Please try again.",
+                success: "Message sent successfully",
+            },
+            whatsappCta: "Direct channel · WhatsApp →",
+        },
+        serviciosPage: {
+            hero: {
+                label: "Digital solutions",
+                title: "Websites, applications and digital tools designed to grow your business.",
+                text: "At Code Work Digital we combine design, technology and strategy to create modern, optimized digital experiences focused on results. We build solutions that help companies, professionals and entrepreneurs grow, connect with their customers and create new opportunities.",
+                cta: "Request estimate",
+            },
+            list: {
+                label: "What we do",
+                title: "Digital solutions adapted to the needs of each project.",
+                items: [
+                    {
+                        numero: "01",
+                        titulo: "Professional Web Development",
+                        texto: "We create institutional websites, landing pages, portfolios and corporate platforms with modern design, excellent performance and a clear, professional user experience focused on conversion.",
+                    },
+                    {
+                        numero: "02",
+                        titulo: "Online Stores and E-commerce",
+                        texto: "We develop digital stores prepared to sell, integrating product catalogs, payment methods, order management and an optimized experience to increase sales from any device.",
+                    },
+                    {
+                        numero: "03",
+                        titulo: "Web and Mobile Applications",
+                        texto: "We design and develop custom applications for companies, ventures and digital projects. Scalable, secure solutions adapted to the specific needs of each business.",
+                    },
+                    {
+                        numero: "04",
+                        titulo: "Optimization and Digital Presence",
+                        texto: "We improve performance, speed, user experience and SEO positioning so your site loads faster, gains more visibility and generates more business opportunities.",
+                    },
+                    {
+                        numero: "05",
+                        titulo: "Analytics & Insights",
+                        texto: "We implement privacy-centered metrics to turn data into decisions, validate results and support your business growth with real evidence.",
+                    },
+                ],
+            },
+            cta: {
+                title: "Your next customer may be looking for exactly what you offer.",
+                text: "Let's turn your idea into a professional, modern digital solution prepared to grow with your business.",
+                button: "Start my project",
+            },
+        },
         quienesSomosPage: {
             label: "About us",
 
-            titulo: `We create websites,
+            titulo: `We are creators of websites,
 applications and digital
 experiences that deliver results.`,
 
             descripcion:
-                "We create websites, applications and digital solutions that combine design, technology and strategy to boost brands, improve experiences and generate real results.",
+                "Our products, websites, applications and digital solutions combine design, technology and strategy to boost brands, improve experiences and generate real results.",
 
             botonProyecto: "Let's talk about your project",
             botonServicios: "View services",
@@ -327,6 +541,11 @@ experiences that deliver results.`,
         },
 
         homePage: {
+            narrative: {
+                triad: ["Progettiamo.", "Costruiamo.", "Misuriamo."],
+                valueProposition: "Siamo creatori di esperienze digitali supportate da ingegneria, privacy e metriche reali.",
+            },
+
             frases: [
                 "Sviluppo Web Professionale",
                 "Negozi Online ed E-commerce",
@@ -385,9 +604,36 @@ experiences that deliver results.`,
                     text: "Accompagniamo miglioramenti e nuove funzionalità.",
                 },
             ],
+            beneficiosExtended: [
+                {
+                    title: "Siti web che convertono",
+                    text: "Progettiamo e sviluppiamo siti web veloci, chiari e pronti a crescere. Curiamo l'esperienza visiva, la struttura tecnica e le prestazioni affinché la tua presenza digitale non sia solo attraente, ma anche funzionale, misurabile ed efficace.",
+                },
+                {
+                    title: "App mobile su misura",
+                    text: "Creiamo applicazioni mobile pensate per risolvere problemi reali. Dall'idea iniziale a una versione funzionale, diamo priorità a interfacce semplici, flussi chiari e una base tecnica solida affinché l'app possa evolvere senza perdere stabilità.",
+                },
+                {
+                    title: "Backend robusto",
+                    text: "Costruiamo API, servizi e logiche di business con attenzione a sicurezza, scalabilità e manutenibilità. Ci importa che il sistema funzioni bene al suo interno: contratti chiari, dati coerenti, integrazioni affidabili e codice pronto a crescere.",
+                },
+                {
+                    title: "Integrazioni intelligenti",
+                    text: "Colleghiamo sistemi, piattaforme, database e servizi esterni affinché lavorino come un'unica unità. Riduciamo i processi manuali, miglioriamo la tracciabilità e aiutiamo la tecnologia a sostenere il flusso reale del tuo business.",
+                },
+                {
+                    title: "Performance e stabilità",
+                    text: "Ottimizziamo le applicazioni affinché rispondano meglio, falliscano meno e siano più facili da monitorare. Analizziamo colli di bottiglia, tempi di caricamento, errori ricorrenti e punti critici per migliorare l'esperienza dell'utente finale.",
+                },
+                {
+                    title: "Evoluzione continua",
+                    text: "Non pensiamo al software come a qualcosa di statico. Accompagniamo miglioramenti, nuove funzionalità, manutenzione e adeguamenti tecnici affinché il tuo prodotto digitale possa adattarsi al mercato, agli utenti e a nuove opportunità di business.",
+                },
+            ],
                 beneficiosHeader: {
                 subtitulo: "Perché scegliere noi",
-                    titulo: "Tecnologia pensata per creare, crescere ed evolvere."
+                    titulo: "Tecnologia pensata per creare, crescere ed evolvere.",
+                    lineas: ["Tecnologia", "pensata", "per creare,", "crescere ed", "evolvere."],
             },
             servicios: {
                 titulo: "SERVIZI",
@@ -433,15 +679,90 @@ experiences that deliver results.`,
             phone: "+39 XXX XXX XXXX",
             copy: "© 2025 Code Work Digital — Tutti i diritti riservati."
         },
+        contactPage: {
+            hero: {
+                label: "Contatto",
+                title: "Parliamo del tuo prossimo progetto digitale.",
+                text: "Raccontaci cosa devi creare, migliorare o far crescere. Ti risponderemo al più presto per aiutarti a trasformare la tua idea in una soluzione digitale professionale, moderna e pronta a crescere.",
+            },
+            info: {
+                title: "Come possiamo aiutarti?",
+                text: "Possiamo accompagnarti nello sviluppo di siti web, applicazioni web, applicazioni mobile, negozi online e soluzioni digitali pensate per potenziare il tuo brand, ottimizzare i processi e generare nuove opportunità di business.",
+                items: [
+                    "Design e sviluppo web professionale",
+                    "Applicazioni web su misura",
+                    "Applicazioni mobile (Android e iOS)",
+                    "Negozi online ed e-commerce",
+                    "Landing page per campagne",
+                    "Ottimizzazione e posizionamento digitale",
+                ],
+            },
+            form: {
+                title: "Modulo di contatto",
+                name: "Nome",
+                email: "Email",
+                phone: "Telefono",
+                message: "Messaggio",
+                submit: "Richiedi proposta",
+                sending: "invio_messaggio...",
+                error: "Errore durante l'invio del messaggio. Riprova.",
+                success: "Messaggio inviato correttamente",
+            },
+            whatsappCta: "Canale diretto · WhatsApp →",
+        },
+        serviciosPage: {
+            hero: {
+                label: "Soluzioni digitali",
+                title: "Siti web, applicazioni e strumenti digitali progettati per far crescere il tuo business.",
+                text: "In Code Work Digital combiniamo design, tecnologia e strategia per creare esperienze digitali moderne, ottimizzate e orientate ai risultati. Sviluppiamo soluzioni che aiutano aziende, professionisti e imprenditori a crescere, connettersi con i clienti e generare nuove opportunità.",
+                cta: "Richiedi preventivo",
+            },
+            list: {
+                label: "Cosa facciamo",
+                title: "Soluzioni digitali adattate alle esigenze di ogni progetto.",
+                items: [
+                    {
+                        numero: "01",
+                        titulo: "Sviluppo Web Professionale",
+                        texto: "Creiamo siti istituzionali, landing page, portfolio e piattaforme corporate con design moderno, prestazioni eccellenti e un'esperienza utente chiara, professionale e orientata alla conversione.",
+                    },
+                    {
+                        numero: "02",
+                        titulo: "Negozi Online ed E-commerce",
+                        texto: "Sviluppiamo negozi digitali pronti a vendere, integrando catalogo prodotti, metodi di pagamento, gestione degli ordini e un'esperienza ottimizzata per aumentare le vendite da qualsiasi dispositivo.",
+                    },
+                    {
+                        numero: "03",
+                        titulo: "Applicazioni Web e Mobile",
+                        texto: "Progettiamo e sviluppiamo applicazioni personalizzate per aziende, iniziative e progetti digitali. Soluzioni scalabili, sicure e adattate alle esigenze specifiche di ogni business.",
+                    },
+                    {
+                        numero: "04",
+                        titulo: "Ottimizzazione e Presenza Digitale",
+                        texto: "Miglioriamo prestazioni, velocità, esperienza utente e posizionamento SEO affinché il tuo sito carichi più rapidamente, ottenga maggiore visibilità e generi più opportunità di business.",
+                    },
+                    {
+                        numero: "05",
+                        titulo: "Analitica e Decisioni",
+                        texto: "Implementiamo metriche centrate sulla privacy per trasformare i dati in decisioni, validare i risultati e accompagnare la crescita del tuo business con evidenza reale.",
+                    },
+                ],
+            },
+            cta: {
+                title: "Il tuo prossimo cliente potrebbe cercare esattamente ciò che offri.",
+                text: "Trasformiamo la tua idea in una soluzione digitale professionale, moderna e pronta a crescere insieme al tuo business.",
+                button: "Inizia il mio progetto",
+            },
+        },
         quienesSomosPage: {
             label: "Chi siamo",
 
-            titulo: `Creiamo siti web,
+            titulo: `Siamo creatori di siti web,
 applicazioni ed esperienze
 digitali che generano risultati.`,
 
             descripcion:
-                "Creiamo siti web, applicazioni e soluzioni digitali che combinano design, tecnologia e strategia per far crescere i brand, migliorare le esperienze e generare risultati reali.",
+                "I nostri prodotti, siti web, applicazioni e soluzioni digitali combinano design, tecnologia e strategia che fanno crescere i brand, migliorano le esperienze e generano risultati reali.",
 
             botonProyecto: "Parliamo del tuo progetto",
             botonServicios: "Vedi i servizi",
