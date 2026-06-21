@@ -4,7 +4,7 @@ import Head from "next/head";import "@/app/home1.css";import "@/styles/contacto.
 
 import Link from "next/link";import ContactForm from "@/components/ContactForm";
 
-import {useEffect,useState,useRef} from "react";
+import {useEffect,useMemo,useState,useRef} from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -62,6 +62,39 @@ const HERO_CAROUSEL_MOTION_PRESETS = {
 const HERO_CAROUSEL_MOTION = HERO_CAROUSEL_MOTION_PRESETS.noticeableBrake;
 const HERO_CAROUSEL_GAP = HERO_CAROUSEL_MOTION.gapPx;
 const HERO_CAROUSEL_RESET_MS = HERO_CAROUSEL_MOTION.durationMs + 80;
+const HERO_VALUE_PROPOSITION =
+  "Creamos experiencias digitales respaldadas por ingeniería, privacidad y métricas reales.";
+
+const NARRATIVE_TIMING = {
+  triadInitialDelayMs: 220,
+  triadWordDurationMs: 850,
+  triadWordGapMs: 650,
+  phraseCharStepMs: 18,
+  phraseCharRevealDurationMs: 180,
+  phraseVisualLeadMs: 350,
+  phraseHoldAfterTypingMs: 320,
+  phraseFadeOutDurationMs: 220,
+  phraseRevealDelayMs: 80,
+  phraseRevealDurationMs: 420,
+};
+
+const HERO_VALUE_WORDS = HERO_VALUE_PROPOSITION.split(" ");
+const HERO_VALUE_CHAR_COUNT = Array.from(HERO_VALUE_PROPOSITION).filter(
+    (character) => character !== " "
+).length;
+const HERO_MEDIMOS_START_MS =
+    NARRATIVE_TIMING.triadInitialDelayMs +
+    NARRATIVE_TIMING.triadWordGapMs * 2;
+const HERO_PHRASE_START_AFTER_TRIAD_MS = NARRATIVE_TIMING.triadWordGapMs;
+const HERO_VALUE_START_DELAY_MS =
+    Math.max(
+        0,
+        HERO_MEDIMOS_START_MS +
+        HERO_PHRASE_START_AFTER_TRIAD_MS -
+        NARRATIVE_TIMING.phraseVisualLeadMs
+    );
+const HERO_VALUE_TYPING_MS =
+    HERO_VALUE_CHAR_COUNT * NARRATIVE_TIMING.phraseCharStepMs + 320;
 
 export default function Home() {
     const { language } = useLanguage();
@@ -89,8 +122,65 @@ export default function Home() {
   const carouselTrackRef = useRef(null);
   const carouselResetTimeoutRef = useRef(null);
   const [isCarouselResetting, setIsCarouselResetting] = useState(false);
+  const [valuePropositionPhase, setValuePropositionPhase] = useState("idle");
+  const valuePropositionWords = useMemo(() => {
+    let characterIndex = 0;
+
+    return HERO_VALUE_WORDS.map((word, wordIndex) => ({
+      id: `${word}-${wordIndex}`,
+      chars: Array.from(word).map((character) => {
+        const nextCharacter = {
+          character,
+          index: characterIndex,
+        };
+        characterIndex += 1;
+        return nextCharacter;
+      }),
+    }));
+  }, []);
 
   /* =========================HERO CARRUSEL========================= */
+
+  useEffect(() => {
+    const reduceMotionQuery =
+        typeof window !== "undefined"
+            ? window.matchMedia("(prefers-reduced-motion: reduce)")
+            : null;
+
+    const prefersReducedMotion = reduceMotionQuery?.matches;
+    const timers = [];
+
+    const schedule = (callback, delay) => {
+      const timer = setTimeout(callback, delay);
+      timers.push(timer);
+      return timer;
+    };
+
+    if (prefersReducedMotion) {
+      setValuePropositionPhase("complete");
+      return () => timers.forEach(clearTimeout);
+    }
+
+    setValuePropositionPhase("idle");
+
+    schedule(() => {
+      setValuePropositionPhase("typing");
+
+      schedule(() => {
+        setValuePropositionPhase("exiting");
+
+        schedule(() => {
+          setValuePropositionPhase("impact");
+
+          schedule(() => {
+            setValuePropositionPhase("complete");
+          }, NARRATIVE_TIMING.phraseRevealDurationMs);
+        }, NARRATIVE_TIMING.phraseFadeOutDurationMs + NARRATIVE_TIMING.phraseRevealDelayMs);
+      }, HERO_VALUE_TYPING_MS + NARRATIVE_TIMING.phraseHoldAfterTypingMs);
+    }, HERO_VALUE_START_DELAY_MS);
+
+    return () => timers.forEach(clearTimeout);
+  }, []);
 
   useEffect(() => {
     if (!slides.length) return undefined;
@@ -547,7 +637,9 @@ export default function Home() {
         </Head>
         {/* ================= HERO SECTION ================= */}
         <div className="hero-showcase-composition">
-          <CodeCascade />
+          <div className="hero-code-layer" aria-hidden="true">
+            <CodeCascade />
+          </div>
 
           <section className="hero">
             <div className="hero-layout">
@@ -563,6 +655,46 @@ export default function Home() {
                 <p className="carousel-text hero-slogan">
                   <span className="hero-slogan-mark">_</span>we make it work
                 </p>
+                <section
+                    className="cwd-narrative-core"
+                    aria-labelledby="cwd-narrative-title"
+                    style={{
+                      "--triad-initial-delay": `${NARRATIVE_TIMING.triadInitialDelayMs}ms`,
+                      "--triad-word-duration": `${NARRATIVE_TIMING.triadWordDurationMs}ms`,
+                      "--triad-word-gap": `${NARRATIVE_TIMING.triadWordGapMs}ms`,
+                      "--phrase-char-step": `${NARRATIVE_TIMING.phraseCharStepMs}ms`,
+                      "--phrase-char-duration": `${NARRATIVE_TIMING.phraseCharRevealDurationMs}ms`,
+                      "--phrase-fade-out-duration": `${NARRATIVE_TIMING.phraseFadeOutDurationMs}ms`,
+                      "--phrase-reveal-duration": `${NARRATIVE_TIMING.phraseRevealDurationMs}ms`,
+                    }}
+                >
+                  <h2 className="brutal-triad" id="cwd-narrative-title">
+                    <span className="triad-word">Diseñamos.</span>
+                    <span className="triad-word">Construimos.</span>
+                    <span className="triad-word accent-glow">Medimos.</span>
+                  </h2>
+                  <p
+                      className={`value-proposition is-${valuePropositionPhase}`}
+                      aria-label={HERO_VALUE_PROPOSITION}
+                  >
+                    <span className="value-proposition-visual" aria-hidden="true">
+                      {valuePropositionWords.map((word, wordIndex) => (
+                          <span className="value-word" key={word.id}>
+                            {word.chars.map(({ character, index }) => (
+                                <span
+                                    className="value-char"
+                                    key={`${character}-${index}`}
+                                    style={{ "--char-index": index }}
+                                >
+                                  {character}
+                                </span>
+                            ))}
+                            {wordIndex < valuePropositionWords.length - 1 ? "\u00A0" : ""}
+                          </span>
+                      ))}
+                    </span>
+                  </p>
+                </section>
               </div>
             </div>
           </section>

@@ -754,6 +754,39 @@ footer {
   z-index: 1000001 !important;
 }
 
+.language-dropdown.is-open {
+  animation: languageMenuIn 160ms ease-out both;
+}
+
+.language-dropdown.is-closing {
+  pointer-events: none !important;
+  animation: languageMenuOut 180ms ease-in both;
+}
+
+@keyframes languageMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes languageMenuOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
 .top-header nav .holder li a:hover,
 .top-header nav .holder li a.activo {
   color: var(--cwd-accent) !important;
@@ -859,24 +892,61 @@ footer {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 7px !important;
+  gap: 0.5rem !important;
   width: auto !important;
-  min-width: 86px !important;
-  height: 40px !important;
-  padding: 0 13px !important;
+  min-width: 0 !important;
+  height: auto !important;
+  padding: 6px 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 6px !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  box-shadow: none !important;
+  color: rgba(255, 255, 255, 0.62) !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+  cursor: pointer !important;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease !important;
 }
 
-.top-header .language-globe {
-  width: 14px !important;
-  height: 14px !important;
-  color: #fff !important;
+.top-header .language-btn:hover,
+.top-header .language-btn:focus-visible {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  outline: none !important;
+}
+
+.top-header .language-btn:focus-visible {
+  box-shadow: 0 0 0 2px rgba(255, 0, 119, 0.22) !important;
+}
+
+.top-header .lang-status-dot {
   flex: 0 0 auto !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 999px !important;
+  background: var(--cwd-accent) !important;
+  box-shadow: 0 0 8px rgba(255, 0, 119, 0.55) !important;
+  transition: box-shadow 180ms ease !important;
 }
 
-.top-header .language-caret {
-  color: rgba(255, 255, 255, 0.82) !important;
-  font-size: 0.72rem !important;
+.top-header .language-btn:hover .lang-status-dot,
+.top-header .language-btn:focus-visible .lang-status-dot {
+  box-shadow: 0 0 12px rgba(255, 0, 119, 0.8) !important;
+}
+
+.top-header .lang-code {
+  color: currentColor !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
   line-height: 1 !important;
+}
+
+.top-header .lang-code-prefix {
+  color: currentColor !important;
 }
 
 .main-content {
@@ -923,15 +993,14 @@ footer {
   }
 
   .top-header .language-btn {
-    min-width: 74px !important;
-    height: 34px !important;
-    padding: 0 10px !important;
+    min-width: 0 !important;
+    height: auto !important;
+    padding: 6px 9px !important;
     gap: 6px !important;
   }
 
-  .top-header .language-globe {
-    width: 12px !important;
-    height: 12px !important;
+  .top-header .lang-code {
+    font-size: 0.7rem !important;
   }
 
   .top-header nav .holder.open {

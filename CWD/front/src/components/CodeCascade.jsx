@@ -106,13 +106,15 @@ const KEYWORDS = new Set([
 ]);
 
 const CODE_CASCADE_CONFIG = {
-    viewportHeight: "clamp(824px, 63.1vw, 946px)",
-    tabletViewportHeight: "clamp(437px, 63.1vw, 558px)",
-    mobileViewportHeight: "clamp(315px, 82.4vw, 413px)",
+    viewportHeight: "clamp(989px, 75.5vw, 1178px)",
+    tabletViewportHeight: "clamp(521px, 75.5vw, 681px)",
+    mobileViewportHeight: "clamp(378px, 99vw, 498px)",
     initialVisibleLines: 44,
     fadeoutLines: 14,
     lineHeightPx: 18.7,
-    maxRenderedLines: 87,
+    opacityFadeStartLine: 16,
+    opacityFadeStep: 0.034,
+    maxRenderedLines: 84,
 };
 
 const TYPE_STEP = 2;
@@ -241,6 +243,8 @@ export default function CodeCascade() {
         "--code-cascade-tablet-height": CODE_CASCADE_CONFIG.tabletViewportHeight,
         "--code-cascade-mobile-height": CODE_CASCADE_CONFIG.mobileViewportHeight,
         "--code-cascade-line-height": `${CODE_CASCADE_CONFIG.lineHeightPx}px`,
+        "--code-cascade-opacity-fade-start": CODE_CASCADE_CONFIG.opacityFadeStartLine,
+        "--code-cascade-opacity-fade-step": CODE_CASCADE_CONFIG.opacityFadeStep,
         "--code-cascade-fade-lines": CODE_CASCADE_CONFIG.fadeoutLines,
         "--code-cascade-fade-height": `${CODE_CASCADE_CONFIG.fadeoutLines * CODE_CASCADE_CONFIG.lineHeightPx}px`,
         "--code-cascade-fade-midpoint": `${CODE_CASCADE_CONFIG.fadeoutLines * CODE_CASCADE_CONFIG.lineHeightPx * 0.38}px`,
