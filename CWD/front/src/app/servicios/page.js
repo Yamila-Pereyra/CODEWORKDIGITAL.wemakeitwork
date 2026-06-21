@@ -3,6 +3,7 @@ import {
   FaLaptopCode,
   FaShoppingCart,
   FaChartLine,
+  FaChartPie,
   FaMobileAlt,
 } from "react-icons/fa";
 import OpticalDivider from "@/components/OpticalDivider";
@@ -131,6 +132,22 @@ export default function Servicios() {
                   y posicionamiento SEO para que tu sitio cargue más rápido,
                   tenga mayor visibilidad y genere más oportunidades de
                   negocio.
+                </p>
+              </article>
+
+              {/* ANALYTICS */}
+
+              <article className="servicio-card">
+                <FaChartPie className="servicio-icon" />
+
+                <span>05</span>
+
+                <h3>Analítica y Decisiones</h3>
+
+                <p>
+                  Implementamos métricas centradas en privacidad para
+                  transformar datos en decisiones, validar resultados y
+                  acompañar el crecimiento de tu negocio con evidencia real.
                 </p>
               </article>
 
