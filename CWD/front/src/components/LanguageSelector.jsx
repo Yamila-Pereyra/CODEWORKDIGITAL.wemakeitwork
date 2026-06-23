@@ -14,8 +14,6 @@ export default function LanguageSelector() {
 
     const changeLanguage = (lang) => {
         setLanguage(lang);
-        localStorage.setItem("language", lang);
-        document.documentElement.lang = lang;
     };
 
     return (

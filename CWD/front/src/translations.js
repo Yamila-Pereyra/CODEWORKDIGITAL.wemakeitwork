@@ -11,6 +11,7 @@ export const translations = {
             narrative: {
                 triad: ["Diseñamos.", "Construimos.", "Medimos."],
                 valueProposition: "Somos creadores de experiencias digitales respaldadas por ingeniería, privacidad y métricas reales.",
+                partnership: "Juntos escalamos y crecemos.",
             },
 
             frases: [
@@ -277,6 +278,7 @@ digitales que generan resultados.`,
             narrative: {
                 triad: ["We design.", "We build.", "We measure."],
                 valueProposition: "We are creators of digital experiences backed by engineering, privacy, and real metrics.",
+                partnership: "Together we scale and grow.",
             },
 
             frases: [
@@ -544,6 +546,7 @@ experiences that deliver results.`,
             narrative: {
                 triad: ["Progettiamo.", "Costruiamo.", "Misuriamo."],
                 valueProposition: "Siamo creatori di esperienze digitali supportate da ingegneria, privacy e metriche reali.",
+                partnership: "Cresciamo e scaliamo insieme.",
             },
 
             frases: [
