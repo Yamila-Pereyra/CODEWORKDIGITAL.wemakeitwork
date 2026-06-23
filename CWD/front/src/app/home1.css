@@ -379,7 +379,8 @@ nav .holder li a.activo {
   }
 
   .triad-word,
-  .value-proposition {
+  .value-proposition,
+  .hero-partnership-line {
     animation: none;
     opacity: 1;
     filter: none;
@@ -451,7 +452,7 @@ nav .holder li a.activo {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.08em;
+  gap: 0.28em;
   margin: 0;
   color: #fff;
   font-size: 3.25rem;
@@ -484,9 +485,13 @@ nav .holder li a.activo {
   text-shadow: 0 0 20px rgba(255, 0, 119, 0.35);
 }
 
+.hero-value-stack {
+  margin: calc(24px + 1em) 0 0;
+}
+
 .value-proposition {
   --char-step: var(--phrase-char-step);
-  margin: calc(24px + 1em) 0 0;
+  margin: 0;
   color: rgba(255,255,255,.76);
   font-size: 1.18rem;
   font-weight: 600;
@@ -557,6 +562,28 @@ nav .holder li a.activo {
   filter: blur(0);
 }
 
+.hero-partnership-line {
+  margin: 0.32rem 0 0;
+  color: rgba(255,255,255,.88);
+  font-size: clamp(1.08rem, 1.36vw, 1.3rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(12px);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.hero-partnership-line.is-visible {
+  animation: partnershipSlideUpFocus 500ms cubic-bezier(0.16, 1, 0.3, 1) 140ms forwards;
+}
+
+.hero-partnership-accent {
+  color: #FF0077;
+}
+
 @keyframes valueCharType {
   to {
     opacity: 1;
@@ -585,6 +612,25 @@ nav .holder li a.activo {
     filter: blur(0) saturate(100%);
     color: rgba(255,255,255,.76);
     text-shadow: none;
+  }
+}
+
+@keyframes partnershipSlideUpFocus {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(8px);
+  }
+
+  55% {
+    opacity: .85;
+    filter: blur(2px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
   }
 }
 
@@ -2182,6 +2228,10 @@ nav .holder li a.activo {
     white-space: normal;
   }
 
+  .hero-partnership-line {
+    text-align: left;
+  }
+
   .hero-code-layer {
     position: relative;
     left: auto;
@@ -2219,6 +2269,10 @@ nav .holder li a.activo {
     width: 100%;
   }
 
+  .hero-code-layer {
+    display: none;
+  }
+
   .code-cascade-card {
     border-radius: 0;
   }
@@ -2236,7 +2290,7 @@ nav .holder li a.activo {
   }
 
   .brutal-triad {
-    gap: 0.08em;
+    gap: 0.24em;
     font-size: 2.1rem;
     line-height: 1.06;
   }
@@ -2244,5 +2298,9 @@ nav .holder li a.activo {
   .value-proposition {
     font-size: .98rem;
     line-height: 1.5;
+  }
+
+  .hero-partnership-line {
+    font-size: 1.02rem;
   }
 }

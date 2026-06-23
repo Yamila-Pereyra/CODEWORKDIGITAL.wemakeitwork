@@ -76,6 +76,9 @@ export default function Home() {
     const cta = t.homePage.cta;
     const narrative = t.homePage.narrative;
     const heroValueProposition = narrative.valueProposition;
+    const partnershipWords = narrative.partnership.split(" ");
+    const partnershipAccentIndex =
+        language === "it" ? partnershipWords.length - 1 : 0;
     const heroValueCharCount = Array.from(heroValueProposition).filter(
         (character) => character !== " "
     ).length;
@@ -667,27 +670,47 @@ export default function Home() {
                         </span>
                     ))}
                   </h2>
-                  <p
-                      className={`value-proposition is-${valuePropositionPhase}`}
-                      aria-label={heroValueProposition}
-                  >
-                    <span className="value-proposition-visual" aria-hidden="true">
-                      {valuePropositionWords.map((word, wordIndex) => (
-                          <span className="value-word" key={word.id}>
-                            {word.chars.map(({ character, index }) => (
-                                <span
-                                    className="value-char"
-                                    key={`${character}-${index}`}
-                                    style={{ "--char-index": index }}
-                                >
-                                  {character}
-                                </span>
-                            ))}
-                            {wordIndex < valuePropositionWords.length - 1 ? "\u00A0" : ""}
+                  <div className="hero-value-stack">
+                    <p
+                        className={`value-proposition is-${valuePropositionPhase}`}
+                        aria-label={heroValueProposition}
+                    >
+                      <span className="value-proposition-visual" aria-hidden="true">
+                        {valuePropositionWords.map((word, wordIndex) => (
+                            <span className="value-word" key={word.id}>
+                              {word.chars.map(({ character, index }) => (
+                                  <span
+                                      className="value-char"
+                                      key={`${character}-${index}`}
+                                      style={{ "--char-index": index }}
+                                  >
+                                    {character}
+                                  </span>
+                              ))}
+                              {wordIndex < valuePropositionWords.length - 1 ? "\u00A0" : ""}
+                            </span>
+                        ))}
+                      </span>
+                    </p>
+                    <p
+                        className={`hero-partnership-line ${
+                            valuePropositionPhase === "impact" ||
+                            valuePropositionPhase === "complete"
+                                ? "is-visible"
+                                : ""
+                        }`}
+                    >
+                      {partnershipWords.map((word, index) => (
+                          <span
+                              className={index === partnershipAccentIndex ? "hero-partnership-accent" : undefined}
+                              key={`${word}-${index}`}
+                          >
+                            {word}
+                            {index < partnershipWords.length - 1 ? " " : ""}
                           </span>
                       ))}
-                    </span>
-                  </p>
+                    </p>
+                  </div>
                 </section>
               </div>
             </div>
