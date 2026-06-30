@@ -144,7 +144,7 @@ export const translations = {
         footer: {
             title: "CodeWork Digital",
             email: "contact@codeworkdigital.com",
-            phone: "+39 XXX XXX XXXX",
+            phone: "+39 333 735 2719",
             copy: "© 2025 Code Work Digital — Todos los derechos reservados."
         },
         contactPage: {
@@ -413,7 +413,7 @@ digitales que generan resultados.`,
         footer: {
             title: "CodeWork Digital",
             email: "contact@codeworkdigital.com",
-            phone: "+39 XXX XXX XXXX",
+            phone: "+39 333 735 2719",
             copy: "© 2025 Code Work Digital — All rights reserved."
         },
         contactPage: {
@@ -679,7 +679,7 @@ experiences that deliver results.`,
         footer: {
             title: "CodeWork Digital",
             email: "contact@codeworkdigital.com",
-            phone: "+39 XXX XXX XXXX",
+            phone: "+39 333 735 2719",
             copy: "© 2025 Code Work Digital — Tutti i diritti riservati."
         },
         contactPage: {
