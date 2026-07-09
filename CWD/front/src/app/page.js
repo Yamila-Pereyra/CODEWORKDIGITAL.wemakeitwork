@@ -1,242 +1,544 @@
 "use client";
 
-import Head from "next/head";import "@/app/home1.css";import "@/styles/contacto.css";
+import Head from "next/head";
+import "@/app/home1.css";
+import "@/styles/contacto.css";
 
-import Link from "next/link";import ContactForm from "@/components/ContactForm";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translations } from "@/translations";
+import OpticalDivider from "@/components/OpticalDivider";
+import CodeCascade from "@/components/CodeCascade";
 
-import {useEffect,useState,useRef} from "react";
+gsap.registerPlugin(ScrollTrigger);
+
+const HERO_CAROUSEL_MOTION_PRESETS = {
+  balanced: {
+    gapPx: 22,
+    durationMs: 960,
+    easing: "cubic-bezier(0.11, 0.95, 0.18, 1)",
+  },
+  noticeableBrake: {
+    gapPx: 28,
+    durationMs: 1550,
+    easing:
+        "linear(0, 0.2 7%, 0.46 16%, 0.68 30%, 0.82 46%, 0.92 64%, 0.98 86%, 1)",
+  },
+  cinematicBrake: {
+    gapPx: 32,
+    durationMs: 1480,
+    easing: "cubic-bezier(0.06, 0.76, 0.1, 1)",
+  },
+};
+
+const HERO_CAROUSEL_MOTION =
+    HERO_CAROUSEL_MOTION_PRESETS.noticeableBrake;
+
+const HERO_CAROUSEL_GAP = HERO_CAROUSEL_MOTION.gapPx;
+const HERO_CAROUSEL_RESET_MS = HERO_CAROUSEL_MOTION.durationMs + 80;
+
+const NARRATIVE_TIMING = {
+  triadInitialDelayMs: 220,
+  triadWordDurationMs: 850,
+  triadWordGapMs: 650,
+  phraseCharStepMs: 18,
+  phraseCharRevealDurationMs: 180,
+  phraseVisualLeadMs: 350,
+  phraseHoldAfterTypingMs: 320,
+  phraseFadeOutDurationMs: 220,
+  phraseRevealDelayMs: 80,
+  phraseRevealDurationMs: 420,
+};
+
+const HERO_MEDIMOS_START_MS =
+    NARRATIVE_TIMING.triadInitialDelayMs +
+    NARRATIVE_TIMING.triadWordGapMs * 2;
+
+const HERO_PHRASE_START_AFTER_TRIAD_MS =
+    NARRATIVE_TIMING.triadWordGapMs;
+
+const HERO_VALUE_START_DELAY_MS = Math.max(
+    0,
+    HERO_MEDIMOS_START_MS +
+    HERO_PHRASE_START_AFTER_TRIAD_MS -
+    NARRATIVE_TIMING.phraseVisualLeadMs
+);
 
 export default function Home() {
+  const { language } = useLanguage();
+  const t = translations[language];
 
-  const frases = ["Desarrollo Web Profesional","Tiendas Online y E-commerce","Optimización y SEO","Aplicaciones Web y Móviles","Diseño que convierte"];
+  const slides = t.homePage.carousel;
+  const beneficios = t.homePage.beneficios;
+  const beneficiosExtended = t.homePage.beneficiosExtended || [];
+  const beneficiosHeader = t.homePage.beneficiosHeader;
+  const servicios = t.homePage.servicios;
+  const cta = t.homePage.cta;
+  const narrative = t.homePage.narrative;
 
-  const [index, setIndex] = useState(0);const [fade, setFade] = useState(true);
+  const beneficiosTitleLines = useMemo(
+      () => beneficiosHeader.lineas || [beneficiosHeader.titulo],
+      [beneficiosHeader]
+  );
+
+  const heroValueProposition = narrative.valueProposition;
+  const partnershipWords = narrative.partnership.split(" ");
+
+  const partnershipAccentIndex =
+      language === "it" ? partnershipWords.length - 1 : 0;
+
+  const heroValueCharCount = Array.from(heroValueProposition).filter(
+      (character) => character !== " "
+  ).length;
+
+  const heroValueTypingMs =
+      heroValueCharCount * NARRATIVE_TIMING.phraseCharStepMs + 320;
 
   const beneficiosRef = useRef(null);
-
-  const slides = [{image: "/imagenes/carrucel-1.png",title: "Creamos experiencias visuales",text: "Que transmiten confianza, modernidad y credibilidad para tu marca."},{image: "/imagenes/carrucel-2.png",title: "Apps móviles que conectan con tus usuarios",text: "Desarrollamos aplicaciones para Android e iOS con experiencias intuitivas, rápidas y escalables."},{image: "/imagenes/carrucel-3.png",title: "Más visibilidad. Más clientes. Más resultados.",text: "Optimizamos tu presencia digital para atraer más tráfico, mejorar tu posicionamiento y convertir visitas en oportunidades."}];
+  const beneficiosHeaderRef = useRef(null);
+  const sectionRef = useRef(null);
+  const carouselTrackRef = useRef(null);
+  const carouselResetTimeoutRef = useRef(null);
 
   const [slideIndex, setSlideIndex] = useState(0);
+  const [carouselIndex, setCarouselIndex] = useState(1);
+  const [isCarouselResetting, setIsCarouselResetting] = useState(false);
+  const [valuePropositionPhase, setValuePropositionPhase] =
+      useState("idle");
 
-  /* =========================NOSOTROS========================= */
+  const valuePropositionWords = useMemo(() => {
+    let characterIndex = 0;
 
-  const nosotrosRef = useRef(null);
+    return heroValueProposition.split(" ").map((word, wordIndex) => ({
+      id: `${word}-${wordIndex}`,
+      chars: Array.from(word).map((character) => {
+        const nextCharacter = {
+          character,
+          index: characterIndex,
+        };
 
-  const [x, setX] = useState(-120);const [opacity, setOpacity] = useState(0);
-
-  /* =========================SERVICIOS========================= */
-
-  const sectionRef = useRef(null);
-
-  /* =========================HERO CARRUSEL========================= */
-
-  useEffect(() => {
-
-    const intervalo = setInterval(() => {
-
-      setFade(false);
-
-      setTimeout(() => {
-
-        setIndex((prev) =>
-            (prev + 1) % frases.length
-        );
-
-        setFade(true);
-
-      }, 300);
-
-    }, 2500);
-
-    return () => clearInterval(intervalo);
-
-  }, []);
+        characterIndex += 1;
+        return nextCharacter;
+      }),
+    }));
+  }, [heroValueProposition]);
+  /* =========================
+   HERO NARRATIVE
+========================= */
 
   useEffect(() => {
+    const reduceMotionQuery =
+        typeof window !== "undefined"
+            ? window.matchMedia("(prefers-reduced-motion: reduce)")
+            : null;
+
+    const prefersReducedMotion = reduceMotionQuery?.matches;
+    const timers = [];
+
+    const schedule = (callback, delay) => {
+      const timer = setTimeout(callback, delay);
+      timers.push(timer);
+      return timer;
+    };
+
+    if (prefersReducedMotion) {
+      setValuePropositionPhase("complete");
+      return () => timers.forEach(clearTimeout);
+    }
+
+    setValuePropositionPhase("idle");
+
+    schedule(() => {
+      setValuePropositionPhase("typing");
+
+      schedule(() => {
+        setValuePropositionPhase("exiting");
+
+        schedule(() => {
+          setValuePropositionPhase("impact");
+
+          schedule(() => {
+            setValuePropositionPhase("complete");
+          }, NARRATIVE_TIMING.phraseRevealDurationMs);
+        }, NARRATIVE_TIMING.phraseFadeOutDurationMs + NARRATIVE_TIMING.phraseRevealDelayMs);
+      }, heroValueTypingMs + NARRATIVE_TIMING.phraseHoldAfterTypingMs);
+    }, HERO_VALUE_START_DELAY_MS);
+
+    return () => timers.forEach(clearTimeout);
+  }, [heroValueTypingMs, heroValueProposition]);
+
+  /* =========================
+     HERO CAROUSEL
+  ========================= */
+
+  useEffect(() => {
+    if (!slides.length) return undefined;
 
     const interval = setInterval(() => {
+      setSlideIndex((prev) => (prev + 1) % slides.length);
 
-      setSlideIndex((prev) =>
-          (prev + 1) % slides.length
-      );
-
-    }, 5000);
+      setCarouselIndex((prev) => {
+        if (prev >= slides.length + 1) return prev;
+        return prev + 1;
+      });
+    }, 3500);
 
     return () => clearInterval(interval);
-
-  }, []);
-
-  /* =========================BENEFICIOS========================= */
+  }, [slides.length]);
 
   useEffect(() => {
+    setIsCarouselResetting(true);
+    setCarouselIndex(1);
+    setSlideIndex(0);
+  }, [slides.length]);
 
+  useEffect(() => {
+    if (!isCarouselResetting) return undefined;
+
+    const frame = requestAnimationFrame(() => {
+      setIsCarouselResetting(false);
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [isCarouselResetting]);
+
+  useEffect(() => {
+    if (carouselIndex <= slides.length + 1) return undefined;
+
+    setIsCarouselResetting(true);
+    setCarouselIndex(1);
+    setSlideIndex(0);
+
+    return undefined;
+  }, [carouselIndex, slides.length]);
+
+  useEffect(() => {
+    if (carouselIndex !== slides.length + 1) return undefined;
+
+    carouselResetTimeoutRef.current = setTimeout(() => {
+      setIsCarouselResetting(true);
+      setCarouselIndex(1);
+      setSlideIndex(0);
+    }, HERO_CAROUSEL_RESET_MS);
+
+    return () => {
+      if (carouselResetTimeoutRef.current) {
+        clearTimeout(carouselResetTimeoutRef.current);
+      }
+    };
+  }, [carouselIndex, slides.length]);
+
+  const handleHeroCarouselTransitionEnd = (event) => {
+    if (event.target !== carouselTrackRef.current) return;
+    if (carouselIndex !== slides.length + 1) return;
+
+    if (carouselResetTimeoutRef.current) {
+      clearTimeout(carouselResetTimeoutRef.current);
+    }
+
+    setIsCarouselResetting(true);
+    setCarouselIndex(1);
+    setSlideIndex(0);
+  };
+
+  /* =========================
+     BENEFICIOS OBSERVER
+  ========================= */
+
+  useEffect(() => {
     if (!beneficiosRef.current) return;
 
-    const items =
-        beneficiosRef.current.querySelectorAll(
-            ".beneficio-card"
-        );
+    const items = beneficiosRef.current.querySelectorAll(".beneficio-card");
 
-    const observer =
-        new IntersectionObserver(
+    const observer = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const el = entry.target;
+              const index = [...items].indexOf(el);
 
-            (entries, obs) => {
+              el.style.transitionDelay = `${index * 120}ms`;
+              el.classList.add("show");
 
-              entries.forEach((entry) => {
-
-                if (entry.isIntersecting) {
-
-                  const el = entry.target;
-
-                  const index =
-                      [...items].indexOf(el);
-
-                  el.style.transitionDelay =
-                      `${index * 120}ms`;
-
-                  el.classList.add("show");
-
-                  obs.unobserve(el);
-
-                }
-
-              });
-
-            },
-
-            {
-              threshold: 0.25,
+              obs.unobserve(el);
             }
-
-        );
-
-    items.forEach((item) =>
-        observer.observe(item)
+          });
+        },
+        {
+          threshold: 0.25,
+        }
     );
+
+    items.forEach((item) => observer.observe(item));
 
     return () => observer.disconnect();
-
   }, []);
-
-  /* =========================NOSOTROS APPLE EFFECT========================= */
+  /* =========================
+   BENEFICIOS PIN
+========================= */
 
   useEffect(() => {
+    const beneficiosSection = beneficiosRef.current;
+    const beneficiosHeader = beneficiosHeaderRef.current;
 
-    const handleScroll = () => {
+    if (!beneficiosSection || !beneficiosHeader) return;
 
-      if (!nosotrosRef.current) return;
+    const mm = gsap.matchMedia();
+    let refreshFrame;
 
-      const rect =
-          nosotrosRef.current.getBoundingClientRect();
+    const ctx = gsap.context(() => {
+      mm.add("(min-width: 1101px)", () => {
+        const WHY_PIN_TOP = 120;
+        const WHY_GEOMETRIC_FADE_DISTANCE = 120;
+        const WHY_LINE_SHIFT = -10;
+        const WHY_EYEBROW_FADE_DELAY = 0.85;
 
-      const windowHeight =
-          window.innerHeight;
+        const cardsContainer = beneficiosSection.querySelector(".beneficios-grid");
 
-      const progress =
-          1 - (rect.top / windowHeight);
+        if (!cardsContainer) return;
 
-      const p =
-          Math.max(0, Math.min(1, progress));
+        const cards = gsap.utils.toArray(".beneficio-card", cardsContainer);
+        const lastCard = cards[cards.length - 1];
 
-      setX(-120 + p * 240);
+        if (!lastCard) return;
 
-      setOpacity(p);
+        const titleLines = gsap.utils.toArray(".why-title-line", beneficiosHeader);
+        const eyebrow = beneficiosHeader.querySelector(".beneficios-eyebrow");
 
-    };
+        if (!titleLines.length || !eyebrow) return;
 
-    window.addEventListener(
-        "scroll",
-        handleScroll
-    );
+        const getTitleFirstLineBottom = () => {
+          const headerRect = beneficiosHeader.getBoundingClientRect();
+          const firstLineRect = titleLines[0].getBoundingClientRect();
 
-    handleScroll();
+          return WHY_PIN_TOP + firstLineRect.bottom - headerRect.top;
+        };
 
-    return () =>
-        window.removeEventListener(
-            "scroll",
-            handleScroll
-        );
+        gsap.set(titleLines, {
+          autoAlpha: 1,
+          y: 0,
+        });
 
-  }, []);
+        gsap.set(eyebrow, {
+          autoAlpha: 1,
+          y: 0,
+        });
 
-  /* =========================SERVICIOS SCROLL EFFECT========================= */
+        const pinTrigger = ScrollTrigger.create({
+          trigger: beneficiosSection,
+          pin: beneficiosHeader,
+          start: `top ${WHY_PIN_TOP}px`,
+          endTrigger: lastCard,
+          end: () => `bottom ${getTitleFirstLineBottom()}`,
+          pinSpacing: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        });
 
-  useEffect(() => {
+        const clampProgress = gsap.utils.clamp(0, 1);
 
-    const cards =
-        document.querySelectorAll(
-            ".cinematic-card"
-        );
+        const lineSetters = titleLines.map((line) => ({
+          opacity: gsap.quickSetter(line, "opacity"),
+          y: gsap.quickSetter(line, "y", "px"),
+        }));
 
-    const handleScroll = () => {
+        const eyebrowSetters = {
+          opacity: gsap.quickSetter(eyebrow, "opacity"),
+          y: gsap.quickSetter(eyebrow, "y", "px"),
+        };
 
-      const section =
-          sectionRef.current;
+        const getLastRowCards = () => {
+          const lastRowTop = Math.max(...cards.map((card) => card.offsetTop));
 
-      if (!section) return;
+          return cards.filter((card) =>
+              Math.abs(card.offsetTop - lastRowTop) < 4
+          );
+        };
 
-      const rect =
-          section.getBoundingClientRect();
+        const getLastRowBottom = () =>
+            Math.max(
+                ...getLastRowCards().map((card) =>
+                    card.getBoundingClientRect().bottom
+                )
+            );
 
-      const scrollProgress =
-          -rect.top;
+        const updateGeometricFade = () => {
+          const targetY = getLastRowBottom();
 
-      cards.forEach((card, index) => {
+          const opacities = titleLines.map((line, index) => {
+            const lineBottom = line.getBoundingClientRect().bottom;
 
-        const start =
-            index * 500;
+            const progress = clampProgress(
+                (lineBottom + WHY_GEOMETRIC_FADE_DISTANCE - targetY) /
+                WHY_GEOMETRIC_FADE_DISTANCE
+            );
 
-        const end =
-            start + 700;
+            const opacity = 1 - progress;
 
-        let progress =
-            (scrollProgress - start) /
-            (end - start);
+            lineSetters[index].opacity(opacity);
+            lineSetters[index].y(WHY_LINE_SHIFT * progress);
 
-        progress =
-            Math.max(0, Math.min(progress, 1));
+            return opacity;
+          });
 
-        const y =
-            300 - (progress * 600);
+          const firstLineOpacity = opacities[0] ?? 1;
 
-        const opacity =
-            progress < 0.5
-                ? progress * 2
-                : (1 - progress) * 2;
+          const eyebrowProgress = clampProgress(
+              (WHY_EYEBROW_FADE_DELAY - firstLineOpacity) /
+              WHY_EYEBROW_FADE_DELAY
+          );
 
-        card.style.transform =
-            `translate(-50%, ${y}px)`;
+          eyebrowSetters.opacity(1 - eyebrowProgress);
+          eyebrowSetters.y(-4 * eyebrowProgress);
+        };
 
-        card.style.opacity =
-            opacity;
+        const fadeTrigger = ScrollTrigger.create({
+          trigger: beneficiosSection,
+          start: `top ${WHY_PIN_TOP}px`,
+          endTrigger: lastCard,
+          end: () => `bottom ${getTitleFirstLineBottom()}`,
+          invalidateOnRefresh: true,
+          onRefresh: updateGeometricFade,
+          onUpdate: updateGeometricFade,
+          onEnter: updateGeometricFade,
+          onLeave: updateGeometricFade,
+          onEnterBack: updateGeometricFade,
+          onLeaveBack: updateGeometricFade,
+        });
 
+        refreshFrame = requestAnimationFrame(() => {
+          pinTrigger.refresh();
+          fadeTrigger.refresh();
+          updateGeometricFade();
+        });
       });
+    }, beneficiosSection);
 
+    return () => {
+      if (refreshFrame) {
+        cancelAnimationFrame(refreshFrame);
+      }
+
+      ctx.revert();
+      mm.revert();
     };
+  }, [language, beneficiosTitleLines]);
 
-    window.addEventListener(
-        "scroll",
-        handleScroll
-    );
+  /* =========================
+     SERVICIOS SCROLL EFFECT
+  ========================= */
 
-    handleScroll();
+  useEffect(() => {
+    const section = sectionRef.current;
 
-    return () =>
-        window.removeEventListener(
-            "scroll",
-            handleScroll
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      const cardsScroll = section.querySelector(".services-cards-scroll");
+      const list = section.querySelector(".services-list");
+      const items = gsap.utils.toArray(".service-item", section);
+
+      if (!cardsScroll || !list || !items.length) return;
+
+      const mm = gsap.matchMedia();
+
+      mm.add("(min-width: 769px)", () => {
+        gsap.set(cardsScroll, {
+          autoAlpha: 1,
+        });
+
+        gsap.set(items, {
+          autoAlpha: 0,
+          y: 32,
+        });
+
+        gsap.set(list, {
+          xPercent: -50,
+          y: () => window.innerHeight * 0.18,
+        });
+
+        const getScrollDistance = () =>
+            Math.max(
+                list.scrollHeight + window.innerHeight * 0.7,
+                window.innerHeight * 2.2
+            );
+
+        const getFinalY = () =>
+            -Math.max(
+                list.scrollHeight - window.innerHeight * 0.42,
+                window.innerHeight * 1.45
+            );
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: () => `+=${getScrollDistance()}`,
+            pin: true,
+            scrub: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        tl.to(
+            items,
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.18,
+              stagger: 0.04,
+            },
+            0
+        ).to(
+            list,
+            {
+              y: getFinalY,
+              ease: "none",
+              duration: 1,
+            },
+            0
         );
 
+        return () => {
+          ScrollTrigger.getAll().forEach((trigger) => {
+            if (trigger.trigger === section) {
+              trigger.kill();
+            }
+          });
+        };
+      });
+    }, section);
+
+    return () => ctx.revert();
   }, []);
+  const heroCarouselSlides = slides.length
+      ? [
+        {
+          slide: slides[slides.length - 1],
+          realIndex: slides.length - 1,
+          key: "clone-last",
+        },
+        ...slides.map((slide, index) => ({
+          slide,
+          realIndex: index,
+          key: `slide-${index}`,
+        })),
+        {
+          slide: slides[0],
+          realIndex: 0,
+          key: "clone-first",
+        },
+      ]
+      : [];
 
   return (
-
       <main>
-
         <Head>
-          <title>
-            CodeWork Digital - Inicio
-          </title>
+          <title>CodeWork Digital - Inicio</title>
 
           <meta
               name="description"
@@ -244,232 +546,281 @@ export default function Home() {
           />
         </Head>
 
-        {/* ================= HERO ================= */}
-
-        <section className="hero">
-
-          <h1>
-            CodeWork Digital
-          </h1>
-
-          <p
-              className={`carousel-text ${
-                  fade ? "fade-in" : "fade-out"
-              }`}
-          >
-            {frases[index]}
-          </p>
-
-        </section>
-
         {/* ================= HERO SECTION ================= */}
-
-        <section className="hero-section">
-
-          <div className="hero-grid">
-
-            <div className="hero-left reveal-left">
-
-              <h2>
-                Creamos sitios web y aplicaciones móviles
-                profesionales que impulsan tu negocio.
-              </h2>
-
-            </div>
-
-            <div className="hero-right reveal-right">
-
-              <p>
-                En <strong>CodeWork Digital</strong>
-                combinamos diseño, tecnología y estrategia para crear sitios web y aplicaciones móviles modernas, funcionales y alineadas con las necesidades de cada negocio.
-              </p>
-
-            </div>
-
+        <div className="hero-showcase-composition">
+          <div className="hero-code-layer" aria-hidden="true">
+            <CodeCascade />
           </div>
 
-        </section>
+          <section className="hero">
+            <div className="hero-layout">
+              <div className="hero-brand-lockup">
+                <h1 className="hero-title">
+                <span className="line1 glitch-line" data-text="CodeWork">
+                  CodeWork
+                </span>
 
-        {/* ================= SHOWCASE ================= */}
+                  <span className="line2 glitch-line" data-text="Digital">
+                  Digital
+                </span>
+                </h1>
 
-        <section className="premium-carousel">
+                <p className="carousel-text hero-slogan">
+                  <span className="hero-slogan-mark">_</span>we make it work
+                </p>
 
-          {slides.map((slide, i) => (
+                <section
+                    className="cwd-narrative-core"
+                    aria-labelledby="cwd-narrative-title"
+                    style={{
+                      "--triad-initial-delay": `${NARRATIVE_TIMING.triadInitialDelayMs}ms`,
+                      "--triad-word-duration": `${NARRATIVE_TIMING.triadWordDurationMs}ms`,
+                      "--triad-word-gap": `${NARRATIVE_TIMING.triadWordGapMs}ms`,
+                      "--phrase-char-step": `${NARRATIVE_TIMING.phraseCharStepMs}ms`,
+                      "--phrase-char-duration": `${NARRATIVE_TIMING.phraseCharRevealDurationMs}ms`,
+                      "--phrase-fade-out-duration": `${NARRATIVE_TIMING.phraseFadeOutDurationMs}ms`,
+                      "--phrase-reveal-duration": `${NARRATIVE_TIMING.phraseRevealDurationMs}ms`,
+                    }}
+                >
+                  <h2 className="brutal-triad" id="cwd-narrative-title">
+                    {narrative.triad.map((word, index) => (
+                        <span
+                            className={`triad-word ${
+                                index === narrative.triad.length - 1
+                                    ? "accent-glow"
+                                    : ""
+                            }`}
+                            key={word}
+                        >
+                      {word}
+                    </span>
+                    ))}
+                  </h2>
 
-              <div
-                  key={i}
-                  className={`premium-slide ${
-                      i === slideIndex ? "active" : ""
-                  }`}
-              >
+                  <div className="hero-value-stack">
+                    <p
+                        className={`value-proposition is-${valuePropositionPhase}`}
+                        aria-label={heroValueProposition}
+                    >
+                    <span
+                        className="value-proposition-visual"
+                        aria-hidden="true"
+                    >
+                      {valuePropositionWords.map((word, wordIndex) => (
+                          <span className="value-word" key={word.id}>
+                          {word.chars.map(({ character, index }) => (
+                              <span
+                                  className="value-char"
+                                  key={`${character}-${index}`}
+                                  style={{ "--char-index": index }}
+                              >
+                              {character}
+                            </span>
+                          ))}
 
-                <img
-                    src={slide.image}
-                    alt={slide.title}
-                />
+                            {wordIndex < valuePropositionWords.length - 1
+                                ? "\u00A0"
+                                : ""}
+                        </span>
+                      ))}
+                    </span>
+                    </p>
 
+                    <p
+                        className={`hero-partnership-line ${
+                            valuePropositionPhase === "impact" ||
+                            valuePropositionPhase === "complete"
+                                ? "is-visible"
+                                : ""
+                        }`}
+                    >
+                      {partnershipWords.map((word, index) => (
+                          <span
+                              className={
+                                index === partnershipAccentIndex
+                                    ? "hero-partnership-accent"
+                                    : undefined
+                              }
+                              key={`${word}-${index}`}
+                          >
+                        {word}
+                            {index < partnershipWords.length - 1 ? " " : ""}
+                      </span>
+                      ))}
+                    </p>
+                  </div>
+                </section>
               </div>
+            </div>
+          </section>
 
-          ))}
+          {/* ================= SHOWCASE ================= */}
+          <section
+              className="premium-carousel hero-carousel"
+              style={{
+                "--hero-carousel-gap": `${HERO_CAROUSEL_MOTION.gapPx}px`,
+                "--hero-carousel-duration": `${HERO_CAROUSEL_MOTION.durationMs}ms`,
+                "--hero-carousel-easing": HERO_CAROUSEL_MOTION.easing,
+              }}
+          >
+            <div
+                className={`hero-track ${
+                    isCarouselResetting ? "is-resetting" : ""
+                }`}
+                ref={carouselTrackRef}
+                style={{
+                  transform: `translate3d(calc(-${
+                      carouselIndex * 100
+                  }% - ${carouselIndex * HERO_CAROUSEL_GAP}px), 0, 0)`,
+                }}
+                onTransitionEnd={handleHeroCarouselTransitionEnd}
+            >
+              {heroCarouselSlides.map(({ slide, realIndex, key }, i) => (
+                  <div
+                      key={key}
+                      className={`premium-slide hero-slide ${
+                          i === carouselIndex ? "active" : ""
+                      }`}
+                  >
+                    <img
+                        src={slide.image}
+                        alt={slide.title}
+                        loading="eager"
+                        decoding="async"
+                    />
 
-          <div className="premium-dots">
-
-            {slides.map((_, i) => (
-
-                <button
-                    key={i}
-                    onClick={() =>
-                        setSlideIndex(i)
-                    }
-                    className={
-                      i === slideIndex
-                          ? "active"
-                          : ""
-                    }
-                />
-
-            ))}
-
-          </div>
-
-        </section>
-
-        {/* ================= NOSOTROS ================= */}
-        {/* ================= BENEFICIOS / NOSOTROS ================= */}
-
-        <section className="beneficios">
-          <div className="container beneficios-layout">
-
-            <div className="beneficios-grid" ref={beneficiosRef}>
-
-              {[
-                {
-                  front: "/imagenes/diseno-front.png",
-                  back: "/imagenes/diseno-back.png",
-                  alt: "Diseño moderno",
-                },
-                {
-                  front: "/imagenes/rendimiento-front.png",
-                  back: "/imagenes/rendimiento-back.png",
-                  alt: "Mayor rendimiento",
-                },
-                {
-                  front: "/imagenes/proteccion-front.png",
-                  back: "/imagenes/proteccion-back.png",
-                  alt: "Protección avanzada",
-                },
-                {
-                  front: "/imagenes/responsive-front.png",
-                  back: "/imagenes/responsive-back.png",
-                  alt: "Diseño responsive",
-                },
-                {
-                  front: "/imagenes/seo-front-cortado.png",
-                  back: "/imagenes/seo-back-cortado.png",
-                  alt: "SEO & E-commerce",
-                },
-                {
-                  front: "/imagenes/acompanamiento-front-codework.png",
-                  back: "/imagenes/acompanamiento-back-codework.png",
-                  alt: "Acompañamiento",
-                },
-              ].map((item, index) => (
-                  <div className="beneficio-card" key={index}>
-                    <div className="beneficio-img beneficio-front">
-                      <img src={item.front} alt={item.alt} />
-                    </div>
-
-                    <div className="beneficio-img beneficio-back">
-                      <img src={item.back} alt={item.alt} />
+                    <div className={`slide-content slide-${realIndex}`}>
+                      <h2>{slide.title}</h2>
+                      <p>{slide.text}</p>
                     </div>
                   </div>
               ))}
-
             </div>
-            <div className="beneficios-texto">
-              <div>
-                <span>Por qué</span>
-                <strong>elegirnos</strong>
-              </div>
+          </section>
+
+          <div
+              className="hero-carousel-progress outside-dots"
+              aria-label="Progreso del carrusel principal"
+          >
+            {slides.map((_, i) => (
+                <button
+                    key={i}
+                    type="button"
+                    onClick={() => {
+                      setSlideIndex(i);
+                      setCarouselIndex(i + 1);
+                    }}
+                    className={`hero-carousel-progress__segment ${
+                        i < slideIndex
+                            ? "is-filled"
+                            : i === slideIndex
+                                ? "is-active"
+                                : "is-pending"
+                    }`}
+                    aria-label={`Ir al slide ${i + 1} de ${slides.length}`}
+                    aria-current={i === slideIndex ? "true" : undefined}
+                >
+                  <span className="hero-carousel-progress__fill" />
+                </button>
+            ))}
+          </div>
+        </div>
+        {/* ================= BENEFICIOS / NOSOTROS ================= */}
+        <section className="beneficios" ref={beneficiosRef}>
+          <div className="beneficios-layout">
+            <div className="beneficios-grid">
+              {beneficios.map((item, index) => {
+                const expanded = beneficiosExtended[index] || {
+                  title: item.title,
+                  text: item.text,
+                };
+
+                return (
+                    <article className="beneficio-card" key={index} tabIndex={0}>
+                      <div className="beneficio-card-front">
+                        <div className="beneficio-card-img">
+                          <img src={item.image} alt={item.title} />
+                        </div>
+
+                        <div className="beneficio-card-text">
+                          <span>{String(index + 1).padStart(2, "0")}</span>
+                          <h3>{item.title}</h3>
+                          <p>{item.text}</p>
+                        </div>
+                      </div>
+
+                      <div className="beneficio-card-back">
+                        <span>{String(index + 1).padStart(2, "0")}</span>
+                        <h3>{expanded.title}</h3>
+                        <p>{expanded.text}</p>
+                      </div>
+                    </article>
+                );
+              })}
             </div>
 
+            <div className="beneficios-header" ref={beneficiosHeaderRef}>
+            <span className="beneficios-eyebrow">
+              {beneficiosHeader.subtitulo}
+            </span>
+
+              <h2 aria-label={beneficiosHeader.titulo}>
+                {beneficiosTitleLines.map((line) => (
+                    <span
+                        className="why-title-line"
+                        aria-hidden="true"
+                        key={line}
+                    >
+                  {line}
+                </span>
+                ))}
+              </h2>
+            </div>
           </div>
         </section>
+
         {/* ================= SERVICIOS ================= */}
-        <section className="services-clean">
-
-          <div className="services-fixed-title">
-            <h1>SERVICIOS</h1>
+        <section className="services-clean" ref={sectionRef}>
+          <div className="services-bg-title">
+            <h1>{servicios.titulo}</h1>
           </div>
 
-          <div className="services-list">
-
-            <div className="service-item left">
-
-              <h3>Desarrollo Web</h3>
-              <p>
-                Sitios modernos y optimizados.
-              </p>
+          <div className="services-cards-scroll">
+            <div className="services-list">
+              {servicios.items.map((item, index) => (
+                  <div
+                      key={index}
+                      className={`service-item ${
+                          index % 2 === 0 ? "left" : "right"
+                      }`}
+                  >
+                    <span>{item.numero}</span>
+                    <h3>{item.titulo}</h3>
+                    <p>{item.texto}</p>
+                  </div>
+              ))}
             </div>
-
-            <div className="service-item right">
-
-              <h3>E-Commerce</h3>
-              <p>
-                Tiendas online enfocadas en ventas.
-              </p>
-            </div>
-
-            <div className="service-item left">
-
-              <h3>SEO & Optimización</h3>
-              <p>
-                Velocidad y posicionamiento.
-              </p>
-            </div>
-
-            <div className="service-item right">
-
-              <h3> Desarrollo de Apps Mobile</h3>
-              <p>
-                Aplicaciones móviles personalizadas para Android y iOS.
-              </p>
-            </div>
-
           </div>
-
         </section>
+
         {/* ================= CTA FINAL ================= */}
-
         <section className="cta-final">
+          <div className="cta-glow" />
 
-          <div className="container">
+          <div className="cta-content">
+            <span>{cta.badge}</span>
 
-            <h2>
-              ¡Llevemos tu proyecto al siguiente nivel!
-            </h2>
+            <h2>{cta.titulo}</h2>
 
-            <p>
-              Contanos tu idea y creamos una solución digital pensada para hacer crecer tu negocio.
-            </p>
+            <p>{cta.texto}</p>
 
-            <Link
-                href="/contacto"
-                className="btn-primary btn-contactar"
-            >
-              Contactar ahora
+            <Link href="/contacto" className="btn-contactar cta-final-comet-button">
+              {cta.boton}
             </Link>
-
           </div>
 
+          <OpticalDivider />
         </section>
-
-        {/* ================= FORM =================
-
-    <ContactForm
-        postUrl={`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/contacto`}
-    />*/
-        }
       </main>
-
-  );}
+  );
+}

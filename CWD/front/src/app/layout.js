@@ -2,11 +2,16 @@ import "@/styles/globals.css";
 import "@/styles/quienessomos.css";
 import "@/styles/servicios.css";
 import "@/styles/contacto.css";
+
 import Nav from "@/components/Nav";
-import Link from "next/link";
-import { LanguageProvider } from "@/contexts/LanguageContext";
+import Footer from "@/components/Footer";
 import LanguageSelector from "@/components/LanguageSelector";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+
+import Link from "next/link";
 import { Red_Hat_Display } from "next/font/google";
+import { FaWhatsapp } from "react-icons/fa";
+
 const redHat = Red_Hat_Display({
     subsets: ["latin"],
     weight: ["400", "500", "700", "800", "900"],
@@ -26,15 +31,9 @@ export default function RootLayout({ children }) {
                 <div className="logo-container">
                     <Link href="/" className="logo-link">
                         <img
-                            src="/imagenes/logodegradea-v.png"
+                            src="/icon.png"
                             className="logo-img"
-                            alt="Logo Code Work Digital"
-                        />
-
-                        <img
-                            src="/imagenes/Sloganazul-verde.png"
-                            className="slogan-img"
-                            alt="We make it work"
+                            alt="Isotipo Code Work Digital"
                         />
                     </Link>
                 </div>
@@ -46,11 +45,22 @@ export default function RootLayout({ children }) {
                 <LanguageSelector />
             </header>
 
-            <div className="main-content">{children}</div>
+            <div className="main-content">
+                {children}
+            </div>
 
-            <footer>
-                <p>© 2025 Code Work Digital — Todos los derechos reservados.</p>
-            </footer>
+            <Footer />
+
+            {/* Botón WhatsApp (solo móvil mediante CSS) */}
+            <a
+                href="https://wa.me/393337352719"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="whatsapp-float"
+                aria-label="WhatsApp"
+            >
+                <FaWhatsapp />
+            </a>
         </LanguageProvider>
         </body>
         </html>

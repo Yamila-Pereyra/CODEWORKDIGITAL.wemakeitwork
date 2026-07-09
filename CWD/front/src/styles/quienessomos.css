@@ -13,22 +13,39 @@
 /* HERO */
 
 .qs-hero {
+    position: relative;
     width: 100%;
     background: #000;
     padding: 90px 0 110px;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.qs-hero::before {
+    content: none;
+    pointer-events: none;
+}
+
+.qs-hero::after {
+    content: none;
+    pointer-events: none;
 }
 
 .qs-hero-layout {
+    position: relative;
+    z-index: 2;
     width: min(1280px, calc(100% - 80px));
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
-    gap: 80px;
-    align-items: center;
+    min-height: 690px;
+    overflow: visible;
 }
 
 .qs-hero-content {
+    position: relative;
+    z-index: 2;
     min-width: 0;
+    max-width: 760px;
+    padding: 0 0 72px;
 }
 
 .qs-label {
@@ -48,6 +65,7 @@
     line-height: 0.92;
     letter-spacing: -0.075em;
     font-weight: 900;
+    overflow-wrap: anywhere;
 }
 
 .qs-hero-content p {
@@ -56,6 +74,7 @@
     color: rgba(255, 255, 255, 0.72);
     font-size: 1.15rem;
     line-height: 1.65;
+    overflow-wrap: anywhere;
 }
 
 .qs-actions {
@@ -67,66 +86,148 @@
 
 .qs-btn-primary,
 .qs-btn-secondary {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 52px;
-    padding: 0 26px;
+
+    min-height: 54px;
+    padding: 0 30px;
     border-radius: 999px;
-    font-size: 0.95rem;
-    font-weight: 800;
+
+    font-size: 0.92rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
     text-decoration: none;
-    transition: transform 0.3s ease, background 0.3s ease;
+
+    transition:
+            transform 0.35s ease,
+            border-color 0.35s ease,
+            box-shadow 0.35s ease,
+            background 0.35s ease;
 }
 
 .qs-btn-primary {
-    background: #fff;
-    color: #000;
+    color: #fff;
+    background:
+            linear-gradient(135deg, rgba(255, 0, 119, 0.95), rgba(56, 189, 248, 0.28)),
+            #050505;
+    border: 1px solid rgba(255, 0, 119, 0.48);
+    box-shadow:
+            0 16px 46px rgba(0, 0, 0, 0.45),
+            0 0 22px rgba(255, 0, 119, 0.18);
 }
-
 .qs-btn-secondary {
     color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(56, 189, 248, 0.36);
+    box-shadow:
+            inset 0 0 0 1px rgba(255, 255, 255, 0.035),
+            0 12px 34px rgba(0, 0, 0, 0.35);
+}
+.qs-btn-primary::before,
+.qs-btn-secondary::before {
+    content: "";
+    position: absolute;
+    inset: -40%;
+
+    z-index: -1;
+    background: linear-gradient(
+            110deg,
+            transparent 35%,
+            rgba(255, 255, 255, 0.28) 48%,
+            transparent 62%
+    );
+
+    transform: translateX(-70%) rotate(8deg);
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.qs-btn-primary::after,
+.qs-btn-secondary::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    z-index: -2;
+    border-radius: inherit;
+    background:
+            radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.2), transparent 32%),
+            rgba(0, 0, 0, 0.16);
 }
 
 .qs-btn-primary:hover,
 .qs-btn-secondary:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
+}
+
+.qs-btn-primary:hover {
+    box-shadow:
+            0 22px 64px rgba(0, 0, 0, 0.5),
+            0 0 34px rgba(255, 0, 119, 0.28);
 }
 
 .qs-btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(56, 189, 248, 0.7);
+    background: rgba(56, 189, 248, 0.08);
+    box-shadow:
+            inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+            0 18px 48px rgba(56, 189, 248, 0.12);
 }
 
-/* IMAGEN / BLOQUE DERECHO */
+.qs-btn-primary:hover::before,
+.qs-btn-secondary:hover::before {
+    transform: translateX(70%) rotate(8deg);
+}
 
-.qs-hero-image {
-    position: relative;
-    width: 100%;
-    height: 520px;
-    border-radius: 38px;
+.qs-btn-primary:focus-visible,
+.qs-btn-secondary:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.85);
+    outline-offset: 5px;
+}
+
+/* GLOBO HERO */
+
+.qs-hero-globe-layer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: visible;
+}
+
+.qs-hero-globe {
+    position: absolute;
+    top: 20px;
+    right: -260px;
+    width: clamp(860px, 78vw, 1180px);
+    height: clamp(860px, 78vw, 1180px);
     overflow: hidden;
+    opacity: 0.74;
     background:
-            linear-gradient(145deg, rgba(56, 189, 248, 0.18), rgba(255,255,255,0.04)),
-            #111;
-    box-shadow: 0 30px 100px rgba(0, 0, 0, 0.55);
+            radial-gradient(circle at 50% 48%, rgba(255, 79, 207, 0.12), transparent 34%),
+            radial-gradient(circle at 50% 50%, rgba(8, 126, 164, 0.06), transparent 48%);
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.34) 14%, rgba(0, 0, 0, 0.82) 38%, #000 58%);
+    mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.34) 14%, rgba(0, 0, 0, 0.82) 38%, #000 58%);
 }
 
-.qs-hero-image::after {
-    content: "";
+.qs-hero-globe__stage {
     position: absolute;
     inset: 0;
-    background:
-            linear-gradient(to top, rgba(0, 0, 0, 0.72), transparent 55%),
-            radial-gradient(circle at 30% 20%, rgba(56, 189, 248, 0.22), transparent 35%);
-    pointer-events: none;
-}
-
-.qs-hero-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+}
+
+.qs-hero-globe__stage canvas {
     display: block;
+    width: 100%;
+    height: 100%;
 }
 
 /* MANIFIESTO */
@@ -245,12 +346,18 @@
     }
 
     .qs-hero-layout {
-        grid-template-columns: 1fr;
-        gap: 50px;
+        width: calc(100% - 48px);
+        min-height: 620px;
     }
 
-    .qs-hero-image {
-        height: 430px;
+    .qs-hero-globe {
+        top: 72px;
+        right: -360px;
+        width: 840px;
+        height: 840px;
+        min-width: 620px;
+        min-height: 620px;
+        opacity: 0.48;
     }
 
     .qs-manifiesto-grid {
@@ -278,55 +385,101 @@
 /* MOBILE */
 
 @media (max-width: 768px) {
+    .qs-hero-globe-layer {
+        display: block;
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
     .qs-hero {
-        padding: 70px 0 60px;
+        padding: 30px 0 50px;
     }
 
-    .qs-hero-layout,
-    .qs-manifiesto-grid,
-    .qs-valores-grid {
-        width: calc(100% - 32px);
+    .qs-hero-layout {
+        min-height: 560px;
+
+    }
+
+    .qs-hero-globe {
+        position: absolute;
+        top: 140px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 520px;
+        height: 520px;
+        opacity: .30;
+
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+
+    .qs-hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 100%;
+        margin: 0 auto;
+        text-align: center;
+        align-items: center;
+    }
+    .qs-label {
+        display: block;
+        margin-bottom: 20px;
     }
 
     .qs-hero-content h1 {
-        font-size: clamp(3rem, 16vw, 4.7rem);
-        letter-spacing: -0.06em;
+        margin: 0 auto;
     }
 
-    .qs-hero-content p,
-    .qs-manifiesto-grid > p {
-        font-size: 1rem;
+    .qs-hero-content p {
+            max-width: 100%;
+            width: 100%;
+            margin: 26px 0 0;
+            text-align: left;
+        align-self: stretch;
+        }
+    .qs-actions{
+        display:flex;
+        flex-direction:column;
+        gap:12px;
+        margin-top:40px;
     }
 
-    .qs-hero-image {
-        height: 340px;
-        border-radius: 28px;
+    .qs-btn-primary{
+        width:fit-content;
+        align-self:flex-start;
     }
 
+    .qs-btn-secondary{
+        width:fit-content;
+        align-self:flex-end;
+        margin-right:24px;
+    }
     .qs-manifiesto {
         padding: 70px 0;
     }
 
-    .qs-valores {
-        padding: 75px 0 90px;
+    .qs-manifiesto-grid {
+        width: calc(100% - 32px);
+        grid-template-columns: 1fr;
+        gap: 24px;
     }
 
-    .qs-card {
-        min-height: auto;
-    }
-}
-
-@media (max-width: 520px) {
-    .qs-actions {
-        flex-direction: column;
+    .qs-manifiesto-grid > div {
+        order: 1;
+        text-align: left;
     }
 
-    .qs-btn-primary,
-    .qs-btn-secondary {
-        width: 100%;
+    .qs-manifiesto-grid h2 {
+        margin: 0;
     }
 
-    .qs-hero-content h1 {
-        font-size: 3rem;
+    .qs-manifiesto-grid > p {
+        order: 2;
+        margin: 0;
+        max-width: 100%;
+        font-size: 1rem;
+        line-height: 1.7;
+        color: rgba(255,255,255,.72);
     }
 }

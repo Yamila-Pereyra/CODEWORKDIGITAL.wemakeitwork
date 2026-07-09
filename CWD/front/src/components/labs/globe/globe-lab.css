@@ -1,0 +1,20 @@
+.globe-lab {
+  width: 100%;
+  min-height: 100vh;
+  background:
+          radial-gradient(circle at 50% 46%, rgba(79,195,255,.14), transparent 30%),
+          radial-gradient(circle at 50% 50%, rgba(8,126,164,.08), transparent 46%),
+          #000;
+  overflow: hidden;
+}
+
+.globe-lab__stage {
+  width: 100%;
+  height: 100vh;
+}
+
+.globe-lab__stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

@@ -1,105 +1,78 @@
-export const metadata = {
-  title: "Code Work Digital - Quiénes Somos",
-  description: "Soluciones web que impulsan tu negocio",
-};
+"use client";
+
+import dynamic from "next/dynamic";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translations } from "@/translations";
+import OpticalDivider from "@/components/OpticalDivider";
+
+const GlobeLab = dynamic(() => import("@/components/labs/globe/GlobeLab"), {
+  ssr: false,
+});
 
 export default function QuienesSomos() {
+  const { language } = useLanguage();
+  const t = translations[language] || translations.es;
+  const qs = t.quienesSomosPage;
+
   return (
       <main className="qs-page">
         <section className="qs-hero">
-            <div className="qs-hero-layout">
+          <div className="qs-hero-layout">
+            <div className="qs-hero-globe-layer" aria-hidden="true">
+              <GlobeLab
+                  wrapper="div"
+                  className="qs-hero-globe"
+                  stageClassName="qs-hero-globe__stage"
+                  ariaLabel="Globo internacional de Code Work Digital"
+                  progressiveReveal
+              />
+            </div>
+
             <div className="qs-hero-content">
-              <span className="qs-label">Quiénes somos</span>
+              <span className="qs-label">{qs.label}</span>
 
-              <h1>
-                Creamos sitios web,
-                <br />
-                aplicaciones y experiencias
-                <br />
-                digitales que generan resultados.
-              </h1>
+              <h1>{qs.titulo}</h1>
 
-              <p>
-                Creamos sitios web, aplicaciones y soluciones digitales que
-                combinan diseño, tecnología y estrategia para impulsar marcas,
-                mejorar experiencias y generar resultados reales.
-              </p>
+              <p>{qs.descripcion}</p>
 
               <div className="qs-actions">
                 <a href="/contacto" className="qs-btn-primary">
-                  Hablemos de tu proyecto
+                  {qs.botonProyecto}
                 </a>
 
                 <a href="/servicios" className="qs-btn-secondary">
-                  Ver servicios
+                  {qs.botonServicios}
                 </a>
               </div>
-            </div>
-
-            <div className="qs-hero-image">
-              <img
-                  src="/imagenes/quienes-somos-hero.png"
-                  alt="Oficina de Code Work Digital"
-                  loading="eager"
-              />
             </div>
           </div>
         </section>
 
         <section className="qs-manifiesto">
           <div className="qs-manifiesto-grid">
-            <p>
-              Cada proyecto comienza escuchando tus necesidades y entendiendo tus
-              objetivos. Combinamos diseño, desarrollo y estrategia para crear
-              soluciones claras, efectivas y pensadas para crecer junto a tu
-              negocio.
-            </p>
+            <p>{qs.manifiestoTexto}</p>
 
             <div>
-              <span className="qs-label">Nuestra forma de trabajar</span>
+              <span className="qs-label">{qs.manifiestoLabel}</span>
 
-              <h2>
-                Tecnología, diseño y estrategia trabajando juntos.
-              </h2>
+              <h2>{qs.manifiestoTitulo}</h2>
             </div>
           </div>
         </section>
 
-        <section className="qs-valores">
+        <section className="qs-valores optical-divider-host">
           <div className="qs-valores-grid">
-            <article className="qs-card">
-              <span>01</span>
+            {qs.valores.map((item, index) => (
+                <article className="qs-card" key={index}>
+                  <span>{item.numero}</span>
 
-              <h3>Diseño con propósito</h3>
+                  <h3>{item.titulo}</h3>
 
-              <p>
-                Creamos interfaces modernas que reflejan la identidad de tu marca
-                y generan confianza desde el primer vistazo.
-              </p>
-            </article>
-
-            <article className="qs-card">
-              <span>02</span>
-
-              <h3>Tecnología sólida</h3>
-
-              <p>
-                Desarrollamos sitios rápidos, seguros y optimizados para ofrecer
-                una experiencia fluida en cualquier dispositivo.
-              </p>
-            </article>
-
-            <article className="qs-card">
-              <span>03</span>
-
-              <h3>Acompañamiento real</h3>
-
-              <p>
-                Te acompañamos durante todo el proceso, desde la planificación
-                inicial hasta la publicación y evolución del proyecto.
-              </p>
-            </article>
+                  <p>{item.texto}</p>
+                </article>
+            ))}
           </div>
+          <OpticalDivider />
         </section>
       </main>
   );
