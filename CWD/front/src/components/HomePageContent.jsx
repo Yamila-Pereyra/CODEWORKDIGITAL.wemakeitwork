@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
@@ -680,11 +681,12 @@ export default function HomePageContent() {
                   i === carouselIndex ? "active" : ""
                 }`}
               >
-                <img
+                <Image
                   src={slide.image}
                   alt={slide.title}
-                  loading="eager"
-                  decoding="async"
+                  fill
+                  sizes="(max-width: 1024px) calc(100vw - 32px), (max-width: 1413px) 92vw, 1300px"
+                  priority={i === 1}
                 />
 
                 <div className={`slide-content slide-${realIndex}`}>
@@ -737,7 +739,7 @@ export default function HomePageContent() {
                 <article className="beneficio-card" key={index} tabIndex={0}>
                   <div className="beneficio-card-front">
                     <div className="beneficio-card-img">
-                      <img src={item.image} alt={item.title} />
+                      <img src={item.image} alt={item.title} loading="lazy" />
                     </div>
 
                     <div className="beneficio-card-text">

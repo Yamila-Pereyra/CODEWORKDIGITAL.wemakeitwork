@@ -24,17 +24,17 @@ export const translations = {
 
             carousel: [
                 {
-                    image: "/imagenes/CARROUSEL-1.png",
+                    image: "/imagenes/carousel-1.webp",
                     title: "Creamos experiencias visuales",
                     text: "Que transmiten confianza, modernidad y credibilidad para tu marca.",
                 },
                 {
-                    image: "/imagenes/CARROUSEL-2.png",
+                    image: "/imagenes/carousel-2.webp",
                     title: "Apps móviles que conectan con tus usuarios",
                     text: "Desarrollamos aplicaciones para Android e iOS con experiencias intuitivas, rápidas y escalables.",
                 },
                 {
-                    image: "/imagenes/CARROUSEL-3.png",
+                    image: "/imagenes/carousel-3.webp",
                     title: "Más visibilidad. Más clientes. Más resultados.",
                     text: "Optimizamos tu presencia digital para atraer más tráfico, mejorar tu posicionamiento y convertir visitas en oportunidades.",
                 },
@@ -291,17 +291,17 @@ digitales que generan resultados.`,
 
             carousel: [
                 {
-                    image: "/imagenes/CARROUSEL-1.png",
+                    image: "/imagenes/carousel-1.webp",
                     title: "We create visual experiences",
                     text: "That build trust, modernity, and credibility for your brand.",
                 },
                 {
-                    image: "/imagenes/CARROUSEL-2.png",
+                    image: "/imagenes/carousel-2.webp",
                     title: "Mobile apps that connect with your users",
                     text: "We develop Android and iOS applications with intuitive, fast, and scalable experiences.",
                 },
                 {
-                    image: "/imagenes/CARROUSEL-3.png",
+                    image: "/imagenes/carousel-3.webp",
                     title: "More visibility. More clients. More results.",
                     text: "We optimize your digital presence to attract more traffic, improve your ranking, and turn visits into opportunities.",
                 },
@@ -559,17 +559,17 @@ experiences that deliver results.`,
 
             carousel: [
                 {
-                    image: "/imagenes/CARROUSEL-1.png",
+                    image: "/imagenes/carousel-1.webp",
                     title: "Creiamo esperienze visive",
                     text: "Che trasmettono fiducia, modernità e credibilità al tuo brand.",
                 },
                 {
-                    image: "/imagenes/CARROUSEL-2.png",
+                    image: "/imagenes/carousel-2.webp",
                     title: "App mobile che connettono con i tuoi utenti",
                     text: "Sviluppiamo applicazioni Android e iOS con esperienze intuitive, rapide e scalabili.",
                 },
                 {
-                    image: "/imagenes/CARROUSEL-3.png",
+                    image: "/imagenes/carousel-3.webp",
                     title: "Più visibilità. Più clienti. Più risultati.",
                     text: "Ottimizziamo la tua presenza digitale per attirare più traffico, migliorare il posizionamento e trasformare le visite in opportunità.",
                 },
