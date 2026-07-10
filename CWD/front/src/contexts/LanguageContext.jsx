@@ -18,7 +18,10 @@ export function LanguageProvider({ children }) {
         const savedLanguage = localStorage.getItem("language");
         const nextLanguage = normalizeLanguage(savedLanguage);
 
-        setLanguageState(nextLanguage);
+        if (nextLanguage !== DEFAULT_LANGUAGE) {
+            setLanguageState(nextLanguage);
+        }
+
         document.documentElement.lang = nextLanguage;
         setLanguageReady(true);
     }, []);
@@ -30,10 +33,6 @@ export function LanguageProvider({ children }) {
         localStorage.setItem("language", nextLanguage);
         document.documentElement.lang = nextLanguage;
     };
-
-    if (!languageReady) {
-        return null;
-    }
 
     return (
         <LanguageContext.Provider value={{ language, setLanguage, languageReady }}>
