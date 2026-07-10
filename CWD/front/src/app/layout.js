@@ -7,6 +7,8 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import LanguageSelector from "@/components/LanguageSelector";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { DEFAULT_LOCALE, DEFAULT_OG_IMAGE, SITE_NAME } from "@/lib/metadata";
+import { SITE_URL } from "@/lib/site";
 
 import Link from "next/link";
 import { Red_Hat_Display } from "next/font/google";
@@ -18,8 +20,25 @@ const redHat = Red_Hat_Display({
 });
 
 export const metadata = {
-    title: "Code Work Digital",
-    description: "We make it work",
+    metadataBase: new URL(SITE_URL),
+    title: {
+        default: "CodeWork Digital — Desarrollo web y soluciones digitales",
+        template: "%s | CodeWork Digital",
+    },
+    description:
+        "Agencia de desarrollo web y software. Creamos sitios, aplicaciones y soluciones digitales a medida para empresas y emprendedores. We make it work.",
+    openGraph: {
+        type: "website",
+        siteName: SITE_NAME,
+        locale: DEFAULT_LOCALE,
+        title: "CodeWork Digital — Desarrollo web y soluciones digitales",
+        description:
+            "Agencia de desarrollo web y software. Creamos sitios, aplicaciones y soluciones digitales a medida.",
+        images: [{ url: DEFAULT_OG_IMAGE }],
+    },
+    twitter: {
+        card: "summary_large_image",
+    },
 };
 
 export default function RootLayout({ children }) {
