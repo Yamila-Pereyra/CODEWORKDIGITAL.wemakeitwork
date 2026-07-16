@@ -7,6 +7,21 @@ export const translations = {
             contacto: "Contacto",
         },
 
+        accessibility: {
+            navigation: {
+                openMenu: "Abrir menú de navegación",
+                closeMenu: "Cerrar menú de navegación",
+            },
+            languageSelector: {
+                groupLabel: "Cambiar idioma",
+                optionLabels: {
+                    es: "ES — Cambiar idioma a español",
+                    en: "EN — Cambiar idioma a inglés",
+                    it: "IT — Cambiar idioma a italiano",
+                },
+            },
+        },
+
         homePage: {
             narrative: {
                 triad: ["Diseñamos.", "Construimos.", "Medimos."],
@@ -272,6 +287,21 @@ digitales que generan resultados.`,
             nosotros: "About us",
             servicios: "Services",
             contacto: "Contact",
+        },
+
+        accessibility: {
+            navigation: {
+                openMenu: "Open navigation menu",
+                closeMenu: "Close navigation menu",
+            },
+            languageSelector: {
+                groupLabel: "Change language",
+                optionLabels: {
+                    es: "ES — Change language to Spanish",
+                    en: "EN — Change language to English",
+                    it: "IT — Change language to Italian",
+                },
+            },
         },
 
         homePage: {
@@ -540,6 +570,21 @@ experiences that deliver results.`,
             nosotros: "Chi siamo",
             servicios: "Servizi",
             contacto: "Contatto",
+        },
+
+        accessibility: {
+            navigation: {
+                openMenu: "Apri il menu di navigazione",
+                closeMenu: "Chiudi il menu di navigazione",
+            },
+            languageSelector: {
+                groupLabel: "Cambia lingua",
+                optionLabels: {
+                    es: "ES — Cambia lingua in spagnolo",
+                    en: "EN — Cambia lingua in inglese",
+                    it: "IT — Cambia lingua in italiano",
+                },
+            },
         },
 
         homePage: {
