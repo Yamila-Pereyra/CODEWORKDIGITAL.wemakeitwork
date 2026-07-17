@@ -22,16 +22,18 @@ export default function Footer() {
                     href="https://instagram.com/TUUSUARIO"
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Instagram"
                 >
-                    <FaInstagram />
+                    <FaInstagram aria-hidden="true" focusable="false" />
                 </a>
 
                 <a
                     href="https://facebook.com/TUPAGINA"
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Facebook"
                 >
-                    <FaFacebookF />
+                    <FaFacebookF aria-hidden="true" focusable="false" />
                 </a>
             </div>
 

@@ -12,7 +12,12 @@ export default function Nav() {
 
     const { language } = useLanguage();
 
-    const textos = translations[language];
+    const current = translations[language] || translations.es;
+    const textos = current;
+    const navigationA11y =
+        current.accessibility?.navigation ||
+        translations.es.accessibility.navigation;
+    const primaryNavigationId = "primary-navigation";
 
     const isActive = (path) => path === pathname;
 
@@ -25,7 +30,11 @@ export default function Nav() {
             <button
                 type="button"
                 className="menu-toggle"
-                aria-label="Toggle menu"
+                aria-label={
+                    isOpen ? navigationA11y.closeMenu : navigationA11y.openMenu
+                }
+                aria-expanded={isOpen}
+                aria-controls={primaryNavigationId}
                 onClick={() => {
                     setIsOpen(!isOpen);
                 }}
@@ -35,7 +44,10 @@ export default function Nav() {
                 <span className="bar"></span>
             </button>
 
-            <ul className={`holder ${isOpen ? "open" : ""}`}>
+            <ul
+                id={primaryNavigationId}
+                className={`holder ${isOpen ? "open" : ""}`}
+            >
                 <li>
                     <Link
                         className={isActive("/") ? "activo" : ""}
