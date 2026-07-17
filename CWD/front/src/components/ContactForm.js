@@ -10,6 +10,12 @@ export default function ContactForm({ postUr }) {
   const t = translations[language] || translations.es;
   const formCopy = t.contactPage.form;
   const initialForm = { nombre: '', email: '', telefono: '', mensaje: '' };
+  const fieldIds = {
+    nombre: "contact-name",
+    email: "contact-email",
+    telefono: "contact-phone",
+    mensaje: "contact-message",
+  };
   const [formData, setFormData] = useState(initialForm);
   const [sending, setSending] = useState(false);
   const [msg, setMsg] = useState('');
@@ -54,25 +60,25 @@ export default function ContactForm({ postUr }) {
     <section className="contacto-section">
       <div className="contacto-form-wrapper">
         <h3>{formCopy.title}</h3>
-        <form onSubmit={handleSubmit} className="contacto-form">
+        <form onSubmit={handleSubmit} className="contacto-form" aria-busy={sending}>
           <p>
-            <label>{formCopy.name}</label>
-            <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
+            <label htmlFor={fieldIds.nombre}>{formCopy.name}</label>
+            <input id={fieldIds.nombre} type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
           </p>
 
           <p>
-            <label>{formCopy.email}</label>
-            <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+            <label htmlFor={fieldIds.email}>{formCopy.email}</label>
+            <input id={fieldIds.email} type="email" name="email" value={formData.email} onChange={handleChange} required />
           </p>
 
           <p>
-            <label>{formCopy.phone}</label>
-            <input type="text" name="telefono" value={formData.telefono} onChange={handleChange} />
+            <label htmlFor={fieldIds.telefono}>{formCopy.phone}</label>
+            <input id={fieldIds.telefono} type="text" name="telefono" value={formData.telefono} onChange={handleChange} />
           </p>
 
           <p>
-            <label>{formCopy.message}</label>
-            <textarea name="mensaje" rows="4" value={formData.mensaje} onChange={handleChange} required />
+            <label htmlFor={fieldIds.mensaje}>{formCopy.message}</label>
+            <textarea id={fieldIds.mensaje} name="mensaje" rows="4" value={formData.mensaje} onChange={handleChange} required />
           </p>
 
           <button type="submit" className="btn-primary form-btn" disabled={sending}>
@@ -80,9 +86,11 @@ export default function ContactForm({ postUr }) {
           </button>
         </form>
 
-        {msg && (
-          <p className={`form-msg ${isError ? "error" : ""}`}>{msg}</p>
-        )}
+        <div role="status" aria-live="polite" aria-atomic="true">
+          {msg && (
+            <p className={`form-msg ${isError ? "error" : ""}`}>{msg}</p>
+          )}
+        </div>
       </div>
     </section>
   )
