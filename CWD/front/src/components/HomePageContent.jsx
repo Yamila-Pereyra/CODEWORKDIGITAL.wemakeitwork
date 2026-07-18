@@ -466,19 +466,20 @@ export default function HomePageContent() {
 
         gsap.set(list, {
           xPercent: -50,
-          y: () => window.innerHeight * 0.18,
         });
 
-        const getScrollDistance = () =>
-          Math.max(
-            list.scrollHeight + window.innerHeight * 0.7,
-            window.innerHeight * 2.2
-          );
-
+        const getEntryGap = () => Math.max(48, window.innerHeight * 0.08);
+        const getInitialY = () => window.innerHeight + getEntryGap();
         const getFinalY = () =>
           -Math.max(
-            list.scrollHeight - window.innerHeight * 0.42,
-            window.innerHeight * 1.45
+            list.scrollHeight - window.innerHeight * 0.4,
+            window.innerHeight * 1.1
+          );
+        const getTravelDistance = () => getInitialY() - getFinalY();
+        const getScrollDistance = () =>
+          Math.max(
+            getTravelDistance() * 1.05,
+            window.innerHeight * 2.4
           );
 
         const tl = gsap.timeline({
@@ -502,8 +503,11 @@ export default function HomePageContent() {
             stagger: 0.04,
           },
           0
-        ).to(
+        ).fromTo(
           list,
+          {
+            y: getInitialY,
+          },
           {
             y: getFinalY,
             ease: "none",

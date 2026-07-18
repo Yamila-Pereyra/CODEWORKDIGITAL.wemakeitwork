@@ -4,6 +4,7 @@ import ContactForm from "@/components/ContactForm";
 import ContactWhatsAppLink from "@/components/ContactWhatsAppLink";
 import OpticalDivider from "@/components/OpticalDivider";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getSocialLinks } from "@/lib/socialLinks";
 import { translations } from "@/translations";
 import {
   FaWhatsapp,
@@ -15,6 +16,7 @@ export default function ContactoPageContent() {
   const { language } = useLanguage();
   const t = translations[language] || translations.es;
   const copy = t.contactPage;
+  const socialLinks = getSocialLinks(language);
 
   return (
       <main className="contacto-page">
@@ -22,33 +24,33 @@ export default function ContactoPageContent() {
           <div className="contacto-container">
             <div className="contacto-top-social">
               <a
-                  href="https://www.instagram.com/codeworkdigital/"
+                  href={socialLinks.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="social-btn"
                   aria-label="Instagram"
               >
-                <FaInstagram />
+                <FaInstagram aria-hidden="true" focusable="false" />
               </a>
 
               <a
-                  href="https://facebook.com/TU_FACEBOOK"
+                  href={socialLinks.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="social-btn"
                   aria-label="Facebook"
               >
-                <FaFacebook />
+                <FaFacebook aria-hidden="true" focusable="false" />
               </a>
 
               <a
-                  href="https://wa.me/393393309228"
+                  href={socialLinks.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="social-btn"
                   aria-label="WhatsApp"
               >
-                <FaWhatsapp />
+                <FaWhatsapp aria-hidden="true" focusable="false" />
               </a>
             </div>
 

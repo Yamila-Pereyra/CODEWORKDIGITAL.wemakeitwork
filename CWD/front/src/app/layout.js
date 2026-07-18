@@ -12,7 +12,6 @@ import { SITE_URL } from "@/lib/site";
 
 import Link from "next/link";
 import { Red_Hat_Display } from "next/font/google";
-import { FaWhatsapp } from "react-icons/fa";
 
 const redHat = Red_Hat_Display({
     subsets: ["latin"],
@@ -69,17 +68,6 @@ export default function RootLayout({ children }) {
             </div>
 
             <Footer />
-
-            {/* Botón WhatsApp (solo móvil mediante CSS) */}
-            <a
-                href="https://wa.me/393337352719"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="whatsapp-float"
-                aria-label="WhatsApp"
-            >
-                <FaWhatsapp />
-            </a>
         </LanguageProvider>
         </body>
         </html>
