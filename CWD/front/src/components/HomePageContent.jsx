@@ -296,7 +296,6 @@ export default function HomePageContent() {
     const ctx = gsap.context(() => {
       mm.add("(min-width: 1101px)", () => {
         const WHY_PIN_TOP = 120;
-        const WHY_LINE_SHIFT = -10;
 
         const cardsContainer = beneficiosSection.querySelector(".beneficios-grid");
 
@@ -316,6 +315,18 @@ export default function HomePageContent() {
         if (!titleLines.length || !eyebrow) {
           return;
         }
+
+        gsap.set([...titleLines, eyebrow], {
+          clearProps: "opacity,visibility,transform",
+        });
+
+        gsap.set(beneficiosHeader, {
+          clearProps: "opacity",
+        });
+
+        gsap.set(beneficiosHeader, {
+          opacity: 1,
+        });
 
         const getLastRowCards = () => {
           const lastRowTop = Math.max(...cards.map((card) => card.offsetTop));
@@ -346,72 +357,51 @@ export default function HomePageContent() {
           return;
         }
 
-        const linesBottomToTop = [...titleLines].reverse();
+        const getPreferredFadeEndViewportY = () => {
+          const headerHeight = beneficiosHeader.offsetHeight;
 
-        const getPinnedLineBottom = (line) => {
-          const headerRect = beneficiosHeader.getBoundingClientRect();
-          const lineRect = line.getBoundingClientRect();
-
-          return WHY_PIN_TOP + lineRect.bottom - headerRect.top;
+          return WHY_PIN_TOP + Math.min(headerHeight * 0.68, 300);
         };
 
-        const getAverageLineHeight = () =>
-          titleLines.reduce(
-            (total, line) => total + line.offsetHeight,
-            0
-          ) / titleLines.length;
+        const getDesiredFadeDistance = () =>
+          gsap.utils.clamp(
+            360,
+            520,
+            window.innerHeight * 0.52
+          );
 
-        const getFadeStartViewportY = () => {
-          const lastLine = titleLines[titleLines.length - 1];
-          const lead = Math.max(56, getAverageLineHeight() * 0.9);
+        const getMaximumFadeStartViewportY = () =>
+          window.innerHeight +
+          Math.min(96, window.innerHeight * 0.12);
 
-          return getPinnedLineBottom(lastLine) + lead;
-        };
+        const getFadeGeometry = () => {
+          const endY = getPreferredFadeEndViewportY();
+          const desiredDistance = getDesiredFadeDistance();
+          const startY = Math.min(
+            getMaximumFadeStartViewportY(),
+            endY + desiredDistance
+          );
 
-        const getFadeEndViewportY = () => {
-          const firstLine = titleLines[0];
-          const earlyCompletion = Math.max(32, getAverageLineHeight() * 0.55);
-
-          return getPinnedLineBottom(firstLine) + earlyCompletion;
-        };
-
-        const getPinEndViewportY = () => {
-          const unpinBuffer = Math.max(28, getAverageLineHeight() * 0.4);
-
-          return getFadeEndViewportY() - unpinBuffer;
-        };
-
-        gsap.set(titleLines, {
-          autoAlpha: 1,
-          y: 0,
-        });
-
-        gsap.set(eyebrow, {
-          autoAlpha: 1,
-          y: 0,
-        });
-
-        let fadeTimeline;
-        let pinTrigger;
-
-        const syncFadeDebug = () => {
-          if (typeof window === "undefined" || !fadeTimeline?.scrollTrigger) {
-            return;
-          }
-
-          window.__cwdBenefitsFadeDebug = {
-            fadeStartScroll: fadeTimeline.scrollTrigger.start,
-            fadeEndScroll: fadeTimeline.scrollTrigger.end,
-            pinEndScroll: pinTrigger.end,
-            fadeStartViewportY: getFadeStartViewportY(),
-            fadeEndViewportY: getFadeEndViewportY(),
-            pinEndViewportY: getPinEndViewportY(),
-            driverIndex: cards.indexOf(fadeDriver),
-            lineTexts: titleLines.map((line) => line.textContent?.trim() || ""),
+          return {
+            startY,
+            endY,
+            distance: startY - endY,
           };
         };
 
-        pinTrigger = ScrollTrigger.create({
+        const getUnpinBuffer = () =>
+          Math.max(
+            48,
+            window.innerHeight * 0.06
+          );
+
+        const getPinEndViewportY = () => {
+          const { endY } = getFadeGeometry();
+
+          return endY - getUnpinBuffer();
+        };
+
+        const pinTrigger = ScrollTrigger.create({
           trigger: beneficiosSection,
           pin: beneficiosHeader,
           start: `top ${WHY_PIN_TOP}px`,
@@ -420,50 +410,37 @@ export default function HomePageContent() {
           pinSpacing: false,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onRefresh: syncFadeDebug,
         });
 
-        fadeTimeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: fadeDriver,
-            start: () => `bottom ${getFadeStartViewportY()}px`,
-            end: () => `bottom ${getFadeEndViewportY()}px`,
-            scrub: true,
-            invalidateOnRefresh: true,
-            onRefresh: syncFadeDebug,
-          },
-        });
-
-        fadeTimeline.to(
-          linesBottomToTop,
+        const fadeTween = gsap.fromTo(
+          beneficiosHeader,
           {
-            autoAlpha: 0,
-            y: WHY_LINE_SHIFT,
-            duration: 0.3,
-            stagger: {
-              each: 0.14,
-              from: "start",
+            opacity: 1,
+          },
+          {
+            opacity: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: fadeDriver,
+              start: () => {
+                const { startY } = getFadeGeometry();
+
+                return `bottom ${startY}px`;
+              },
+              end: () => {
+                const { endY } = getFadeGeometry();
+
+                return `bottom ${endY}px`;
+              },
+              scrub: true,
+              invalidateOnRefresh: true,
             },
-            ease: "none",
-          },
-          0
-        );
-
-        fadeTimeline.to(
-          eyebrow,
-          {
-            autoAlpha: 0,
-            y: -4,
-            duration: 0.16,
-            ease: "none",
-          },
-          0.72
+          }
         );
 
         refreshFrame = requestAnimationFrame(() => {
           pinTrigger.refresh();
-          fadeTimeline.scrollTrigger?.refresh();
-          syncFadeDebug();
+          fadeTween.scrollTrigger?.refresh();
         });
 
         document.fonts?.ready.then(() => {
@@ -478,10 +455,6 @@ export default function HomePageContent() {
 
     return () => {
       cancelled = true;
-
-      if (typeof window !== "undefined") {
-        delete window.__cwdBenefitsFadeDebug;
-      }
 
       if (refreshFrame) {
         cancelAnimationFrame(refreshFrame);
