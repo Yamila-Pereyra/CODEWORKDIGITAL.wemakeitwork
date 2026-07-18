@@ -162,6 +162,47 @@ function countLines(sections) {
     return sections.reduce((total, section) => total + section.lines.length, 0);
 }
 
+function buildCodeSection({ id, block, lineCount, isInitial = true }) {
+    const visibleLines = block.lines.slice(0, lineCount);
+
+    if (!visibleLines.length) {
+        return null;
+    }
+
+    return {
+        id,
+        language: block.language,
+        title: block.title,
+        lines: visibleLines.map((content, index) => ({
+            content,
+            id: `${id}-line-${index}`,
+            lineNumber: index + 1,
+            isEmpty: content.length === 0,
+            isInitial,
+        })),
+    };
+}
+
+function buildSeparatorSection({ id, lineCount, isInitial = true }) {
+    if (lineCount <= 0) {
+        return null;
+    }
+
+    return {
+        id,
+        language: "spacing",
+        title: "",
+        isSeparator: true,
+        lines: Array.from({ length: lineCount }, (_, index) => ({
+            content: "",
+            id: `${id}-line-${index}`,
+            lineNumber: null,
+            isEmpty: true,
+            isInitial,
+        })),
+    };
+}
+
 function pruneSections(sections) {
     let remaining = CODE_CASCADE_CONFIG.maxRenderedLines;
 
@@ -175,7 +216,9 @@ function pruneSections(sections) {
         .filter(Boolean);
 }
 
-function buildInitialSections(lineCount) {
+function buildInitialSections(lineCount, options = {}) {
+    const { includeLeadingBoundary = true, prefix = "initial" } = options;
+
     if (lineCount <= 0) return [];
 
     const sections = [];
@@ -183,26 +226,48 @@ function buildInitialSections(lineCount) {
     let blockIndex = 1;
     let sectionIndex = 0;
 
+    const pushSection = (section) => {
+        if (!section) {
+            return;
+        }
+
+        sections.push(section);
+        remaining -= section.lines.length;
+        sectionIndex += 1;
+    };
+
+    if (includeLeadingBoundary && remaining > 0) {
+        pushSection(
+            buildSeparatorSection({
+                id: `${prefix}-separator-${sectionIndex}`,
+                lineCount: Math.min(STREAM_BLOCKS[0].separatorsAfter, remaining),
+            })
+        );
+    }
+
     while (remaining > 0) {
         const block = STREAM_BLOCKS[blockIndex % STREAM_BLOCKS.length];
-        const lines = block.lines.slice(0, remaining);
+        const codeLineCount = Math.min(block.lines.length, remaining);
 
-        if (lines.length > 0) {
-            sections.push({
-                id: `initial-${sectionIndex}-${block.language.toLowerCase()}`,
-                language: block.language,
-                title: block.title,
-                lines: lines.map((content, index) => ({
-                    content,
-                    id: `initial-${sectionIndex}-${index}`,
-                    lineNumber: index + 1,
-                    isEmpty: content.length === 0,
-                    isInitial: true,
-                })),
-            });
+        pushSection(
+            buildCodeSection({
+                id: `${prefix}-${sectionIndex}-${block.language.toLowerCase()}`,
+                block,
+                lineCount: codeLineCount,
+            })
+        );
 
-            remaining -= lines.length;
-            sectionIndex += 1;
+        if (remaining <= 0) {
+            break;
+        }
+
+        if (codeLineCount === block.lines.length) {
+            pushSection(
+                buildSeparatorSection({
+                    id: `${prefix}-separator-${sectionIndex}`,
+                    lineCount: Math.min(block.separatorsAfter, remaining),
+                })
+            );
         }
 
         blockIndex += 1;
@@ -212,18 +277,48 @@ function buildInitialSections(lineCount) {
 }
 
 function buildStableSections() {
-    return [
-        {
-            id: "stable-java",
-            language: "Java",
-            title: "OrderService.java",
-            lines: STREAM_BLOCKS[0].lines.slice(0, 7).map((content, index) => ({
-                content,
-                id: `stable-java-${index}`,
-                lineNumber: index + 1,
-            })),
-        },
-    ];
+    const sections = [];
+    const stableJava = buildCodeSection({
+        id: "stable-java",
+        block: STREAM_BLOCKS[0],
+        lineCount: Math.min(7, CODE_CASCADE_CONFIG.initialVisibleLines),
+    });
+
+    if (stableJava) {
+        sections.push(stableJava);
+    }
+
+    const remainingAfterJava = Math.max(
+        CODE_CASCADE_CONFIG.initialVisibleLines - countLines(sections),
+        0
+    );
+    const leadingSeparator = buildSeparatorSection({
+        id: "stable-separator-0",
+        lineCount: Math.min(
+            STREAM_BLOCKS[0].separatorsAfter,
+            remainingAfterJava
+        ),
+    });
+
+    if (leadingSeparator) {
+        sections.push(leadingSeparator);
+    }
+
+    const remaining = Math.max(
+        CODE_CASCADE_CONFIG.initialVisibleLines - countLines(sections),
+        0
+    );
+
+    if (remaining > 0) {
+        sections.push(
+            ...buildInitialSections(remaining, {
+                includeLeadingBoundary: false,
+                prefix: "stable-tail",
+            })
+        );
+    }
+
+    return sections;
 }
 
 export default function CodeCascade() {

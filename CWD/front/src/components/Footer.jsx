@@ -1,13 +1,15 @@
 "use client";
 
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getSocialLinks } from "@/lib/socialLinks";
 import { translations } from "@/translations";
-import { FaInstagram, FaFacebookF } from "react-icons/fa";
+import { FaInstagram, FaFacebookF, FaWhatsapp } from "react-icons/fa";
 
 export default function Footer() {
     const { language } = useLanguage();
 
     const current = translations[language] || translations.es;
+    const socialLinks = getSocialLinks(language);
 
     const footer =
         current.footer ||
@@ -19,7 +21,7 @@ export default function Footer() {
         <footer>
             <div className="footer-socials">
                 <a
-                    href="https://instagram.com/TUUSUARIO"
+                    href={socialLinks.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Instagram"
@@ -28,12 +30,21 @@ export default function Footer() {
                 </a>
 
                 <a
-                    href="https://facebook.com/TUPAGINA"
+                    href={socialLinks.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Facebook"
                 >
                     <FaFacebookF aria-hidden="true" focusable="false" />
+                </a>
+
+                <a
+                    href={socialLinks.whatsapp}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="WhatsApp"
+                >
+                    <FaWhatsapp aria-hidden="true" focusable="false" />
                 </a>
             </div>
 
@@ -44,7 +55,7 @@ export default function Footer() {
                     {footer.email}
                 </a>
 
-                <a href="tel:+39XXXXXXXXX">
+                <a href={socialLinks.phoneHref}>
                     {footer.phone}
                 </a>
             </div>

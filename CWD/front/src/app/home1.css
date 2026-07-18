@@ -2064,13 +2064,6 @@ nav .holder li a.activo {
     font-size: 1rem;
   }
 
-  .whatsapp-float {
-    width: 56px;
-    height: 56px;
-    right: 18px;
-    bottom: 18px;
-    font-size: 1.7rem;
-  }
 }
 
 @media (max-width: 480px) {
