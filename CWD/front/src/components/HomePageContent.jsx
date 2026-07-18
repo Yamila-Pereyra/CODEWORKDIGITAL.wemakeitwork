@@ -296,6 +296,9 @@ export default function HomePageContent() {
     const ctx = gsap.context(() => {
       mm.add("(min-width: 1101px)", () => {
         const WHY_PIN_TOP = 120;
+        const WHY_GEOMETRIC_FADE_DISTANCE = 120;
+        const WHY_LINE_SHIFT = -10;
+        const WHY_EYEBROW_FADE_DELAY = 0.85;
 
         const cardsContainer = beneficiosSection.querySelector(".beneficios-grid");
 
@@ -312,20 +315,12 @@ export default function HomePageContent() {
         const titleLines = gsap.utils.toArray(".why-title-line", beneficiosHeader);
         const eyebrow = beneficiosHeader.querySelector(".beneficios-eyebrow");
 
-        if (!titleLines.length || !eyebrow) {
+        if (titleLines.length !== 5 || !eyebrow) {
           return;
         }
 
-        gsap.set([...titleLines, eyebrow], {
+        gsap.set(beneficiosHeader, {
           clearProps: "opacity,visibility,transform",
-        });
-
-        gsap.set(beneficiosHeader, {
-          clearProps: "opacity",
-        });
-
-        gsap.set(beneficiosHeader, {
-          opacity: 1,
         });
 
         const getLastRowCards = () => {
@@ -357,48 +352,89 @@ export default function HomePageContent() {
           return;
         }
 
-        const getPreferredFadeEndViewportY = () => {
-          const headerHeight = beneficiosHeader.offsetHeight;
+        gsap.set([...titleLines, eyebrow], {
+          clearProps: "opacity,visibility,transform",
+        });
 
-          return WHY_PIN_TOP + Math.min(headerHeight * 0.68, 300);
+        const getTitleFirstLineBottom = () => {
+          const headerRect = beneficiosHeader.getBoundingClientRect();
+          const firstLineRect = titleLines[0].getBoundingClientRect();
+
+          return WHY_PIN_TOP + firstLineRect.bottom - headerRect.top;
         };
 
-        const getDesiredFadeDistance = () =>
-          gsap.utils.clamp(
-            360,
-            520,
-            window.innerHeight * 0.52
-          );
-
-        const getMaximumFadeStartViewportY = () =>
-          window.innerHeight +
-          Math.min(96, window.innerHeight * 0.12);
-
-        const getFadeGeometry = () => {
-          const endY = getPreferredFadeEndViewportY();
-          const desiredDistance = getDesiredFadeDistance();
-          const startY = Math.min(
-            getMaximumFadeStartViewportY(),
-            endY + desiredDistance
-          );
-
-          return {
-            startY,
-            endY,
-            distance: startY - endY,
-          };
-        };
+        const getAverageLineHeight = () =>
+          titleLines.reduce(
+            (total, line) => total + line.offsetHeight,
+            0
+          ) / titleLines.length;
 
         const getUnpinBuffer = () =>
           Math.max(
-            48,
-            window.innerHeight * 0.06
+            28,
+            getAverageLineHeight() * 0.45
           );
 
-        const getPinEndViewportY = () => {
-          const { endY } = getFadeGeometry();
+        const getPinEndViewportY = () =>
+          getTitleFirstLineBottom() - getUnpinBuffer();
 
-          return endY - getUnpinBuffer();
+        gsap.set(titleLines, {
+          autoAlpha: 1,
+          y: 0,
+        });
+
+        gsap.set(eyebrow, {
+          autoAlpha: 1,
+          y: 0,
+        });
+
+        const clampProgress = gsap.utils.clamp(0, 1);
+
+        const lineSetters = titleLines.map((line) => ({
+          opacity: gsap.quickSetter(line, "opacity"),
+          y: gsap.quickSetter(line, "y", "px"),
+        }));
+
+        const eyebrowSetters = {
+          opacity: gsap.quickSetter(eyebrow, "opacity"),
+          y: gsap.quickSetter(eyebrow, "y", "px"),
+        };
+
+        const getLastRowBottom = () =>
+          Math.max(
+            ...getLastRowCards().map((card) =>
+              card.getBoundingClientRect().bottom
+            )
+          );
+
+        const updateGeometricFade = () => {
+          const targetY = getLastRowBottom();
+
+          const opacities = titleLines.map((line, index) => {
+            const lineBottom = line.getBoundingClientRect().bottom;
+
+            const progress = clampProgress(
+              (lineBottom + WHY_GEOMETRIC_FADE_DISTANCE - targetY) /
+                WHY_GEOMETRIC_FADE_DISTANCE
+            );
+
+            const opacity = 1 - progress;
+
+            lineSetters[index].opacity(opacity);
+            lineSetters[index].y(WHY_LINE_SHIFT * progress);
+
+            return opacity;
+          });
+
+          const firstLineOpacity = opacities[0] ?? 1;
+
+          const eyebrowProgress = clampProgress(
+            (WHY_EYEBROW_FADE_DELAY - firstLineOpacity) /
+              WHY_EYEBROW_FADE_DELAY
+          );
+
+          eyebrowSetters.opacity(1 - eyebrowProgress);
+          eyebrowSetters.y(-4 * eyebrowProgress);
         };
 
         const pinTrigger = ScrollTrigger.create({
@@ -412,35 +448,24 @@ export default function HomePageContent() {
           invalidateOnRefresh: true,
         });
 
-        const fadeTween = gsap.fromTo(
-          beneficiosHeader,
-          {
-            opacity: 1,
-          },
-          {
-            opacity: 0,
-            ease: "none",
-            scrollTrigger: {
-              trigger: fadeDriver,
-              start: () => {
-                const { startY } = getFadeGeometry();
-
-                return `bottom ${startY}px`;
-              },
-              end: () => {
-                const { endY } = getFadeGeometry();
-
-                return `bottom ${endY}px`;
-              },
-              scrub: true,
-              invalidateOnRefresh: true,
-            },
-          }
-        );
+        const fadeTrigger = ScrollTrigger.create({
+          trigger: beneficiosSection,
+          start: `top ${WHY_PIN_TOP}px`,
+          endTrigger: fadeDriver,
+          end: () => `bottom ${getPinEndViewportY()}px`,
+          invalidateOnRefresh: true,
+          onRefresh: updateGeometricFade,
+          onUpdate: updateGeometricFade,
+          onEnter: updateGeometricFade,
+          onLeave: updateGeometricFade,
+          onEnterBack: updateGeometricFade,
+          onLeaveBack: updateGeometricFade,
+        });
 
         refreshFrame = requestAnimationFrame(() => {
           pinTrigger.refresh();
-          fadeTween.scrollTrigger?.refresh();
+          fadeTrigger.refresh();
+          updateGeometricFade();
         });
 
         document.fonts?.ready.then(() => {
@@ -462,6 +487,30 @@ export default function HomePageContent() {
 
       ctx.revert();
       mm.revert();
+
+      const currentHeader = beneficiosHeaderRef.current;
+      const currentTitleLines = currentHeader
+        ? gsap.utils.toArray(".why-title-line", currentHeader)
+        : [];
+      const currentEyebrow = currentHeader?.querySelector(".beneficios-eyebrow");
+
+      if (currentHeader) {
+        gsap.set(currentHeader, {
+          clearProps: "opacity,visibility,transform",
+        });
+      }
+
+      if (currentTitleLines.length) {
+        gsap.set(currentTitleLines, {
+          clearProps: "opacity,visibility,transform",
+        });
+      }
+
+      if (currentEyebrow) {
+        gsap.set(currentEyebrow, {
+          clearProps: "opacity,visibility,transform",
+        });
+      }
     };
   }, [language, beneficiosTitleLines]);
 
