@@ -347,7 +347,7 @@ export default function CodeCascade() {
 
     useEffect(() => {
         if (reducedMotion) {
-            setSections(initialSections.length ? initialSections : stableSections);
+            setSections(stableSections);
             setActiveMeta({
                 language: "Java / React / SQL / Python",
                 title: "continuous_delivery.stream",

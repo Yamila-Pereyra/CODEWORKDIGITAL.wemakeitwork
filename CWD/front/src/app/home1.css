@@ -1147,12 +1147,6 @@ nav .holder li a.activo {
   line-height: 0.95;
   letter-spacing: -0.06em;
   font-weight: 900;
-  background: linear-gradient(90deg, #fff, #38bdf8, #fff);
-  background-size: 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: textoBrillo 5s ease-in-out infinite;
 }
 
 .why-title-line {
@@ -2143,9 +2137,6 @@ nav .holder li a.activo {
     font-size: 2.4rem;
   }
 
-  footer {
-    padding-bottom: 90px;
-  }
 }
 @media (max-width: 768px) {
   .slide-content.slide-2 {
