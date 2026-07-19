@@ -291,7 +291,6 @@ export default function HomePageContent() {
 
     const mm = gsap.matchMedia();
     let refreshFrame;
-    let cancelled = false;
 
     const ctx = gsap.context(() => {
       mm.add("(min-width: 1101px)", () => {
@@ -307,54 +306,18 @@ export default function HomePageContent() {
         }
 
         const cards = gsap.utils.toArray(".beneficio-card", cardsContainer);
+        const lastCard = cards[cards.length - 1];
 
-        if (!cards.length) {
+        if (!lastCard) {
           return;
         }
 
         const titleLines = gsap.utils.toArray(".why-title-line", beneficiosHeader);
         const eyebrow = beneficiosHeader.querySelector(".beneficios-eyebrow");
 
-        if (titleLines.length !== 5 || !eyebrow) {
+        if (!titleLines.length || !eyebrow) {
           return;
         }
-
-        gsap.set(beneficiosHeader, {
-          clearProps: "opacity,visibility,transform",
-        });
-
-        const getLastRowCards = () => {
-          const lastRowTop = Math.max(...cards.map((card) => card.offsetTop));
-
-          return cards.filter((card) =>
-            Math.abs(card.offsetTop - lastRowTop) < 4
-          );
-        };
-
-        const getFadeDriver = () =>
-          getLastRowCards().reduce((lowestCard, card) => {
-            if (!lowestCard) {
-              return card;
-            }
-
-            const currentBottom = card.offsetTop + card.offsetHeight;
-            const lowestBottom =
-              lowestCard.offsetTop + lowestCard.offsetHeight;
-
-            return currentBottom > lowestBottom
-              ? card
-              : lowestCard;
-          }, null);
-
-        const fadeDriver = getFadeDriver();
-
-        if (!fadeDriver) {
-          return;
-        }
-
-        gsap.set([...titleLines, eyebrow], {
-          clearProps: "opacity,visibility,transform",
-        });
 
         const getTitleFirstLineBottom = () => {
           const headerRect = beneficiosHeader.getBoundingClientRect();
@@ -362,21 +325,6 @@ export default function HomePageContent() {
 
           return WHY_PIN_TOP + firstLineRect.bottom - headerRect.top;
         };
-
-        const getAverageLineHeight = () =>
-          titleLines.reduce(
-            (total, line) => total + line.offsetHeight,
-            0
-          ) / titleLines.length;
-
-        const getUnpinBuffer = () =>
-          Math.max(
-            28,
-            getAverageLineHeight() * 0.45
-          );
-
-        const getPinEndViewportY = () =>
-          getTitleFirstLineBottom() - getUnpinBuffer();
 
         gsap.set(titleLines, {
           autoAlpha: 1,
@@ -386,6 +334,17 @@ export default function HomePageContent() {
         gsap.set(eyebrow, {
           autoAlpha: 1,
           y: 0,
+        });
+
+        const pinTrigger = ScrollTrigger.create({
+          trigger: beneficiosSection,
+          pin: beneficiosHeader,
+          start: `top ${WHY_PIN_TOP}px`,
+          endTrigger: lastCard,
+          end: () => `bottom ${getTitleFirstLineBottom()}`,
+          pinSpacing: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
         });
 
         const clampProgress = gsap.utils.clamp(0, 1);
@@ -398,6 +357,14 @@ export default function HomePageContent() {
         const eyebrowSetters = {
           opacity: gsap.quickSetter(eyebrow, "opacity"),
           y: gsap.quickSetter(eyebrow, "y", "px"),
+        };
+
+        const getLastRowCards = () => {
+          const lastRowTop = Math.max(...cards.map((card) => card.offsetTop));
+
+          return cards.filter((card) =>
+            Math.abs(card.offsetTop - lastRowTop) < 4
+          );
         };
 
         const getLastRowBottom = () =>
@@ -437,22 +404,11 @@ export default function HomePageContent() {
           eyebrowSetters.y(-4 * eyebrowProgress);
         };
 
-        const pinTrigger = ScrollTrigger.create({
-          trigger: beneficiosSection,
-          pin: beneficiosHeader,
-          start: `top ${WHY_PIN_TOP}px`,
-          endTrigger: fadeDriver,
-          end: () => `bottom ${getPinEndViewportY()}px`,
-          pinSpacing: false,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        });
-
         const fadeTrigger = ScrollTrigger.create({
           trigger: beneficiosSection,
           start: `top ${WHY_PIN_TOP}px`,
-          endTrigger: fadeDriver,
-          end: () => `bottom ${getPinEndViewportY()}px`,
+          endTrigger: lastCard,
+          end: () => `bottom ${getTitleFirstLineBottom()}`,
           invalidateOnRefresh: true,
           onRefresh: updateGeometricFade,
           onUpdate: updateGeometricFade,
@@ -467,50 +423,16 @@ export default function HomePageContent() {
           fadeTrigger.refresh();
           updateGeometricFade();
         });
-
-        document.fonts?.ready.then(() => {
-          if (cancelled) {
-            return;
-          }
-
-          ScrollTrigger.refresh();
-        });
       });
     }, beneficiosSection);
 
     return () => {
-      cancelled = true;
-
       if (refreshFrame) {
         cancelAnimationFrame(refreshFrame);
       }
 
       ctx.revert();
       mm.revert();
-
-      const currentHeader = beneficiosHeaderRef.current;
-      const currentTitleLines = currentHeader
-        ? gsap.utils.toArray(".why-title-line", currentHeader)
-        : [];
-      const currentEyebrow = currentHeader?.querySelector(".beneficios-eyebrow");
-
-      if (currentHeader) {
-        gsap.set(currentHeader, {
-          clearProps: "opacity,visibility,transform",
-        });
-      }
-
-      if (currentTitleLines.length) {
-        gsap.set(currentTitleLines, {
-          clearProps: "opacity,visibility,transform",
-        });
-      }
-
-      if (currentEyebrow) {
-        gsap.set(currentEyebrow, {
-          clearProps: "opacity,visibility,transform",
-        });
-      }
     };
   }, [language, beneficiosTitleLines]);
 
