@@ -55,6 +55,11 @@ export const translations = {
                 },
             ],
 
+            carouselA11y: {
+                progressLabel: "Progreso del carrusel principal",
+                slideButtonLabel: (current, total) => `Ir a la diapositiva ${current} de ${total}`,
+            },
+
             beneficios: [
                 {
                     image: "/imagenes/cards1.jpeg",
@@ -336,6 +341,11 @@ digitales que generan resultados.`,
                     text: "We optimize your digital presence to attract more traffic, improve your ranking, and turn visits into opportunities.",
                 },
             ],
+
+            carouselA11y: {
+                progressLabel: "Main carousel progress",
+                slideButtonLabel: (current, total) => `Go to slide ${current} of ${total}`,
+            },
 
             beneficios: [
                 {
@@ -619,6 +629,11 @@ experiences that deliver results.`,
                     text: "Ottimizziamo la tua presenza digitale per attirare più traffico, migliorare il posizionamento e trasformare le visite in opportunità.",
                 },
             ],
+
+            carouselA11y: {
+                progressLabel: "Avanzamento del carosello principale",
+                slideButtonLabel: (current, total) => `Vai alla diapositiva ${current} di ${total}`,
+            },
 
             beneficios: [
                 {

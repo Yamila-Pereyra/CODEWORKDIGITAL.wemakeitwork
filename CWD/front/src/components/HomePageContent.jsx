@@ -69,6 +69,7 @@ export default function HomePageContent() {
   const t = translations[language];
 
   const slides = t.homePage.carousel;
+  const carouselA11y = t.homePage.carouselA11y;
   const beneficios = t.homePage.beneficios;
   const beneficiosExtended = t.homePage.beneficiosExtended || [];
   const beneficiosHeader = t.homePage.beneficiosHeader;
@@ -604,8 +605,10 @@ export default function HomePageContent() {
                 <div className="hero-value-stack">
                   <p
                     className={`value-proposition is-${valuePropositionPhase}`}
-                    aria-label={heroValueProposition}
                   >
+                    <span className="home-visually-hidden">
+                      {heroValueProposition}
+                    </span>
                     <span
                       className="value-proposition-visual"
                       aria-hidden="true"
@@ -704,7 +707,8 @@ export default function HomePageContent() {
 
         <div
           className="hero-carousel-progress outside-dots"
-          aria-label="Progreso del carrusel principal"
+          role="group"
+          aria-label={carouselA11y.progressLabel}
         >
           {slides.map((_, i) => (
             <button
@@ -721,7 +725,7 @@ export default function HomePageContent() {
                     ? "is-active"
                     : "is-pending"
               }`}
-              aria-label={`Ir al slide ${i + 1} de ${slides.length}`}
+              aria-label={carouselA11y.slideButtonLabel(i + 1, slides.length)}
               aria-current={i === slideIndex ? "true" : undefined}
             >
               <span className="hero-carousel-progress__fill" />
@@ -785,7 +789,7 @@ export default function HomePageContent() {
 
       <section className="services-clean" ref={sectionRef}>
         <div className="services-bg-title">
-          <h1>{servicios.titulo}</h1>
+          <h2>{servicios.titulo}</h2>
         </div>
 
         <div className="services-cards-scroll">
