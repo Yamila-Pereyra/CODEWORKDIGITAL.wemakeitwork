@@ -22,7 +22,7 @@
 
 .contacto-header {
   max-width: 900px;
-  margin-bottom: 70px;
+  margin-bottom: calc(70px + clamp(2rem, 3vw, 3.2rem));
 }
 
 .contacto-label {
@@ -281,7 +281,7 @@
   }
 
   .contacto-header {
-    margin-bottom: 45px;
+    margin-bottom: calc(45px + clamp(2rem, 3vw, 3.2rem));
   }
 
   .contacto-header h1 {
