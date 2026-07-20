@@ -57,42 +57,40 @@ export default function ContactForm({ postUr }) {
   }
 
   return (
-    <section className="contacto-section">
-      <div className="contacto-form-wrapper">
-        <h3>{formCopy.title}</h3>
-        <form onSubmit={handleSubmit} className="contacto-form" aria-busy={sending}>
-          <p>
-            <label htmlFor={fieldIds.nombre}>{formCopy.name}</label>
-            <input id={fieldIds.nombre} type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
-          </p>
+    <div className="contacto-form-wrapper">
+      <h3>{formCopy.title}</h3>
+      <form onSubmit={handleSubmit} className="contacto-form" aria-busy={sending}>
+        <p>
+          <label htmlFor={fieldIds.nombre}>{formCopy.name}</label>
+          <input id={fieldIds.nombre} type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
+        </p>
 
-          <p>
-            <label htmlFor={fieldIds.email}>{formCopy.email}</label>
-            <input id={fieldIds.email} type="email" name="email" value={formData.email} onChange={handleChange} required />
-          </p>
+        <p>
+          <label htmlFor={fieldIds.email}>{formCopy.email}</label>
+          <input id={fieldIds.email} type="email" name="email" value={formData.email} onChange={handleChange} required />
+        </p>
 
-          <p>
-            <label htmlFor={fieldIds.telefono}>{formCopy.phone}</label>
-            <input id={fieldIds.telefono} type="text" name="telefono" value={formData.telefono} onChange={handleChange} />
-          </p>
+        <p>
+          <label htmlFor={fieldIds.telefono}>{formCopy.phone}</label>
+          <input id={fieldIds.telefono} type="text" name="telefono" value={formData.telefono} onChange={handleChange} />
+        </p>
 
-          <p>
-            <label htmlFor={fieldIds.mensaje}>{formCopy.message}</label>
-            <textarea id={fieldIds.mensaje} name="mensaje" rows="4" value={formData.mensaje} onChange={handleChange} required />
-          </p>
+        <p>
+          <label htmlFor={fieldIds.mensaje}>{formCopy.message}</label>
+          <textarea id={fieldIds.mensaje} name="mensaje" rows="4" value={formData.mensaje} onChange={handleChange} required />
+        </p>
 
-          <button type="submit" className="btn-primary form-btn" disabled={sending}>
-            {sending ? formCopy.sending : formCopy.submit}
-          </button>
-        </form>
+        <button type="submit" className="btn-primary form-btn" disabled={sending}>
+          {sending ? formCopy.sending : formCopy.submit}
+        </button>
+      </form>
 
-        <div role="status" aria-live="polite" aria-atomic="true">
-          {msg && (
-            <p className={`form-msg ${isError ? "error" : ""}`}>{msg}</p>
-          )}
-        </div>
+      <div role="status" aria-live="polite" aria-atomic="true">
+        {msg && (
+          <p className={`form-msg ${isError ? "error" : ""}`}>{msg}</p>
+        )}
       </div>
-    </section>
+    </div>
   )
 }
 
