@@ -256,7 +256,7 @@ nav .holder li a.activo {
 .code-cascade-header small {
   min-width: 0;
   overflow: hidden;
-  color: rgba(255,255,255,.42);
+  color: rgba(255,255,255,.74);
   font-size: .64rem;
   font-weight: 700;
   letter-spacing: .04em;
@@ -507,6 +507,18 @@ nav .holder li a.activo {
           transform var(--phrase-fade-out-duration) ease,
           filter var(--phrase-fade-out-duration) ease,
           letter-spacing 520ms ease;
+}
+
+.home-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .value-proposition-visual {
@@ -1354,7 +1366,7 @@ nav .holder li a.activo {
   pointer-events: none;
 }
 
-.services-bg-title h1 {
+.services-bg-title h2 {
   margin: 0;
   font-size: clamp(4rem, 11vw, 11rem);
 
@@ -1514,7 +1526,7 @@ nav .holder li a.activo {
     padding: 0;
   }
 
-  .services-bg-title h1 {
+  .services-bg-title h2 {
     font-size: 4rem;
   }
 
@@ -1970,7 +1982,7 @@ nav .holder li a.activo {
     grid-template-columns: 1fr;
   }
 
-  .services-bg-title h1 {
+  .services-bg-title h2 {
     font-size: clamp(3.4rem, 14vw, 7rem);
   }
 
@@ -2037,7 +2049,7 @@ nav .holder li a.activo {
     top: 50%;
   }
 
-  .services-bg-title h1 {
+  .services-bg-title h2 {
     opacity: 1;
   }
 
@@ -2129,7 +2141,7 @@ nav .holder li a.activo {
     padding: 28px;
   }
 
-  .services-bg-title h1 {
+  .services-bg-title h2 {
     font-size: 3.4rem;
   }
 
@@ -2305,7 +2317,7 @@ nav .holder li a.activo {
     margin-bottom: 18px !important;
   }
 
-  .services-bg-title h1 {
+  .services-bg-title h2 {
     font-size: clamp(2.6rem, 14vw, 4rem);
     white-space: normal;
   }
