@@ -61,15 +61,7 @@
 }
 
 .contacto-info {
-  min-height: 520px;
-  padding: 38px;
-  border-radius: 30px;
-  background: linear-gradient(
-          145deg,
-          rgba(255,255,255,.08),
-          rgba(255,255,255,.03)
-  );
-  border: 1px solid rgba(255,255,255,.1);
+  min-width: 0;
 }
 
 .contacto-info h2 {
@@ -277,9 +269,6 @@
     grid-template-columns: 1fr;
   }
 
-  .contacto-info {
-    min-height: auto;
-  }
 }
 
 @media (max-width: 768px) {
@@ -304,7 +293,6 @@
     font-size: 1rem;
   }
 
-  .contacto-info,
   .contacto-form-wrapper {
     padding: 26px;
     border-radius: 24px;
