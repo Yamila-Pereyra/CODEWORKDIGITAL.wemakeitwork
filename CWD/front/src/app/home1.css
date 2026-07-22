@@ -2250,6 +2250,15 @@ nav .holder li a.activo {
   }
 }
 
+@media
+  (orientation: landscape)
+  and (max-width: 1024px)
+  and (max-height: 500px) {
+  .hero-code-layer {
+    display: none !important;
+  }
+}
+
 @media (max-width: 768px) {
   .hero-layout {
     width: calc(100% - 32px);
