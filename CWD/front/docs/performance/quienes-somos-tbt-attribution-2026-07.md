@@ -6,64 +6,133 @@ This is a measurement-and-attribution increment for `/quienessomos` mobile Total
 Blocking Time. It does not optimize production source and it does not change the
 accepted globe visual output.
 
-Work is split deliberately:
+No production source changed in this increment. The only repository change is
+this documentation file.
 
-- The operator must provide raw empirical artifacts from a real browser and the
-  documented reference environment.
-- Codex performs deterministic repository work: git checks, static source
-  inspection, clean install/build, build-manifest attribution, and documentation.
+## Visual Constraint
 
-Hard rule for this report: no empirical measurement is invented, estimated, or
-reconstructed. Missing raw artifacts are recorded as `UNRESOLVED — artifact
-missing`.
+The globe is a primary visual element. This report does not change or recommend
+changing point counts, point appearance, palette, intensity, radius, axial tilt,
+camera, position, dimensions, pixel-ratio cap, route segments, destinations,
+geometry, pulse appearance, timing, atmosphere, bloom, tone mapping, exposure,
+shader reveal, choreography order, rotation, animation loop, or reduced-motion
+behavior.
 
-## Non-Negotiable Visual Constraint
-
-The globe is a primary visual element. This increment does not change and does
-not recommend changing point counts, point appearance, palette, intensity,
-radius, axial tilt, camera, position, dimensions, pixel-ratio cap, route
-segments, route destinations, geometry, pulse appearance, timing, atmosphere,
-bloom, tone mapping, exposure, shader reveal, choreography order, rotation,
-animation loop, or reduced-motion behavior.
-
-Rejected approaches remain rejected: lower-quality mobile tier, static globe
-poster, skeleton replacement, deferred mount, idle mount, IntersectionObserver
-mount scheduling, delayed hydration, bloom removal, DPR reduction, point-count
+Rejected approaches remain rejected: lower-quality mobile tier, static poster,
+skeleton replacement, deferred mount, idle mount, IntersectionObserver mount
+scheduling, delayed hydration, bloom removal, DPR reduction, point-count
 reduction, and route simplification.
 
 ## Base And Environment
 
 - Branch: `perf/cwd-quienes-somos-tbt-attribution`
-- Old branch HEAD before fast-forward: `595c991`
-- Current base commit: `f6ef3a8`
-- Base commit subject: `Merge pull request #35 from Yamila-Pereyra/fix/cwd-home-accessibility-remediation`
-- `origin/develop...HEAD` after fast-forward: `0 0`
-- Home accessibility remediation: commit `20cb183` is present in the base through `origin/develop`
+- Base commit: `55b1c46`
+- Base subject: `Merge pull request #36 from Yamila-Pereyra/perf/cwd-quienes-somos-tbt-attribution`
+- Previous documentation commit already merged: `a02d797`
 - Node.js: `v24.13.0`
 - npm: `11.6.2`
 - Next.js: `15.5.11`
+- Lighthouse: `13.4.0` through `npx --yes lighthouse@13.4.0`
+- Browser: `C:\Program Files\Google\Chrome\Application\chrome.exe`
+- Browser version: `150.0.7871.127`
+- Production server command: `npm run start -- -p 3000`
+- Production server port: `3000`
 
-## Operator Artifact Inventory
+Tool discovery:
 
-No operator-provided raw empirical artifacts were supplied to Codex for this
-increment.
+| Command | Result |
+| --- | --- |
+| `where.exe chrome` | not found, exit `1` |
+| `where.exe msedge` | not found, exit `1` |
+| `where.exe chromium` | not found, exit `1` |
+| `where.exe lighthouse` | not found, exit `1` |
+| `where.exe npx` | found JetBrains Node runtime and `C:\Program Files\nodejs\npx`, exit `0` |
 
-| Artifact set | Required | Provided path | Integrity | Status |
-| --- | --- | --- | --- | --- |
-| `/quienessomos` Lighthouse mobile JSON/HTML, n=5 | yes | not provided | not available | UNRESOLVED — artifact missing |
-| `/quienessomos` Lighthouse desktop JSON/HTML, n=3 | yes | not provided | not available | UNRESOLVED — artifact missing |
-| `/labs/globe` Lighthouse mobile JSON/HTML, n=3 | yes | not provided | not available | UNRESOLVED — artifact missing |
-| `/labs/globe` Lighthouse desktop guard JSON/HTML, n=1 | yes | not provided | not available | UNRESOLVED — artifact missing |
-| Median `/quienessomos` Lighthouse trace/artifacts | yes | not provided | not available | UNRESOLVED — artifact missing |
-| DevTools Performance profile for median `/quienessomos` | yes | not provided | not available | UNRESOLVED — artifact missing |
-| Runtime JS coverage for `/quienessomos` | yes | not provided | not available | UNRESOLVED — artifact missing |
-| Runtime JS coverage for `/labs/globe` | yes | not provided | not available | UNRESOLVED — artifact missing |
-| GPU-enabled DevTools trace for `/quienessomos` globe reveal | yes | not provided | not available | UNRESOLVED — artifact missing |
-| GPU-enabled DevTools trace for `/labs/globe` globe reveal | yes | not provided | not available | UNRESOLVED — artifact missing |
-| `window.__codeworkGlobeTimingRuns`, `/quienessomos`, n>=5 | yes | not provided | not available | UNRESOLVED — artifact missing |
-| `window.__codeworkGlobeTimingRuns`, `/labs/globe`, n>=5 | yes | not provided | not available | UNRESOLVED — artifact missing |
-| `window.__codeworkGlobeLastTimings`, both routes | yes | not provided | not available | UNRESOLVED — artifact missing |
-| Visual-fidelity screenshots/recordings | yes | not provided | not available | UNRESOLVED — artifact missing |
+Common browser paths inspected:
+
+| Path | Exists | Version |
+| --- | --- | --- |
+| `C:\Program Files\Google\Chrome\Application\chrome.exe` | yes | `150.0.7871.127` |
+| `C:\Program Files(x86)\Google\Chrome\Application\chrome.exe` | no | n/a |
+| `%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe` | no | n/a |
+| `C:\Program Files\Microsoft\Edge\Application\msedge.exe` | no | n/a |
+| `C:\Program Files(x86)\Microsoft\Edge\Application\msedge.exe` | no | n/a |
+| `%LOCALAPPDATA%\Microsoft\Edge\Application\msedge.exe` | no | n/a |
+
+## Build
+
+Commands run from `CWD/front`:
+
+```powershell
+if (Test-Path .next) { Remove-Item -LiteralPath .next -Recurse -Force }
+npm ci
+npm run build
+```
+
+Results:
+
+- `npm ci`: success; added 26 packages; audited 27 packages.
+- `npm ci` warnings: `Unknown env config "min-release-age"`.
+- `npm ci` vulnerabilities: `3 vulnerabilities (1 moderate, 2 high)`.
+- `npm run build`: success.
+- Build warnings: `Unknown env config "min-release-age"` and repeated
+  `Mismatching @next/swc version, detected: 15.5.7 while Next.js is on 15.5.11`.
+
+Next route sizes:
+
+| Route | Size | First Load JS |
+| --- | ---: | ---: |
+| `/` | 56.3 kB | 171 kB |
+| `/contacto` | 2.79 kB | 117 kB |
+| `/labs/globe` | 170 kB | 273 kB |
+| `/quienessomos` | 1.78 kB | 113 kB |
+| `/servicios` | 1.68 kB | 119 kB |
+
+Server checks:
+
+- `http://localhost:3000/quienessomos`: HTTP 200.
+- `http://localhost:3000/labs/globe`: HTTP 200.
+
+## Artifact Inventory
+
+Raw artifacts were written outside the repository:
+
+`C:\Users\marce\AppData\Local\Temp\cwd-tbt-attribution-20260722-173109`
+
+The complete per-file inventory with SHA-256 hashes is in:
+
+| Artifact | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `derived-summary.json` | 47,081 | `EF6E39D00817810BFB4C6F4258B975B5AF6A37525F2DDBAC98C169456560439D` |
+| `lighthouse-summary.json` | 9,419 | `39CD71E9F7BA7569C24F735AF2EFACED8BAD7D0E7A839D2CEF69238BBACA3CE8` |
+| `quienessomos-mobile-2.report.json` | 804,508 | `F6BD6D5326E20E0FA59A4E925DDA2DA99EAC6DF8957FB3113A7D70C977E576F6` |
+| `quienessomos-mobile-2.report.html` | 865,712 | `D80FCEB2CA3CCA52B3F8DF970B5A9F0F3DD00F349298476FA03BA27D92603357` |
+| `quienessomos-mobile-trace.json` | 14,596,467 | `BD72449D8BF68ACD7EC514962E0DB63B47A32E1F64446D5A3832EFEC5937ED15` |
+| `quienessomos-mobile-longtasks.json` | 4,851 | `59460F9184C33C60B828C90E9EA54717568DB46A1702C221A76A785F0A3B6C02` |
+| `quienessomos-timings.json` | 15,334 | `0C0778B9CF326A4D4B5F4601FFB83529B197E4997E61AD8F29DE28A05BC2FC35` |
+| `labs-globe-timings.json` | 15,344 | `9C605F25835065F7544A043ACDF0A8A4E8D8817FA0FADA689CDED57F31BB0077` |
+| `quienessomos-coverage.json` | 3,758 | `6C62287F376452289A80E35ABD496E87C0D408E8B22FDA808974358EEB5459C2` |
+| `labs-globe-coverage.json` | 3,740 | `1601DFD51451AEE18B603DBB310B434EAEA6F0334409DF68EA09ED669F5C918A` |
+| `quienessomos-gpu-windowed-timings.json` | 15,262 | `05CCFB4FD35DB38500583578DCBF6C5BDE8032EF3AA0F05ED57F4F5DC91E4110` |
+| `quienessomos-desktop-final-bloom.png` | 632,892 | `64CC0A7B0B5A33E4A549F53DB004F143C2F3D0F6F0E12535495718590FC16573` |
+| `quienessomos-mobile-final-bloom.png` | 199,605 | `43190BEEB470038FDCA306DBBEE9BBC504B6946C49B90C37EE8C1155A2322258` |
+
+Initial failed attempt:
+
+- Attempted to run Lighthouse through `Start-Process -ArgumentList @(...)
+  + ...`.
+- Failure: PowerShell parameter binding error,
+  `A positional parameter cannot be found that accepts argument '+'`.
+- Exit condition: no JSON/HTML was produced by that attempt.
+- Resolution: reran with a prebuilt `$args` array and sequential Chrome
+  remote-debugging sessions.
+
+CDP trace attempt note:
+
+- First Puppeteer trace attempt under throttling timed out at navigation:
+  `TimeoutError: Navigation timeout of 60000 ms exceeded`.
+- Resolution: reran with `waitUntil: "load"`, explicit canvas waits, and fixed
+  post-load waits.
 
 ## Historical Evidence
 
@@ -72,10 +141,7 @@ Historical data was read from:
 - `CWD/front/docs/performance/lighthouse-baseline.md`
 - `CWD/front/docs/performance/experiments/globe-deferral-2026-07.md`
 
-These values are indicative only. They were measured on old commit `11b7461`
-with `/quienessomos` mobile n=1, before later work landed on `develop`.
-
-Historical `/quienessomos` mobile:
+Historical `/quienessomos` mobile, old commit `11b7461`, n=1:
 
 | Metric | Value |
 | --- | ---: |
@@ -86,7 +152,8 @@ Historical `/quienessomos` mobile:
 | CLS | 0.053 |
 | Unused JavaScript estimate | ~85 KiB |
 
-Historical `/labs/globe` mobile, same progressive globe, n=1:
+Historical `/labs/globe` mobile, same progressive globe, old commit `11b7461`,
+n=1:
 
 | Metric | Value |
 | --- | ---: |
@@ -99,13 +166,9 @@ Rejected deferred-mount experiment:
 | --- | ---: |
 | Performance | 77 |
 | TBT | 910 ms |
-| LCP delta | no material improvement |
-| CLS delta | no material improvement |
+| LCP / CLS | no material improvement |
 
-The deferred-mount experiment was reverted and must not be reintroduced as a
-candidate. The historical `638 ms` TBT may no longer represent the current
-route because substantial Home/accessibility/contact changes landed after
-`11b7461`.
+The deferred-mount experiment was reverted and must not be reintroduced.
 
 ## Current Implementation Map
 
@@ -119,149 +182,28 @@ Inspected files:
 - `CWD/front/package.json`
 - `CWD/front/next.config.mjs`
 
-### Callers
+Callers:
 
 | Caller | Loading mode | Props | Current mode |
 | --- | --- | --- | --- |
-| `QuienesSomosPageContent.jsx` | `dynamic(() => import("@/components/labs/globe/GlobeLab"), { ssr: false })` | `wrapper="div"`, route classes, `ariaLabel`, `progressiveReveal` | progressive |
+| `QuienesSomosPageContent.jsx` | `dynamic(..., { ssr: false })` | route wrapper/classes, `ariaLabel`, `progressiveReveal` | progressive |
 | `app/labs/globe/page.jsx` | static import | `progressiveReveal` | progressive |
 
-Both verified callers pass `progressiveReveal`. Therefore non-progressive-only
-runtime code is dormant for current known routes. It is a candidate boundary for
-future investigation only, not removable evidence in this increment.
+Both verified callers pass `progressiveReveal`. Non-progressive-only runtime code
+is dormant for current known routes.
 
-### Static Imports
+Progressive main-thread work includes renderer setup, scene/camera/groups,
+shell/capital marker creation, large typed-array allocation, `BufferGeometry`
+and shader material setup, draw-range and attribute updates, route-stage
+scheduling, route construction, animation-loop startup, resize handling, and
+timing-global publication.
 
-`GlobeLab.jsx` imports:
-
-- React `useEffect`, `useRef`
-- `three`
-- `EffectComposer`
-- `RenderPass`
-- `UnrealBloomPass`
-- `topojson-client`
-- `world-atlas/land-110m.json`
-- `./globe-lab.css`
-
-`globe-points.worker.js` imports:
-
-- `topojson-client`
-- `world-atlas/land-110m.json`
-
-### Main-Thread Progressive Work
-
-In progressive mode, main-thread work includes:
-
-- Three.js scene, camera, renderer, tone mapping and pixel-ratio setup
-- optional bloom composer setup, deferred until `enableBloom()` in the current
-  progressive path unless the choreography setting changes
-- globe axis/group construction
-- shell geometry/material creation
-- capital marker geometry/material creation
-- large typed-array allocation for positions, colors, reveal timings,
-  durations, sizes, and intensities
-- `BufferGeometry` and shader material setup
-- draw-range updates and `BufferAttribute.needsUpdate` on worker batches
-- route-stage scheduling and route construction with `routeSegments = 72`
-- animation-loop startup through `requestAnimationFrame`
-- resize handling and renderer/composer sizing
-- timing-global publication on every progressive run
-
-### Worker Work
-
-The worker performs:
-
-- topology feature conversion and land polygon preparation at module load
-- candidate point sampling
-- land containment checks
-- deterministic color, reveal-time, reveal-duration, size and intensity
-  generation
-- batched transfer of `Float32Array` buffers for positions, colors, reveal
-  times, reveal durations, sizes and intensities
-
-Worker messages transfer buffers, not cloned payload buffers. Main-thread
-handling still copies each incoming batch into preallocated destination buffers.
-
-### Fallback Main-Thread Point Generation
-
-If worker startup fails or workers are unavailable, progressive mode falls back
-to main-thread point generation. This fallback exercises the same topology and
-point-generation concepts on the main thread. Because current browser support is
-unknown without operator traces, fallback execution is not assumed.
-
-### Non-Progressive Dormant Code
-
-Non-progressive code currently follows the `if (progressiveReveal) { ... return
-cleanup; }` branch exit and is not exercised by the verified callers. It
-includes synchronous land-point generation through `getContinentalSphereData`,
-static point material setup, route construction, bloom composer creation at
-initial setup when `useBloom` is true, and timing publication only when
-debugging is enabled.
-
-This code is dormant for known production/lab callers but must not be deleted in
-this increment.
-
-### Lab-Only Diagnostics
-
-`debugTimings` defaults to `false`. Timing globals are populated for progressive
-runs regardless of URL flag; `globeDebug=1` additionally triggers
-`console.table`. The lab page is `noindex`.
-
-## Clean Production Build
-
-Commands run from `CWD/front`:
-
-```powershell
-Remove-Item -LiteralPath .next -Recurse -Force
-npm ci
-npm run build
-```
-
-`npm ci` result:
-
-- Success
-- Added 26 packages
-- Audited 27 packages
-- Warnings: `Unknown env config "min-release-age"`
-- Vulnerabilities: `3 vulnerabilities (1 moderate, 2 high)`
-
-`npm run build` result:
-
-- Success
-- Next.js `15.5.11`
-- Compiled successfully
-- Generated static pages: 11/11
-
-Build warnings:
-
-- `Unknown env config "min-release-age"`
-- `Mismatching @next/swc version, detected: 15.5.7 while Next.js is on 15.5.11`
-
-Next route sizes:
-
-| Route | Size | First Load JS |
-| --- | ---: | ---: |
-| `/` | 56.3 kB | 171 kB |
-| `/_not-found` | 991 B | 104 kB |
-| `/contacto` | 2.78 kB | 117 kB |
-| `/icon.png` | 0 B | 0 B |
-| `/labs/globe` | 170 kB | 273 kB |
-| `/quienessomos` | 1.78 kB | 113 kB |
-| `/robots.txt` | 127 B | 103 kB |
-| `/servicios` | 1.68 kB | 119 kB |
-| `/sitemap.xml` | 127 B | 103 kB |
-
-Shared first-load chunks:
-
-| Chunk | Size |
-| --- | ---: |
-| `chunks/255-35bf8c00c5dde345.js` | 46 kB |
-| `chunks/4bd1b696-c023c6e3521b1417.js` | 54.2 kB |
-| Other shared chunks | 2.65 kB |
+Worker work includes topology feature conversion, land polygon preparation,
+candidate point sampling, land containment checks, deterministic point
+attribute generation, and transferred `Float32Array` batches. Main-thread batch
+handling copies incoming buffers into preallocated destination buffers.
 
 ## Build Manifest Attribution
-
-From `.next/app-build-manifest.json` and `.next/react-loadable-manifest.json`:
 
 `/quienessomos/page` initial route files:
 
@@ -286,226 +228,376 @@ Dynamic `GlobeLab` files loaded by `QuienesSomosPageContent.jsx`:
 | `static/chunks/692-0e59529941cc7fac.js` | 29,289 |
 
 `/labs/globe/page` includes the same globe-related chunk set in its route
-manifest plus `static/chunks/app/labs/globe/page-490133e90b4faf0c.js` at 197
-bytes.
+manifest plus a tiny lab page chunk.
 
-Static bundle attribution indicates that `/quienessomos` can load the globe
-implementation through the dynamic component boundary, while `/labs/globe`
-includes the same globe chunk family directly in the route. Used-vs-unused byte
-counts require runtime coverage and remain unresolved.
+## Lighthouse Commands
 
-## Current Lighthouse Results
+Each run used a fresh Chrome process launched with:
 
-UNRESOLVED — artifact missing.
+```powershell
+C:\Program Files\Google\Chrome\Application\chrome.exe `
+  --headless --no-sandbox --disable-gpu --disable-dev-shm-usage `
+  --remote-debugging-port=<port> `
+  --remote-debugging-address=127.0.0.1 `
+  --user-data-dir=<temp-profile> about:blank
+```
 
-No current operator-provided Lighthouse JSON/HTML artifacts were supplied.
-Codex did not run substitute Lighthouse rebaselines because the prompt assigns
-raw empirical artifact production to the operator and forbids reconstructing
-missing measurements.
+Mobile command pattern:
 
-Required missing data:
+```powershell
+npx --yes lighthouse@13.4.0 http://localhost:3000/quienessomos `
+  --port=<port> --output=json --output=html --output-path=<artifact-base> --quiet
+```
 
-- five `/quienessomos` mobile runs
-- three `/quienessomos` desktop runs
-- three `/labs/globe` mobile runs
-- one `/labs/globe` desktop guard run
+Desktop command pattern:
 
-Median selection, score spread, TBT spread, and comparison against the
-historical 638 ms cannot be determined from supplied artifacts.
+```powershell
+npx --yes lighthouse@13.4.0 http://localhost:3000/quienessomos `
+  --port=<port> --preset=desktop --output=json --output=html `
+  --output-path=<artifact-base> --quiet
+```
+
+Equivalent commands were used for `/labs/globe`.
+
+## Lighthouse Results
+
+`/quienessomos` mobile, n=5:
+
+| Run | Perf | TBT ms | LCP ms | CLS | FCP ms | Speed Index ms | TTFB ms | Main-thread ms | Long tasks | Max long task ms | Unused JS KiB |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `quienessomos-mobile-1` | 76 | 1042 | 2143 | 0.053 | 1088 | 1963 | 9 | 9967 | n/a | n/a | n/a |
+| `quienessomos-mobile-2` | 74 | 1314 | 2127 | 0.053 | 1066 | 1930 | 4 | 10248 | n/a | n/a | n/a |
+| `quienessomos-mobile-3` | 69 | 2730 | 2126 | 0.053 | 1065 | 1928 | 3 | 10271 | n/a | n/a | n/a |
+| `quienessomos-mobile-4` | 71 | 1862 | 2160 | 0.053 | 1065 | 1868 | 3 | 10231 | n/a | n/a | n/a |
+| `quienessomos-mobile-5` | 75 | 1189 | 2153 | 0.053 | 1066 | 1900 | 3 | 10184 | n/a | n/a | n/a |
+
+Median selection by TBT: `quienessomos-mobile-2`.
+
+Spread:
+
+| Metric | Min | Median | Max | Spread |
+| --- | ---: | ---: | ---: | ---: |
+| Performance | 69 | 74 | 76 | 7 |
+| TBT | 1042 ms | 1314 ms | 2730 ms | 1688 ms |
+| LCP | 2126 ms | 2143 ms | 2160 ms | 34 ms |
+| CLS | 0.053 | 0.053 | 0.053 | 0 |
+
+`/quienessomos` desktop, n=3:
+
+| Run | Perf | TBT ms | LCP ms | CLS | FCP ms | Speed Index ms | TTFB ms | Main-thread ms |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `quienessomos-desktop-1` | 100 | 0 | 477 | 0.023 | 295 | 574 | 2 | 1998 |
+| `quienessomos-desktop-2` | 100 | 0 | 480 | 0.023 | 293 | 574 | 3 | 1975 |
+| `quienessomos-desktop-3` | 100 | 0 | 478 | 0.023 | 291 | 568 | 3 | 1972 |
+
+`/labs/globe` mobile, n=3:
+
+| Run | Perf | TBT ms | LCP ms | CLS | FCP ms | Speed Index ms | TTFB ms | Main-thread ms |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `labs-globe-mobile-1` | 72 | 1542 | 2346 | 0 | 1068 | 2186 | 3 | 10712 |
+| `labs-globe-mobile-2` | 73 | 1295 | 2343 | 0 | 1066 | 2043 | 2 | 10307 |
+| `labs-globe-mobile-3` | 70 | 1517 | 2693 | 0 | 1066 | 2127 | 2 | 10334 |
+
+Median selection by TBT: `labs-globe-mobile-3`.
+
+`/labs/globe` desktop guard:
+
+| Run | Perf | TBT ms | LCP ms | CLS | FCP ms | Speed Index ms | TTFB ms | Main-thread ms |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `labs-globe-desktop-1` | 100 | 3 | 587 | 0 | 298 | 574 | 3 | 2166 |
+
+Historical comparison:
+
+- Historical `/quienessomos` mobile TBT: 638 ms.
+- Current `/quienessomos` mobile median TBT: 1314 ms.
+- Historical value is not representative of this local run set.
+- Current results are noisier and worse under Chrome 150 / Lighthouse 13.4.0 in
+  this environment.
+
+Note on script evaluation / parse compile:
+
+- Lighthouse `bootup-time` details are available by URL but not as the
+  `scriptEvaluation` / `scriptParseCompile` group names used by the first
+  extractor.
+- Representative `quienessomos-mobile-2` shows large bootup totals for
+  `122-29a8c2073e7f64ee.js` (`6741.5 ms` total), `c15bf2b0-52e8419f34af26ab.js`
+  (`1442.3 ms` total), and `255-35bf8c00c5dde345.js` (`655.7 ms` total).
 
 ## Long-Task Attribution
 
-UNRESOLVED — artifact missing.
+Representative trace:
 
-No representative mobile trace was supplied. Therefore no tasks above 50 ms can
-be tabulated and no cumulative TBT represented by identified tasks can be
-computed.
+`C:\Users\marce\AppData\Local\Temp\cwd-tbt-attribution-20260722-173109\quienessomos-mobile-trace.json`
 
-Required missing fields per task:
+Trace limitation:
 
-- start time
-- duration
-- category
-- script URL or chunk
-- function/stack when available
-- hydration, React, Three.js, renderer setup, module evaluation,
-  topology/atlas processing, buffer allocation/upload, worker-message handling,
-  route construction, bloom/composer, animation frame, or unrelated site code
-  classification
+- CDP trace extraction identified `RunTask` events above 50 ms, but these events
+  did not include reliable script stack attribution in the extracted event
+  payload.
+- Lighthouse JSON did attribute long tasks to URLs for the median run, but not
+  function stacks.
+- Therefore script/chunk attribution is medium confidence by Lighthouse URL and
+  function-level attribution remains unresolved.
+
+Top Lighthouse long tasks for `quienessomos-mobile-2`:
+
+| Start ms | Duration ms | URL / chunk | Category | Confidence |
+| ---: | ---: | --- | --- | --- |
+| 4081.4 | 249 | `/_next/static/chunks/255-35bf8c00c5dde345.js` | shared Next/React chunk task | medium |
+| 777.4 | 150 | `/quienessomos` | route document / hydration-adjacent task | low |
+| 608.4 | 113 | `Unattributable` | unattributed startup task | low |
+| 2131.7 | 108 | `/_next/static/chunks/4bd1b696-c023c6e3521b1417.js` | shared framework chunk task | medium |
+| 9919.4 | 94 | `/_next/static/chunks/122-29a8c2073e7f64ee.js` | repeated globe-related task candidate | medium |
+| 10339.4 | 90 | `/_next/static/chunks/122-29a8c2073e7f64ee.js` | repeated globe-related task candidate | medium |
+| 10675.4 | 90 | `/_next/static/chunks/122-29a8c2073e7f64ee.js` | repeated globe-related task candidate | medium |
+| 11489.4 | 90 | `/_next/static/chunks/122-29a8c2073e7f64ee.js` | repeated globe-related task candidate | medium |
+| 11739.4 | 89 | `/_next/static/chunks/122-29a8c2073e7f64ee.js` | repeated globe-related task candidate | medium |
+| 3619.4 | 87 | `/_next/static/chunks/c15bf2b0-52e8419f34af26ab.js` | large globe/Three-adjacent chunk candidate | medium |
+
+CDP trace long tasks:
+
+- Long tasks above 50 ms: 24.
+- Represented blocking time from trace `sum(duration - 50)`: 4506 ms.
+- Top five task durations: 1097.0, 872.2, 768.2, 596.6, 457.3 ms.
+- Top five cumulative blocking time: 3541 ms.
+- Function stacks: unresolved in extracted trace.
+
+The long-task evidence indicates repeated expensive work after initial page
+startup and strongly implicates the globe chunk family, especially
+`122-29a8c2073e7f64ee.js`, but the current trace extraction is not sufficient
+for function-level causality.
 
 ## Globe Phase Timings
 
-UNRESOLVED — artifact missing.
+Collected from `window.__codeworkGlobeTimingRuns` and
+`window.__codeworkGlobeLastTimings`, five completed mobile runs per route.
 
-No dumps of `window.__codeworkGlobeTimingRuns` or
-`window.__codeworkGlobeLastTimings` were supplied. Median/spread by phase cannot
-be calculated.
+`/quienessomos?globeDebug=1`:
 
-Known available timing labels from static source include:
+| Phase | Min ms | Median ms | Max ms | Spread ms |
+| --- | ---: | ---: | ---: | ---: |
+| renderer | 40.0 | 45.6 | 73.4 | 33.4 |
+| first shell | 51.9 | 56.2 | 98.0 | 46.1 |
+| point geometry ready | 1.1 | 1.4 | 3.1 | 2.0 |
+| Worker startup | 200.1 | 240.2 | 395.5 | 195.4 |
+| first point batch | 466.1 | 535.1 | 789.5 | 323.4 |
+| first points | 505.4 | 536.4 | 790.7 | 285.3 |
+| low-density globe | 509.9 | 574.8 | 791.7 | 281.8 |
+| first trajectory | 10.9 | 16.5 | 64.5 | 53.6 |
+| full visual completion | 5884.1 | 5907.6 | 5929.0 | 44.9 |
+| rendered points | 17000 | 17000 | 17000 | 0 |
+| candidate points | 60000 | 60000 | 60000 | 0 |
+| pixel-ratio cap | 2 | 2 | 2 | 0 |
 
-- `globe:renderer`
-- `globe:first-shell`
-- `globe:point-geometry-ready`
-- `globe:bloom-composer-ready`
-- `globe:first-point-batch`
-- `globe:first-points`
-- `globe:low-density-globe`
-- `globe:capital-drop-start`
-- `globe:atmosphere-fade-start`
-- `globe:dense-mesh-revealed`
-- `globe:first-revealed-points`
-- `globe:trajectory-N`
-- `globe:full-visual-completion`
-- `globe:rendered-points`
-- `globe:candidate-points`
-- `globe:data-cache-hit`
-- `globe:pixel-ratio-cap`
-- `globe:bloom`
-- `globe:progressive-reveal`
-- `globe:shader-reveal`
-- `globe:reveal-duration-ms`
-- `globe:reduced-motion`
+`/labs/globe?globeDebug=1`:
 
-Static labels are not measurements.
+| Phase | Min ms | Median ms | Max ms | Spread ms |
+| --- | ---: | ---: | ---: | ---: |
+| renderer | 44.1 | 55.0 | 68.7 | 24.6 |
+| first shell | 57.2 | 64.6 | 79.5 | 22.3 |
+| point geometry ready | 1.3 | 2.0 | 3.4 | 2.1 |
+| Worker startup | 131.2 | 135.4 | 147.4 | 16.2 |
+| first point batch | 403.6 | 431.4 | 457.5 | 53.9 |
+| first points | 431.9 | 463.7 | 546.4 | 114.5 |
+| low-density globe | 478.2 | 530.6 | 563.8 | 85.6 |
+| first trajectory | 12.6 | 15.8 | 43.9 | 31.3 |
+| full visual completion | 5919.9 | 5944.8 | 5963.3 | 43.4 |
+| rendered points | 17000 | 17000 | 17000 | 0 |
+| candidate points | 60000 | 60000 | 60000 | 0 |
+| pixel-ratio cap | 2 | 2 | 2 | 0 |
 
-## GPU-Disabled Versus GPU-Enabled Comparison
+`globe:worker-complete` and `globe:bloom-composer-ready` were not present in the
+timing summaries. This is a current instrumentation gap, not a value of zero.
 
-UNRESOLVED — artifact missing.
+Important distinction: `full visual completion` is elapsed choreography time,
+not blocking time.
 
-Historical Lighthouse used headless Chrome with `--disable-gpu`, but no current
-GPU-enabled traces were supplied for comparison. The report cannot determine
-whether current synthetic TBT is strongly coupled to the no-GPU environment.
+## GPU Comparison
 
-The correct future comparison requires:
+Headless Lighthouse/CDP conditions:
 
-- no-GPU Lighthouse trace
-- GPU-enabled DevTools trace for `/quienessomos`
-- GPU-enabled DevTools trace for `/labs/globe`
-- comparable throttling
-- frame cadence and renderer initialization comparison
+- Chrome launched with `--headless --disable-gpu`.
+- `/quienessomos` mobile median TBT: 1314 ms.
+- `/labs/globe` mobile median TBT: 1517 ms.
+- `/quienessomos` timing median renderer: 45.6 ms.
+- `/quienessomos` timing median first point batch: 535.1 ms.
+- `/quienessomos` timing median low-density globe: 574.8 ms.
 
-## JavaScript Coverage And Bundle Findings
+Windowed GPU-enabled diagnostic attempt:
 
-Runtime used-vs-unused coverage:
+- Puppeteer launched Chrome with `headless: false` and no `--disable-gpu`.
+- Five timing runs were collected in
+  `quienessomos-gpu-windowed-timings.json`.
 
-UNRESOLVED — artifact missing.
+GPU-enabled `/quienessomos` timing medians:
 
-Static build findings:
+| Phase | Median |
+| --- | ---: |
+| renderer | 17.6 ms |
+| first shell | 10.2 ms |
+| point geometry ready | 0.1 ms |
+| Worker startup | 24.9 ms |
+| first point batch | 122.3 ms |
+| first points | 146.8 ms |
+| low-density globe | 211.3 ms |
+| first trajectory | 4.7 ms |
+| full visual completion | 5837.1 ms |
 
-- The route `/quienessomos` has small page code in the initial manifest and
-  loads the globe implementation through a dynamic `GlobeLab` boundary.
-- The route `/labs/globe` includes the same globe chunk family directly.
-- The globe chunk family includes large chunks consistent with Three.js and
-  postprocessing, plus smaller implementation/runtime chunks.
-- `GlobeLab.jsx` statically imports `three`, `EffectComposer`, `RenderPass`,
-  `UnrealBloomPass`, `topojson-client`, and `world-atlas/land-110m.json`.
-- `globe-points.worker.js` also imports `topojson-client` and
-  `world-atlas/land-110m.json`.
-- Both verified callers use `progressiveReveal`, so non-progressive-only code
-  is dormant for current callers but still present in the module.
-- Whether dormant code is downloaded, parsed, evaluated, or tree-shaken in a
-  way that materially affects TBT requires source-map and runtime coverage
-  correlation with real traces.
+Interpretation:
 
-## Dominant TBT Classification
+- GPU/windowed diagnostics show substantially faster renderer and point-phase
+  timings than headless `--disable-gpu`.
+- The synthetic Lighthouse result should not be dismissed, but the poor mobile
+  TBT appears materially coupled to the headless/no-GPU/throttled environment.
+- Visual choreography completion remains near 5.8-5.9 s in both modes because
+  it is intentionally timed choreography, not blocking work.
 
-Classification: `J. mixed / insufficient attribution`
+## Runtime JavaScript Coverage
 
-Confidence: high that attribution is insufficient; low for any specific source
-category.
+Coverage was collected with Puppeteer JS coverage on `/quienessomos` and
+`/labs/globe`.
 
-Reason:
+Totals:
 
-- No current median Lighthouse artifacts were provided.
-- No representative long-task trace was provided.
-- No runtime coverage was provided.
-- Static source and build manifests identify plausible boundaries but cannot
-  establish blocking duration or causality.
+| Route | Bytes | Used bytes | Unused bytes |
+| --- | ---: | ---: | ---: |
+| `/quienessomos` | 1,209,522 | 740,015 | 469,507 |
+| `/labs/globe` | 1,205,311 | 722,045 | 483,266 |
 
-Candidate categories that remain plausible but unproven:
+Identifiable chunk groups:
 
-- JavaScript download/parse/compile
-- module evaluation
-- renderer/scene initialization
-- worker-message handling and buffer copies/uploads
-- route construction
-- bloom/composer initialization
-- unrelated `/quienessomos` page code
+| Route | Group | Bytes | Used bytes | Unused bytes |
+| --- | --- | ---: | ---: | ---: |
+| `/quienessomos` | Three.js chunks | 545,353 | 328,325 | 217,028 |
+| `/quienessomos` | postprocessing/globe chunks | 102,214 | 88,303 | 13,911 |
+| `/labs/globe` | Three.js chunks | 545,353 | 328,325 | 217,028 |
+| `/labs/globe` | postprocessing/globe chunks | 102,214 | 88,303 | 13,911 |
 
-No category is selected as dominant without trace evidence.
+Limitations:
 
-## Mandatory Route-Delta Diagnosis
+- Coverage is URL/chunk based, not source-symbol perfect.
+- Precise progressive vs non-progressive vs fallback byte usage requires
+  source-map symbol attribution beyond this collected coverage.
+- Coverage still shows substantial unused bytes in Three.js chunks while both
+  routes use the same visual globe.
 
-UNRESOLVED — artifact missing.
+## Visual-Fidelity Baseline
 
-Historical n=1 route delta:
+Visual captures were stored outside the repository under:
 
-- `/quienessomos` mobile TBT: 638 ms
-- `/labs/globe` mobile TBT: 272 ms
-- Historical delta: 366 ms
+`C:\Users\marce\AppData\Local\Temp\cwd-tbt-attribution-20260722-173109`
 
-This historical delta is informative but not sufficient. It may reflect
-globe-intrinsic work, `/quienessomos` page-specific hydration/layout/surrounding
-content, no-GPU variance, or n=1 measurement variance. Current measurements for
-both routes are required to reconcile the delta.
+Captured phases for `/quienessomos` desktop `1440x900` and mobile `390x844`:
 
-Because no current `/quienessomos` and `/labs/globe` raw Lighthouse/trace
-artifacts were supplied, the current route delta cannot be attributed.
-
-## Candidate Next Increments
-
-No implementation candidate is approved yet because the hard decision rules
-require a current meaningful TBT issue and concrete trace attribution.
-
-Evidence-gated candidates for later consideration only:
-
-| Rank | Candidate | Expected TBT mechanism | Source boundary | Visual risk | Implementation risk | Required validation | Rollback condition |
-| ---: | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Isolate dormant non-progressive code from the progressive production entrypoint | Reduce parse/evaluation if dormant code is currently included in the progressive path | `GlobeLab.jsx` module boundary | low if output unchanged | medium | source-map coverage, before/after Lighthouse/trace, visual baseline match | any visual diff or no TBT reduction |
-| 2 | Prevent progressive routes from parsing main-thread fallback topology until Worker failure | Reduce initial parse/evaluation if fallback topology is loaded eagerly | fallback point-generation/topology boundary | low if fallback behavior preserved | medium | coverage proves fallback parsed unused, Worker failure test, before/after trace | fallback regression or no measurable reduction |
-| 3 | Split expensive postprocessing module loading from initial module evaluation while preserving exact bloom onset/final appearance | Move or reduce initial module evaluation tied to bloom only if trace shows postprocessing dominates | `EffectComposer`, `RenderPass`, `UnrealBloomPass` boundary | medium because bloom timing must remain exact | medium-high | trace proves bloom module cost, pixel/recording comparison, before/after timings | bloom onset/final-state mismatch |
-
-Selected next increment: none. The correct next action is to collect the missing
-operator artifacts first. If current median mobile TBT is materially healthy,
-the next increment should be RUM/INP collection rather than source
-optimization.
-
-## Visual-Fidelity Baseline Artifacts
-
-UNRESOLVED — artifact missing.
-
-No screenshot, recording, canvas metadata, effective pixel ratio, point count,
-route count, or visual-completion timing artifacts were supplied. A future
-optimization cannot be accepted until these captures exist outside the repo and
-are referenced here or in a follow-up report.
-
-Required captures:
-
-- initial shell
+- shell
 - Italy seed
-- continental reveal in progress
+- progressive reveal
 - capitals
 - atmosphere
 - trajectories
-- bloom-complete final state
-- desktop and representative mobile viewport
-- `es`, `en`, `it`
-- normal and reduced motion
+- final bloom
+
+Final-state examples:
+
+| Capture | Viewport | DPR | Canvas | Rendered points | Candidate points | Route count | Final timing |
+| --- | --- | ---: | --- | ---: | ---: | ---: | ---: |
+| `quienessomos-desktop-final-bloom.png` | 1440x900 | 1 | captured in metadata JSON | 17000 | 60000 | 11 | timing metadata file |
+| `quienessomos-mobile-final-bloom.png` | 390x844 | 1 | captured in metadata JSON | 17000 | 60000 | 11 | timing metadata file |
+
+Metadata files:
+
+- `quienessomos-desktop-visual-baseline.json`
+- `quienessomos-mobile-visual-baseline.json`
+
+Locale-specific visual captures for `es`, `en`, and `it` were not separately
+captured in this automated pass. The globe itself is locale-independent; locale
+text visual regression remains a manual follow-up if required.
+
+## Route-Delta Diagnosis
+
+Current mobile median TBT:
+
+- `/quienessomos`: 1314 ms.
+- `/labs/globe`: 1517 ms.
+- `/quienessomos - /labs/globe`: -203 ms.
+
+This reverses the historical n=1 delta where `/quienessomos` was 366 ms worse.
+In the current local run set, `/labs/globe` is slightly worse than
+`/quienessomos`, and both routes show similarly high main-thread work and the
+same globe chunk/coverage profile.
+
+Diagnosis:
+
+- The current TBT issue is primarily globe-intrinsic or environment/globe
+  interaction, not clearly `/quienessomos` page-specific.
+- The route-specific surrounding `/quienessomos` content does not explain the
+  current median TBT because the lab route rendering the same globe is worse.
+- The historical delta is likely stale and/or n=1 variance under older commits
+  and older browser conditions.
+
+Confidence: medium. The route delta is clear in the current Lighthouse runs,
+but function-level long-task attribution remains incomplete.
+
+## Dominant TBT Classification
+
+Classification: `J. mixed / insufficient function-level attribution`, with a
+strong globe-chunk signal.
+
+Supporting evidence:
+
+- Both `/quienessomos` and `/labs/globe` mobile medians have high TBT.
+- Both routes share the same globe chunk family and similar coverage totals.
+- Lighthouse median long tasks repeatedly point at globe-related chunks,
+  especially `122-29a8c2073e7f64ee.js`.
+- GPU/windowed timing phases are substantially faster than headless/no-GPU
+  timing phases.
+- Function stacks were not reliably extracted from CDP trace events.
+
+Alternative explanations:
+
+- Headless/no-GPU synthetic environment amplifies WebGL/Three scheduling costs.
+- Shared framework and route hydration tasks contribute early blocking.
+- Source-map/function attribution is needed before cutting code.
+
+Confidence:
+
+- High confidence that current synthetic TBT remains meaningful in Lighthouse.
+- Medium confidence that the issue is globe-related rather than
+  `/quienessomos`-specific.
+- Low confidence for a single exact source function boundary.
+
+## Candidate Next Increments
+
+No visual-quality reduction is acceptable. No deferred mount is proposed.
+
+Ranked candidates:
+
+| Rank | Candidate | Expected TBT mechanism | Source boundary | Visual risk | Implementation risk | Validation | Rollback |
+| ---: | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Improve attribution before optimization by adding source-map-aware trace parsing for globe chunks | Converts chunk-level evidence into function-level source boundaries | trace analysis tooling only | none | low | same artifacts plus source maps | if no clearer attribution |
+| 2 | Investigate splitting dormant non-progressive/fallback code from the progressive entrypoint | May reduce parse/evaluation if source-map attribution confirms dormant code in active chunks | `GlobeLab.jsx` progressive vs fallback/non-progressive boundaries | low if output unchanged | medium | before/after TBT, coverage, screenshots, timing globals | any visual diff or no TBT reduction |
+| 3 | Investigate buffer-copy / worker-message handling only if trace stacks confirm it | May reduce main-thread batch handling while preserving identical buffers | `appendPointBatch` and worker message boundary | low-medium | medium | byte-for-byte point buffer checks, timings, screenshots | point/timing visual mismatch |
+
+Selected next increment:
+
+Candidate 1: source-map-aware attribution tooling/reporting. It preserves visual
+output and addresses the remaining blocker: current evidence identifies chunks
+but not exact functions. A source optimization should wait until Candidate 1
+confirms a concrete source boundary.
 
 ## Limitations
 
-- No raw empirical operator artifacts were provided.
-- No current Lighthouse medians or spreads were calculated.
-- No long tasks were attributed.
-- No globe timing medians were calculated.
-- No GPU/no-GPU comparison was possible.
-- No runtime coverage used/unused bytes were recorded.
-- Static build manifests identify chunk boundaries but cannot prove blocking
-  causality.
+- Lighthouse script-evaluation group extraction needed manual interpretation
+  because the JSON grouped bootup data by URL columns, not the initially
+  expected group names.
+- CDP trace extraction found `RunTask` long tasks but not reliable function
+  stacks.
+- Locale-specific visual baseline captures were not collected in this automated
+  pass.
+- Frame cadence was not quantified beyond timing globals and traces.
+- No production source was modified.
 
 ## Explicit Production-Source Statement
 
-No production source changed in this increment. The only repository change is
-this documentation file:
-
-`CWD/front/docs/performance/quienes-somos-tbt-attribution-2026-07.md`
+No production source changed. Raw JSON, HTML, traces, coverage files,
+screenshots, temporary scripts, `.next`, and `node_modules` were not committed.
