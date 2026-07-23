@@ -1405,6 +1405,7 @@ nav .holder li a.activo {
 
   display: flex;
   flex-direction: column;
+  row-gap: 40px;
   transform: translateX(-50%);
   will-change: transform;
 }
@@ -1462,18 +1463,6 @@ nav .holder li a.activo {
 
 .service-item:nth-child(1) {
   margin-top: 20px;
-}
-
-.service-item:nth-child(2) {
-  margin-top: 40px;
-}
-
-.service-item:nth-child(3) {
-  margin-top: 80px;
-}
-
-.service-item:nth-child(4) {
-  margin-top: 40px;
 }
 
 /* NUMERO */
