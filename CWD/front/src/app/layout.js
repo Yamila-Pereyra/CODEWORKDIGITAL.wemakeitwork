@@ -6,6 +6,7 @@ import "@/styles/contacto.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import LanguageSelector from "@/components/LanguageSelector";
+import ContactHeaderSocials from "@/components/ContactHeaderSocials";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { DEFAULT_LOCALE, DEFAULT_OG_IMAGE, SITE_NAME } from "@/lib/metadata";
 import { SITE_URL } from "@/lib/site";
@@ -60,7 +61,10 @@ export default function RootLayout({ children }) {
                     <Nav />
                 </div>
 
-                <LanguageSelector />
+                <div className="header-actions">
+                    <LanguageSelector />
+                    <ContactHeaderSocials />
+                </div>
             </header>
 
             <div className="main-content">
