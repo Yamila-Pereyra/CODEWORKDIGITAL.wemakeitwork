@@ -207,6 +207,7 @@ export const translations = {
             list: {
                 label: "Qué hacemos",
                 title: "Soluciones digitales adaptadas a las necesidades de cada proyecto.",
+                watermark: "SERVICIOS",
                 items: [
                     {
                         numero: "01",
@@ -495,6 +496,7 @@ digitales que generan resultados.`,
             list: {
                 label: "What we do",
                 title: "Digital solutions adapted to the needs of each project.",
+                watermark: "SERVICES",
                 items: [
                     {
                         numero: "01",
@@ -780,6 +782,7 @@ experiences that deliver results.`,
             list: {
                 label: "Cosa facciamo",
                 title: "Soluzioni digitali adattate alle esigenze di ogni progetto.",
+                watermark: "SERVIZI",
                 items: [
                     {
                         numero: "01",
