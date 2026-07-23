@@ -196,7 +196,6 @@ export const translations = {
                 error: "Error enviando mensaje. Intenta nuevamente.",
                 success: "Mensaje enviado correctamente",
             },
-            whatsappCta: "Canal directo · WhatsApp →",
         },
         serviciosPage: {
             hero: {
@@ -485,7 +484,6 @@ digitales que generan resultados.`,
                 error: "Error sending message. Please try again.",
                 success: "Message sent successfully",
             },
-            whatsappCta: "Direct channel · WhatsApp →",
         },
         serviciosPage: {
             hero: {
@@ -771,7 +769,6 @@ experiences that deliver results.`,
                 error: "Errore durante l'invio del messaggio. Riprova.",
                 success: "Messaggio inviato correttamente",
             },
-            whatsappCta: "Canale diretto · WhatsApp →",
         },
         serviciosPage: {
             hero: {

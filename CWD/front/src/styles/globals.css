@@ -788,7 +788,7 @@ footer {
 
 .top-header .header-social-links {
   position: absolute;
-  top: calc(100% + 14px);
+  top: calc(100% + 30px);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -886,7 +886,7 @@ footer {
   }
 
   .top-header .header-social-links {
-    top: calc(100% + 11px);
+    top: calc(100% + 25px);
     gap: 8px;
   }
 
