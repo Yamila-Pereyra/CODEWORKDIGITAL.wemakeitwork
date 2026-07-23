@@ -1,7 +1,6 @@
 "use client";
 
 import ContactForm from "@/components/ContactForm";
-import ContactWhatsAppLink from "@/components/ContactWhatsAppLink";
 import OpticalDivider from "@/components/OpticalDivider";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/translations";
@@ -40,10 +39,6 @@ export default function ContactoPageContent() {
                 <ContactForm
                     postUr={`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/contacto`}
                 />
-
-                <div className="whatsapp-contacto">
-                  <ContactWhatsAppLink />
-                </div>
               </div>
             </div>
           </div>
