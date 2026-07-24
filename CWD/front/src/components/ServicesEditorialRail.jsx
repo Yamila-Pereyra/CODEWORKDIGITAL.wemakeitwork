@@ -102,14 +102,23 @@ function AnalyticsVisual() {
 export default function ServicesEditorialRail({ items, watermark }) {
   const railId = useId();
   const railRef = useRef(null);
+  const resetSentinelRef = useRef(null);
   const rowRefs = useRef([]);
   const rowObserverRef = useRef(null);
+  const resetObserverRef = useRef(null);
   const pendingRowsRef = useRef(new Set());
+  const revealedIndicesRef = useRef(new Set());
+  const sentinelPassedAboveRef = useRef(false);
+  const deferredResetRef = useRef(false);
+  const awaitingRowRearmRef = useRef(false);
+  const sentinelReturnedBelowRef = useRef(false);
   const normalizedRailId = railId.replace(/:/g, "");
   const [openIndex, setOpenIndex] = useState(null);
   const [isMotionReady, setIsMotionReady] = useState(false);
   const [hasEntered, setHasEntered] = useState(false);
   const [isRowRevealReady, setIsRowRevealReady] = useState(false);
+  const [isRowCycleArmed, setIsRowCycleArmed] = useState(true);
+  const [revealCycle, setRevealCycle] = useState(0);
   const [revealedIndices, setRevealedIndices] = useState(() => new Set());
 
   const getTriggerId = (numero) =>
@@ -146,6 +155,7 @@ export default function ServicesEditorialRail({ items, watermark }) {
 
       const next = new Set(current);
       next.add(index);
+      revealedIndicesRef.current = next;
       return next;
     });
 
@@ -157,6 +167,49 @@ export default function ServicesEditorialRail({ items, watermark }) {
 
   const revealRowFromFocus = (index) => {
     commitRowReveal(index, rowRefs.current[index], "0ms");
+  };
+
+  const resetRowRevealCycle = () => {
+    rowObserverRef.current?.disconnect();
+    rowObserverRef.current = null;
+    sentinelPassedAboveRef.current = false;
+    deferredResetRef.current = false;
+    awaitingRowRearmRef.current = true;
+    sentinelReturnedBelowRef.current = false;
+    setOpenIndex(null);
+    revealedIndicesRef.current = new Set();
+    setRevealedIndices(new Set());
+
+    rowRefs.current.forEach((row) => {
+      row?.style.removeProperty("--row-delay");
+    });
+
+    pendingRowsRef.current = new Set();
+    setIsRowCycleArmed(false);
+    setRevealCycle((cycle) => cycle + 1);
+  };
+
+  const requestRowRevealReset = () => {
+    if (revealedIndicesRef.current.size === 0) {
+      return;
+    }
+
+    if (railRef.current?.contains(document.activeElement)) {
+      deferredResetRef.current = true;
+      return;
+    }
+
+    resetRowRevealCycle();
+  };
+
+  const handleRailBlurCapture = (event) => {
+    if (
+      deferredResetRef.current &&
+      !event.currentTarget.contains(event.relatedTarget)
+    ) {
+      deferredResetRef.current = false;
+      resetRowRevealCycle();
+    }
   };
 
   useEffect(() => {
@@ -186,6 +239,77 @@ export default function ServicesEditorialRail({ items, watermark }) {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const sentinel = resetSentinelRef.current;
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (
+      prefersReducedMotion ||
+      !sentinel ||
+      typeof IntersectionObserver === "undefined"
+    ) {
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (
+          !entry.isIntersecting &&
+          entry.rootBounds &&
+          entry.boundingClientRect.bottom < entry.rootBounds.top
+        ) {
+          sentinelPassedAboveRef.current = true;
+          return;
+        }
+
+        if (
+          !entry.isIntersecting &&
+          entry.rootBounds &&
+          awaitingRowRearmRef.current &&
+          entry.boundingClientRect.top > entry.rootBounds.bottom
+        ) {
+          sentinelReturnedBelowRef.current = true;
+          return;
+        }
+
+        if (
+          entry.isIntersecting &&
+          awaitingRowRearmRef.current &&
+          sentinelReturnedBelowRef.current &&
+          revealedIndicesRef.current.size === 0
+        ) {
+          awaitingRowRearmRef.current = false;
+          sentinelReturnedBelowRef.current = false;
+          setIsRowCycleArmed(true);
+          return;
+        }
+
+        if (
+          entry.isIntersecting &&
+          sentinelPassedAboveRef.current &&
+          revealedIndicesRef.current.size > 0
+        ) {
+          sentinelPassedAboveRef.current = false;
+          requestRowRevealReset();
+        }
+      },
+      {
+        threshold: 0,
+        rootMargin: "320px 0px 0px 0px",
+      }
+    );
+
+    resetObserverRef.current = observer;
+    observer.observe(sentinel);
+
+    return () => {
+      resetObserverRef.current?.disconnect();
+      resetObserverRef.current = null;
+    };
+  }, []);
+
   useLayoutEffect(() => {
     const rows = rowRefs.current.filter(Boolean);
 
@@ -202,7 +326,15 @@ export default function ServicesEditorialRail({ items, watermark }) {
       rows.forEach((row, index) => {
         row.style.setProperty("--row-delay", "0ms");
       });
-      setRevealedIndices(new Set(rows.map((_, index) => index)));
+      const visibleRows = new Set(rows.map((_, index) => index));
+      revealedIndicesRef.current = visibleRows;
+      setRevealedIndices(visibleRows);
+      setIsRowRevealReady(true);
+      return undefined;
+    }
+
+    if (!isRowCycleArmed) {
+      pendingRowsRef.current = new Set(rows);
       setIsRowRevealReady(true);
       return undefined;
     }
@@ -239,16 +371,23 @@ export default function ServicesEditorialRail({ items, watermark }) {
       rowObserverRef.current = null;
       pendingRowsRef.current.clear();
     };
-  }, []);
+  }, [isRowCycleArmed, revealCycle]);
 
   return (
     <div
       className={`services-editorial-rail ${isMotionReady ? "is-motion-ready" : ""} ${hasEntered ? "is-entered" : ""} ${isRowRevealReady ? "is-row-reveal-ready" : ""}`}
       ref={railRef}
+      onBlurCapture={handleRailBlurCapture}
     >
       <div className="services-rail-watermark" aria-hidden="true">
         {watermark}
       </div>
+
+      <div
+        className="services-rail-reset-sentinel"
+        ref={resetSentinelRef}
+        aria-hidden="true"
+      />
 
       <div className="services-rail-list">
         {items.map((item, index) => {
@@ -257,7 +396,6 @@ export default function ServicesEditorialRail({ items, watermark }) {
           const panelId = getPanelId(item.numero);
           const Visual = VISUALS[item.numero] || AnalyticsVisual;
           const isRevealed = revealedIndices.has(index);
-          const isLast = index === items.length - 1;
 
           return (
             <article
@@ -303,11 +441,9 @@ export default function ServicesEditorialRail({ items, watermark }) {
                 </div>
               </div>
 
-              {isLast && (
-                <div className="services-rail-tail-mask" aria-hidden="true">
-                  <div className="services-rail-tail-line" />
-                </div>
-              )}
+              <div className="services-rail-tail-mask" aria-hidden="true">
+                <div className="services-rail-tail-line" />
+              </div>
             </article>
           );
         })}
