@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 
 const VISUALS = {
   "01": WebVisual,
@@ -102,10 +102,15 @@ function AnalyticsVisual() {
 export default function ServicesEditorialRail({ items, watermark }) {
   const railId = useId();
   const railRef = useRef(null);
+  const rowRefs = useRef([]);
+  const rowObserverRef = useRef(null);
+  const pendingRowsRef = useRef(new Set());
   const normalizedRailId = railId.replace(/:/g, "");
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openIndex, setOpenIndex] = useState(null);
   const [isMotionReady, setIsMotionReady] = useState(false);
   const [hasEntered, setHasEntered] = useState(false);
+  const [isRowRevealReady, setIsRowRevealReady] = useState(false);
+  const [revealedIndices, setRevealedIndices] = useState(() => new Set());
 
   const getTriggerId = (numero) =>
     `services-${normalizedRailId}-${numero}-trigger`;
@@ -123,6 +128,35 @@ export default function ServicesEditorialRail({ items, watermark }) {
 
     event.preventDefault();
     handleToggle(index);
+  };
+
+  const commitRowReveal = (index, row, delay = "0ms") => {
+    if (!row) {
+      return;
+    }
+
+    row.style.setProperty("--row-delay", delay);
+    rowObserverRef.current?.unobserve(row);
+    pendingRowsRef.current.delete(row);
+
+    setRevealedIndices((current) => {
+      if (current.has(index)) {
+        return current;
+      }
+
+      const next = new Set(current);
+      next.add(index);
+      return next;
+    });
+
+    if (pendingRowsRef.current.size === 0) {
+      rowObserverRef.current?.disconnect();
+      rowObserverRef.current = null;
+    }
+  };
+
+  const revealRowFromFocus = (index) => {
+    commitRowReveal(index, rowRefs.current[index], "0ms");
   };
 
   useEffect(() => {
@@ -152,9 +186,64 @@ export default function ServicesEditorialRail({ items, watermark }) {
     return () => observer.disconnect();
   }, []);
 
+  useLayoutEffect(() => {
+    const rows = rowRefs.current.filter(Boolean);
+
+    if (rows.length === 0) {
+      setIsRowRevealReady(true);
+      return undefined;
+    }
+
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
+      rows.forEach((row, index) => {
+        row.style.setProperty("--row-delay", "0ms");
+      });
+      setRevealedIndices(new Set(rows.map((_, index) => index)));
+      setIsRowRevealReady(true);
+      return undefined;
+    }
+
+    pendingRowsRef.current = new Set(rows);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entering = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort(
+            (left, right) =>
+              Number(left.target.dataset.rowIndex) -
+              Number(right.target.dataset.rowIndex)
+          );
+
+        entering.forEach((entry, positionInBatch) => {
+          const index = Number(entry.target.dataset.rowIndex);
+          commitRowReveal(index, entry.target, `${positionInBatch * 70}ms`);
+        });
+      },
+      {
+        threshold: 0,
+        rootMargin: "0px 0px -120px 0px",
+      }
+    );
+
+    rowObserverRef.current = observer;
+    rows.forEach((row) => observer.observe(row));
+    setIsRowRevealReady(true);
+
+    return () => {
+      rowObserverRef.current?.disconnect();
+      rowObserverRef.current = null;
+      pendingRowsRef.current.clear();
+    };
+  }, []);
+
   return (
     <div
-      className={`services-editorial-rail ${isMotionReady ? "is-motion-ready" : ""} ${hasEntered ? "is-entered" : ""}`}
+      className={`services-editorial-rail ${isMotionReady ? "is-motion-ready" : ""} ${hasEntered ? "is-entered" : ""} ${isRowRevealReady ? "is-row-reveal-ready" : ""}`}
       ref={railRef}
     >
       <div className="services-rail-watermark" aria-hidden="true">
@@ -167,28 +256,38 @@ export default function ServicesEditorialRail({ items, watermark }) {
           const triggerId = getTriggerId(item.numero);
           const panelId = getPanelId(item.numero);
           const Visual = VISUALS[item.numero] || AnalyticsVisual;
+          const isRevealed = revealedIndices.has(index);
+          const isLast = index === items.length - 1;
 
           return (
             <article
-              className={`services-rail-item ${isActive ? "is-active" : ""}`}
+              className={`services-rail-item ${isActive ? "is-active" : ""} ${isRevealed ? "is-scroll-revealed" : ""}`}
               key={item.numero}
-              style={{ "--rail-index": index }}
+              data-row-index={index}
+              ref={(node) => {
+                rowRefs.current[index] = node;
+              }}
             >
-              <h3 className="services-rail-heading">
-                <button
-                  type="button"
-                  id={triggerId}
-                  aria-expanded={isActive}
-                  aria-controls={panelId}
-                  className="services-rail-trigger"
-                  onClick={() => handleToggle(index)}
-                  onKeyDown={(event) => handleTriggerKeyDown(event, index)}
-                >
-                  <span className="services-rail-number">{item.numero}</span>
-                  <span className="services-rail-title">{item.titulo}</span>
-                  <span className="services-rail-indicator" aria-hidden="true" />
-                </button>
-              </h3>
+              <div className="services-rail-mask">
+                <div className="services-rail-inner">
+                  <h3 className="services-rail-heading">
+                    <button
+                      type="button"
+                      id={triggerId}
+                      aria-expanded={isActive}
+                      aria-controls={panelId}
+                      className="services-rail-trigger"
+                      onClick={() => handleToggle(index)}
+                      onFocus={() => revealRowFromFocus(index)}
+                      onKeyDown={(event) => handleTriggerKeyDown(event, index)}
+                    >
+                      <span className="services-rail-number">{item.numero}</span>
+                      <span className="services-rail-title">{item.titulo}</span>
+                      <span className="services-rail-indicator" aria-hidden="true" />
+                    </button>
+                  </h3>
+                </div>
+              </div>
 
               <div
                 id={panelId}
@@ -203,6 +302,12 @@ export default function ServicesEditorialRail({ items, watermark }) {
                   <Visual />
                 </div>
               </div>
+
+              {isLast && (
+                <div className="services-rail-tail-mask" aria-hidden="true">
+                  <div className="services-rail-tail-line" />
+                </div>
+              )}
             </article>
           );
         })}
