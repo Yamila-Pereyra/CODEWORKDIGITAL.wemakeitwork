@@ -102,12 +102,25 @@ function AnalyticsVisual() {
 export default function ServicesEditorialRail({ items, watermark }) {
   const railId = useId();
   const normalizedRailId = railId.replace(/:/g, "");
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [openIndex, setOpenIndex] = useState(0);
 
   const getTriggerId = (numero) =>
     `services-${normalizedRailId}-${numero}-trigger`;
   const getPanelId = (numero) =>
     `services-${normalizedRailId}-${numero}-panel`;
+
+  const handleToggle = (index) => {
+    setOpenIndex((current) => (current === index ? null : index));
+  };
+
+  const handleTriggerKeyDown = (event, index) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+
+    event.preventDefault();
+    handleToggle(index);
+  };
 
   return (
     <div className="services-editorial-rail">
@@ -117,7 +130,7 @@ export default function ServicesEditorialRail({ items, watermark }) {
 
       <div className="services-rail-list">
         {items.map((item, index) => {
-          const isActive = index === activeIndex;
+          const isActive = index === openIndex;
           const triggerId = getTriggerId(item.numero);
           const panelId = getPanelId(item.numero);
           const Visual = VISUALS[item.numero] || AnalyticsVisual;
@@ -133,12 +146,9 @@ export default function ServicesEditorialRail({ items, watermark }) {
                   id={triggerId}
                   aria-expanded={isActive}
                   aria-controls={panelId}
-                  aria-disabled={isActive ? "true" : undefined}
                   className="services-rail-trigger"
-                  onClick={() => {
-                    if (isActive) return;
-                    setActiveIndex(index);
-                  }}
+                  onClick={() => handleToggle(index)}
+                  onKeyDown={(event) => handleTriggerKeyDown(event, index)}
                 >
                   <span className="services-rail-number">{item.numero}</span>
                   <span className="services-rail-title">{item.titulo}</span>
