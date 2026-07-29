@@ -95,7 +95,7 @@
     minmax(0, var(--lab-editorial-ratio))
     minmax(520px, var(--lab-form-ratio));
   gap: var(--lab-layout-gap);
-  align-items: center;
+  align-items: start;
   width: min(
     calc(100% - (var(--lab-content-padding-x) * 2)),
     var(--lab-content-max-width)
@@ -107,6 +107,7 @@
 
 .editorialBlock {
   max-width: 520px;
+  justify-self: center;
   pointer-events: auto;
 }
 
@@ -201,6 +202,7 @@
 
   .editorialBlock {
     max-width: none;
+    justify-self: stretch;
   }
 
   .contactEyebrow {

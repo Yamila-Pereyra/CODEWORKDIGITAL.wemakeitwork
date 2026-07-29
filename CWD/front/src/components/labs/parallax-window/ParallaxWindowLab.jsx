@@ -29,8 +29,8 @@ const PARALLAX_WINDOW_CONFIG = Object.freeze({
 // TODO: Replace when final editorial copy is approved.
 const LAB_CONTACT_COPY = Object.freeze({
   eyebrow: "Hablemos de tu proyecto",
-  title: "Construyamos algo excepcional",
-  body: "El momento perfecto no llega. Se decide.",
+  title: "El momento perfecto no llega. Se decide.",
+  body: "",
   submitLabel: "Enviar mensaje",
 });
 
@@ -54,8 +54,8 @@ const LAB_CONTENT_STYLE = Object.freeze({
   "--lab-submit-border-alpha": "0.78",
   "--lab-glass-border-width": "1px",
   "--lab-glass-border-alpha": "0.68",
-  "--lab-glass-background-alpha": "0.0935",
-  "--lab-glass-fallback-background-alpha": "0.153",
+  "--lab-glass-background-alpha": "0.0701",
+  "--lab-glass-fallback-background-alpha": "0.115",
   "--lab-glass-blur": "10px",
   "--lab-glass-saturation": "115%",
   "--lab-glass-radius": "7px",
@@ -202,9 +202,11 @@ export default function ParallaxWindowLab() {
               <h2 className={styles.contactTitle}>
                 {LAB_CONTACT_COPY.title}
               </h2>
-              <p className={styles.contactBody}>
-                {LAB_CONTACT_COPY.body}
-              </p>
+              {LAB_CONTACT_COPY.body ? (
+                <p className={styles.contactBody}>
+                  {LAB_CONTACT_COPY.body}
+                </p>
+              ) : null}
             </div>
 
             <GlassContactForm submitLabel={LAB_CONTACT_COPY.submitLabel} />
