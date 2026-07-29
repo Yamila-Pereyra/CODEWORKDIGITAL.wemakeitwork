@@ -277,6 +277,15 @@
     width: 100%;
     padding: 105px 0 125px;
     background: #000;
+    overflow-x: clip;
+}
+
+.qs-values-sequence-trigger {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
 }
 
 .qs-valores-grid {
@@ -289,6 +298,13 @@
 }
 
 .qs-card {
+    position: relative;
+    min-width: 0;
+    z-index: var(--qs-card-stack-index);
+}
+
+.qs-card-surface {
+    box-sizing: border-box;
     min-height: 300px;
     padding: 34px;
     border-radius: 30px;
@@ -301,16 +317,7 @@
     transition: transform 0.35s ease, background 0.35s ease;
 }
 
-.qs-card:hover {
-    transform: translateY(-8px);
-    background: linear-gradient(
-            145deg,
-            rgba(56, 189, 248, 0.18),
-            rgba(255, 255, 255, 0.04)
-    );
-}
-
-.qs-card span {
+.qs-card-number {
     display: inline-block;
     margin-bottom: 50px;
     color: #38bdf8;
@@ -318,18 +325,66 @@
     font-weight: 900;
 }
 
-.qs-card h3 {
+.qs-card-title {
     margin: 0 0 18px;
     font-size: 1.55rem;
     line-height: 1.1;
     font-weight: 900;
 }
 
-.qs-card p {
+.qs-card-copy {
     margin: 0;
     color: rgba(255, 255, 255, 0.68);
     font-size: 1rem;
     line-height: 1.6;
+}
+
+.qs-valores-grid[data-sequence-ready="false"] .qs-card,
+.qs-valores-grid[data-sequence-state="complete"] .qs-card {
+    opacity: 1;
+    transform: translateX(0);
+    animation: none;
+    pointer-events: auto;
+}
+
+.qs-valores-grid[data-sequence-ready="true"][data-sequence-state="armed"] .qs-card {
+    opacity: 0;
+    transform: translateX(var(--qs-card-start-x));
+    animation: none;
+    pointer-events: none;
+}
+
+.qs-valores-grid[data-sequence-ready="true"][data-sequence-state="playing"] .qs-card {
+    animation-name: qsCardMaterializeHorizontal;
+    animation-duration: var(--qs-card-duration);
+    animation-timing-function: var(--qs-card-easing);
+    animation-delay: calc(var(--qs-card-index) * var(--qs-card-stagger));
+    animation-fill-mode: both;
+    animation-iteration-count: 1;
+    pointer-events: none;
+}
+
+@keyframes qsCardMaterializeHorizontal {
+    from {
+        opacity: 0;
+        transform: translateX(var(--qs-card-start-x));
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .qs-valores-grid[data-sequence-state="complete"] .qs-card-surface:hover {
+        transform: translateY(-8px);
+        background: linear-gradient(
+                145deg,
+                rgba(56, 189, 248, 0.18),
+                rgba(255, 255, 255, 0.04)
+        );
+    }
 }
 
 /* TABLET */
@@ -481,5 +536,15 @@
         font-size: 1rem;
         line-height: 1.7;
         color: rgba(255,255,255,.72);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .qs-card,
+    .qs-valores-grid[data-sequence-state] .qs-card {
+        opacity: 1;
+        transform: none;
+        animation: none;
+        pointer-events: auto;
     }
 }
