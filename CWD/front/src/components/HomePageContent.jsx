@@ -832,7 +832,7 @@ export default function HomePageContent() {
         </div>
       </section>
 
-      <ParallaxContactWindow headingLevel="h2" />
+      <ParallaxContactWindow className="home-parallax-contact-window" headingLevel="h2" />
 
       <section className="cta-final">
         <div className="cta-glow" />
