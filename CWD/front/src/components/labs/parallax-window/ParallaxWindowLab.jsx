@@ -10,16 +10,16 @@ import styles from "./ParallaxWindowLab.module.css";
 gsap.registerPlugin(ScrollTrigger);
 
 const PARALLAX_WINDOW_CONFIG = Object.freeze({
-  windowHeight: "68vh",
-  windowMinHeight: "560px",
-  windowMaxHeight: "1080px",
-  mobileWindowHeight: "76vh",
-  mobileWindowMinHeight: "440px",
-  mobileWindowMaxHeight: "720px",
+  windowHeight: "57.8vh",
+  windowMinHeight: "476px",
+  windowMaxHeight: "918px",
+  mobileWindowHeight: "64.6vh",
+  mobileWindowMinHeight: "374px",
+  mobileWindowMaxHeight: "612px",
   imageScale: 1.24,
   imageOverscan: "62%",
   mobileImageOverscan: "58%",
-  parallaxFactor: 0.63,
+  parallaxFactor: 0.567,
   imageObjectPosition: "center center",
   scrub: true,
 });
