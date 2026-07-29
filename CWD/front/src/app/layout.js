@@ -7,6 +7,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import LanguageSelector from "@/components/LanguageSelector";
 import HeaderSocialLinks from "@/components/HeaderSocialLinks";
+import ScrollCue from "@/components/ScrollCue";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { DEFAULT_LOCALE, DEFAULT_OG_IMAGE, SITE_NAME } from "@/lib/metadata";
 import { SITE_URL } from "@/lib/site";
@@ -72,6 +73,7 @@ export default function RootLayout({ children }) {
             </div>
 
             <Footer />
+            <ScrollCue />
         </LanguageProvider>
         </body>
         </html>
