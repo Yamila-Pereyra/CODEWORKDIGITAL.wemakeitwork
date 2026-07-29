@@ -30,7 +30,7 @@ const PARALLAX_WINDOW_CONFIG = Object.freeze({
 const LAB_CONTACT_COPY = Object.freeze({
   eyebrow: "Hablemos de tu proyecto",
   title: "Construyamos algo excepcional",
-  body: "Contanos sobre tu proyecto, tus objetivos y el desafio que queres resolver. Juntos podemos transformar una idea en una experiencia digital con impacto.",
+  body: "El momento perfecto no llega. Se decide.",
   submitLabel: "Enviar mensaje",
 });
 
@@ -54,8 +54,8 @@ const LAB_CONTENT_STYLE = Object.freeze({
   "--lab-submit-border-alpha": "0.78",
   "--lab-glass-border-width": "1px",
   "--lab-glass-border-alpha": "0.68",
-  "--lab-glass-background-alpha": "0.11",
-  "--lab-glass-fallback-background-alpha": "0.18",
+  "--lab-glass-background-alpha": "0.0935",
+  "--lab-glass-fallback-background-alpha": "0.153",
   "--lab-glass-blur": "10px",
   "--lab-glass-saturation": "115%",
   "--lab-glass-radius": "7px",
@@ -73,7 +73,6 @@ const LAB_CONTENT_STYLE = Object.freeze({
   "--lab-editorial-body-size": "clamp(1rem, 0.94rem + 0.28vw, 1.18rem)",
   "--lab-editorial-body-line-height": "1.58",
   "--lab-editorial-text-alpha": "0.82",
-  "--lab-content-shade-alpha": "0.1",
   "--lab-compact-breakpoint": "980px",
   "--lab-mobile-content-min-height": "840px",
   "--lab-mobile-padding-x": "clamp(18px, 6vw, 32px)",

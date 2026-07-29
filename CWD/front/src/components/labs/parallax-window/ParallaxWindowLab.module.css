@@ -107,10 +107,6 @@
 
 .editorialBlock {
   max-width: 520px;
-  padding: 20px;
-  margin-left: -20px;
-  border-radius: 18px;
-  background: rgba(5, 5, 7, var(--lab-content-shade-alpha));
   pointer-events: auto;
 }
 
@@ -205,9 +201,6 @@
 
   .editorialBlock {
     max-width: none;
-    padding: 0;
-    margin-left: 0;
-    background: transparent;
   }
 
   .contactEyebrow {
