@@ -1,0 +1,130 @@
+.cue {
+  --scroll-cue-capsule-width: 19px;
+  --scroll-cue-capsule-height: 44px;
+  --scroll-cue-dot-size: 4px;
+  --scroll-cue-travel: calc(
+    var(--scroll-cue-capsule-height) - var(--scroll-cue-dot-size) - 12px
+  );
+  --scroll-cue-loop-duration: 2200ms;
+
+  position: fixed;
+  left: max(clamp(14px, 1.8vw, 28px), env(safe-area-inset-left));
+  top: 52%;
+  z-index: 20;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: opacity 400ms ease;
+}
+
+.cue[data-visible="true"] {
+  opacity: 1;
+}
+
+.axis {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.capsule {
+  position: relative;
+  width: var(--scroll-cue-capsule-width);
+  height: var(--scroll-cue-capsule-height);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.44);
+  border-radius: 999px;
+}
+
+.dot {
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  width: var(--scroll-cue-dot-size);
+  height: var(--scroll-cue-dot-size);
+  border-radius: 50%;
+  background: var(--cwd-accent, #ff0077);
+  opacity: 0;
+  transform: translate(-50%, 0);
+}
+
+.cue[data-visible="true"] .dot {
+  animation: cwdScrollCueDotTravel var(--scroll-cue-loop-duration)
+    cubic-bezier(.4, 0, .2, 1) infinite;
+}
+
+.cue[data-visible="false"] .dot {
+  animation: none;
+  opacity: 0;
+  transform: translate(-50%, 0);
+}
+
+@keyframes cwdScrollCueDotTravel {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
+
+  10% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
+
+  18% {
+    opacity: 0.92;
+    transform: translate(-50%, 0);
+  }
+
+  72% {
+    opacity: 0.35;
+  }
+
+  84% {
+    opacity: 0;
+    transform: translate(-50%, var(--scroll-cue-travel));
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, var(--scroll-cue-travel));
+  }
+}
+
+@media (max-width: 600px) {
+  .cue {
+    --scroll-cue-capsule-width: 17px;
+    --scroll-cue-capsule-height: 40px;
+
+    gap: 8px;
+  }
+
+  .axis {
+    height: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cue {
+    transition: none;
+  }
+
+  .cue[data-visible="true"] .dot,
+  .cue[data-visible="false"] .dot {
+    animation: none;
+    transform: translate(-50%, 0);
+  }
+
+  .cue[data-visible="true"] .dot {
+    opacity: 0.9;
+  }
+
+  .cue[data-visible="false"] .dot {
+    opacity: 0;
+  }
+}
