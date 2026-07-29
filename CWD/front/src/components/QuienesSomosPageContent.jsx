@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/translations";
 import OpticalDivider from "@/components/OpticalDivider";
+import QuienesSomosValuesSequence from "@/components/QuienesSomosValuesSequence";
 
 const GlobeLab = dynamic(() => import("@/components/labs/globe/GlobeLab"), {
   ssr: false,
@@ -61,17 +62,7 @@ export default function QuienesSomosPageContent() {
       </section>
 
       <section className="qs-valores optical-divider-host">
-        <div className="qs-valores-grid">
-          {qs.valores.map((item, index) => (
-            <article className="qs-card" key={index}>
-              <span>{item.numero}</span>
-
-              <h3>{item.titulo}</h3>
-
-              <p>{item.texto}</p>
-            </article>
-          ))}
-        </div>
+        <QuienesSomosValuesSequence items={qs.valores} />
         <OpticalDivider />
       </section>
     </main>
