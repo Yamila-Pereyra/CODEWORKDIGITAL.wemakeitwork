@@ -1,0 +1,140 @@
+.form {
+  width: min(100%, var(--lab-form-max-width));
+  margin-left: auto;
+  pointer-events: auto;
+}
+
+.fieldsGrid {
+  display: grid;
+  grid-template-columns: repeat(var(--lab-form-columns), minmax(0, 1fr));
+  gap: var(--lab-form-row-gap) var(--lab-form-column-gap);
+}
+
+.field {
+  min-height: var(--lab-field-height);
+  padding: 10px 15px 9px;
+  border:
+    var(--lab-glass-border-width)
+    solid
+    rgba(255, 255, 255, var(--lab-glass-border-alpha));
+  border-radius: var(--lab-glass-radius);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, calc(var(--lab-glass-background-alpha) + 0.035)),
+      rgba(255, 255, 255, var(--lab-glass-background-alpha))
+    );
+  -webkit-backdrop-filter:
+    blur(var(--lab-glass-blur))
+    saturate(var(--lab-glass-saturation));
+  backdrop-filter:
+    blur(var(--lab-glass-blur))
+    saturate(var(--lab-glass-saturation));
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.field:focus-within {
+  border-color: rgba(255, 255, 255, var(--lab-glass-focus-border-alpha));
+  background-color: rgba(255, 255, 255, var(--lab-glass-focus-background-alpha));
+  box-shadow:
+    0 0 0 var(--lab-focus-ring-width) rgba(255, 255, 255, var(--lab-focus-ring-alpha)),
+    0 0 0 calc(var(--lab-focus-ring-width) + 3px) rgba(255, 0, 119, 0.12);
+}
+
+.label {
+  display: block;
+  margin: 0 0 7px;
+  color: rgba(255, 255, 255, var(--lab-label-alpha));
+  font-size: var(--lab-label-font-size);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: var(--lab-label-line-height);
+  text-transform: uppercase;
+}
+
+.control {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #ffffff;
+  caret-color: #ffffff;
+  font: inherit;
+  font-size: var(--lab-input-font-size);
+  line-height: var(--lab-input-line-height);
+}
+
+.control:-webkit-autofill,
+.control:-webkit-autofill:hover,
+.control:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  caret-color: #ffffff;
+  transition: background-color 9999s ease-in-out 0s;
+  box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.01) inset;
+}
+
+.messageField,
+.submitRow {
+  grid-column: 1 / -1;
+}
+
+.textarea {
+  min-height: var(--lab-textarea-height);
+  resize: vertical;
+}
+
+.submitRow {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.submitButton {
+  min-height: var(--lab-submit-height);
+  padding: 0 var(--lab-submit-padding-x);
+  border: 1px solid rgba(255, 0, 119, var(--lab-submit-border-alpha));
+  border-radius: var(--lab-submit-radius);
+  background:
+    linear-gradient(135deg, rgba(8, 8, 12, 0.84), rgba(28, 8, 22, 0.72));
+  color: #ffffff;
+  cursor: pointer;
+  font-size: var(--lab-submit-font-size);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.submitButton:focus-visible {
+  outline: var(--lab-focus-ring-width) solid rgba(255, 255, 255, 0.9);
+  outline-offset: 3px;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .field {
+    background: rgba(255, 255, 255, var(--lab-glass-fallback-background-alpha));
+  }
+}
+
+@media (max-width: 980px) {
+  .form {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .fieldsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .field {
+    min-height: var(--lab-mobile-field-height);
+  }
+
+  .textarea {
+    min-height: var(--lab-mobile-textarea-height);
+  }
+}
