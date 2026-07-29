@@ -15,9 +15,14 @@ const PUBLIC_SCROLL_CUE_ROUTES = new Set([
 const hasMeaningfulScroll = () =>
   document.documentElement.scrollHeight > document.documentElement.clientHeight + 1;
 
-const CURRENT_SCROLL_CUE_FADE_FRACTION = 0.33;
-const SCROLL_CUE_FADE_RANGE_MULTIPLIER = 3;
+const END_FADE_VIEWPORT_RATIO = 0.33;
 const FULLY_HIDDEN_EPSILON = 0.001;
+const OPACITY_UPDATE_EPSILON = 0.001;
+
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+const smootherstep = (progress) =>
+  progress * progress * progress * (progress * (progress * 6 - 15) + 10);
 
 export default function ScrollCue() {
   const pathname = usePathname();
@@ -28,8 +33,12 @@ export default function ScrollCue() {
   const [isDotActive, setIsDotActive] = useState(false);
   const [dotCycle, setDotCycle] = useState(0);
   const cueRef = useRef(null);
-  const footerRef = useRef(null);
   const isScrollableRef = useRef(false);
+  const fadeGeometryRef = useRef({
+    maxScrollY: 0,
+    fadeDistance: 0,
+    fadeStartScrollY: 0,
+  });
   const cueOpacityRef = useRef(0);
   const frameRef = useRef(null);
   const wasFullyHiddenRef = useRef(true);
@@ -40,36 +49,37 @@ export default function ScrollCue() {
     setDotCycle((cycle) => cycle + 1);
   }, []);
 
-  const calculateCueOpacity = useCallback(() => {
-    if (!footerRef.current || !isScrollableRef.current) {
-      return 0;
-    }
-
+  const calculateFadeGeometry = useCallback(() => {
     const viewportHeight = window.innerHeight;
-    const scrollY = window.scrollY;
+    const documentHeight = document.documentElement.scrollHeight;
     const maxScrollY = Math.max(
       0,
-      document.documentElement.scrollHeight - viewportHeight
+      documentHeight - viewportHeight
     );
-    const footerDocumentTop =
-      scrollY + footerRef.current.getBoundingClientRect().top;
-    const fadeStartScrollY = footerDocumentTop - viewportHeight;
-    const currentFadeDistance =
-      viewportHeight * CURRENT_SCROLL_CUE_FADE_FRACTION;
-    const nominalFadeDistance =
-      currentFadeDistance * SCROLL_CUE_FADE_RANGE_MULTIPLIER;
-    const nominalFadeEndScrollY = fadeStartScrollY + nominalFadeDistance;
-    const fadeEndScrollY = Math.min(nominalFadeEndScrollY, maxScrollY);
-    const effectiveFadeDistance = Math.max(
-      1,
-      fadeEndScrollY - fadeStartScrollY
+    const requestedFadeDistance = viewportHeight * END_FADE_VIEWPORT_RATIO;
+    const fadeDistance = Math.min(requestedFadeDistance, maxScrollY);
+    const fadeStartScrollY = Math.max(
+      0,
+      maxScrollY - fadeDistance
     );
 
-    if (maxScrollY <= fadeStartScrollY && maxScrollY - scrollY <= 1) {
+    return {
+      maxScrollY,
+      fadeDistance,
+      fadeStartScrollY,
+    };
+  }, []);
+
+  const calculateCueOpacity = useCallback(() => {
+    if (!isScrollableRef.current) {
       return 0;
     }
 
-    if (scrollY < fadeStartScrollY) {
+    const { maxScrollY, fadeDistance, fadeStartScrollY } =
+      fadeGeometryRef.current;
+    const scrollY = clamp(window.scrollY, 0, maxScrollY);
+
+    if (scrollY <= fadeStartScrollY) {
       return 1;
     }
 
@@ -77,16 +87,20 @@ export default function ScrollCue() {
       return 0;
     }
 
-    const rawProgress = (scrollY - fadeStartScrollY) / effectiveFadeDistance;
-    const progress = Math.min(1, Math.max(0, rawProgress));
+    const progress = clamp(
+      (scrollY - fadeStartScrollY) / fadeDistance,
+      0,
+      1
+    );
 
     if (progress >= 1) {
       return 0;
     }
 
-    const smoothstep = progress * progress * (3 - 2 * progress);
+    const easedProgress = smootherstep(progress);
+    const opacity = 1 - easedProgress;
 
-    return 1 - smoothstep;
+    return opacity <= FULLY_HIDDEN_EPSILON ? 0 : opacity;
   }, []);
 
   const commitCueOpacity = useCallback(
@@ -108,7 +122,10 @@ export default function ScrollCue() {
         wasFullyHiddenRef.current = true;
       }
 
-      if (Math.abs(cueOpacityRef.current - clampedOpacity) <= FULLY_HIDDEN_EPSILON) {
+      if (
+        Math.abs(cueOpacityRef.current - clampedOpacity) <=
+        OPACITY_UPDATE_EPSILON
+      ) {
         return;
       }
 
@@ -138,7 +155,6 @@ export default function ScrollCue() {
 
   useEffect(() => {
     let isActive = true;
-    let footerObserver = null;
     let resizeObserver = null;
 
     setIsReady(false);
@@ -148,9 +164,13 @@ export default function ScrollCue() {
     cueOpacityRef.current = 0;
     cueRef.current?.style.setProperty("--scroll-cue-opacity", "0");
     isScrollableRef.current = false;
+    fadeGeometryRef.current = {
+      maxScrollY: 0,
+      fadeDistance: 0,
+      fadeStartScrollY: 0,
+    };
     wasFullyHiddenRef.current = true;
     routeRestartPathRef.current = null;
-    footerRef.current = null;
 
     if (!isPublicRoute) {
       return () => {
@@ -162,21 +182,6 @@ export default function ScrollCue() {
       };
     }
 
-    const footers = document.querySelectorAll("footer");
-    const footer = footers.length === 1 ? footers[0] : null;
-
-    if (!footer) {
-      setIsReady(true);
-      return () => {
-        isActive = false;
-        if (frameRef.current !== null) {
-          window.cancelAnimationFrame(frameRef.current);
-          frameRef.current = null;
-        }
-      };
-    }
-    footerRef.current = footer;
-
     const updateScrollable = () => {
       const nextIsScrollable = hasMeaningfulScroll();
 
@@ -185,6 +190,7 @@ export default function ScrollCue() {
       }
 
       isScrollableRef.current = nextIsScrollable;
+      fadeGeometryRef.current = calculateFadeGeometry();
       setIsScrollable((current) =>
         current === nextIsScrollable ? current : nextIsScrollable
       );
@@ -192,22 +198,6 @@ export default function ScrollCue() {
     };
 
     updateScrollable();
-
-    footerObserver = new IntersectionObserver(
-      () => {
-        if (!isActive) {
-          return;
-        }
-
-        scheduleVisibilityUpdate();
-      },
-      {
-        threshold: 0,
-        rootMargin: "0px",
-      }
-    );
-
-    footerObserver.observe(footer);
 
     if (typeof ResizeObserver !== "undefined") {
       resizeObserver = new ResizeObserver(updateScrollable);
@@ -229,14 +219,18 @@ export default function ScrollCue() {
         window.cancelAnimationFrame(frameRef.current);
         frameRef.current = null;
       }
-      footerObserver?.disconnect();
       resizeObserver?.disconnect();
       window.removeEventListener("resize", updateScrollable);
       window.removeEventListener("scroll", scheduleVisibilityUpdate);
-      footerRef.current = null;
       setIsDotActive(false);
     };
-  }, [isPublicRoute, pathname, scheduleVisibilityUpdate, updateCueOpacity]);
+  }, [
+    calculateFadeGeometry,
+    isPublicRoute,
+    pathname,
+    scheduleVisibilityUpdate,
+    updateCueOpacity,
+  ]);
 
   useEffect(() => {
     if (
