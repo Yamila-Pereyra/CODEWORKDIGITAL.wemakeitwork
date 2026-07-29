@@ -17,9 +17,10 @@ const PARALLAX_WINDOW_CONFIG = Object.freeze({
   mobileWindowMinHeight: "374px",
   mobileWindowMaxHeight: "612px",
   imageScale: 1.24,
-  imageOverscan: "62%",
-  mobileImageOverscan: "58%",
-  parallaxFactor: 0.567,
+  imageOverscan: "78%",
+  mobileImageOverscan: "72%",
+  parallaxFactor: 0.6103,
+  imageBaseOffsetYRatio: 0.2,
   imageObjectPosition: "center center",
   scrub: true,
 });
@@ -42,7 +43,8 @@ export default function ParallaxWindowLab() {
 
     if (prefersReducedMotion) {
       gsap.set(imageLayer, {
-        y: 0,
+        y: () =>
+          section.offsetHeight * PARALLAX_WINDOW_CONFIG.imageBaseOffsetYRatio,
         scale: PARALLAX_WINDOW_CONFIG.imageScale,
       });
 
@@ -55,15 +57,17 @@ export default function ParallaxWindowLab() {
 
         return traversalDistance * PARALLAX_WINDOW_CONFIG.parallaxFactor;
       };
+      const getBaseOffsetY = () =>
+        section.offsetHeight * PARALLAX_WINDOW_CONFIG.imageBaseOffsetYRatio;
 
       gsap.set(imageLayer, {
-        y: () => getTravel() * -0.5,
+        y: () => getTravel() * -0.5 + getBaseOffsetY(),
         scale: PARALLAX_WINDOW_CONFIG.imageScale,
         transformOrigin: "center center",
       });
 
       gsap.to(imageLayer, {
-        y: () => getTravel() * 0.5,
+        y: () => getTravel() * 0.5 + getBaseOffsetY(),
         ease: "none",
         scrollTrigger: {
           trigger: section,
