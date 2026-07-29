@@ -21,6 +21,8 @@ export default function ScrollCue() {
   const [isReady, setIsReady] = useState(false);
   const [isScrollable, setIsScrollable] = useState(false);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
+  const [isDotActive, setIsDotActive] = useState(false);
+  const [dotCycle, setDotCycle] = useState(0);
 
   useEffect(() => {
     let isActive = true;
@@ -30,6 +32,7 @@ export default function ScrollCue() {
     setIsReady(false);
     setIsScrollable(false);
     setIsFooterVisible(false);
+    setIsDotActive(false);
 
     if (!isPublicRoute) {
       return () => {
@@ -102,24 +105,47 @@ export default function ScrollCue() {
     };
   }, [isPublicRoute, pathname]);
 
+  const isCueVisible = isReady && isScrollable && !isFooterVisible;
+
+  useEffect(() => {
+    if (!isCueVisible) {
+      return;
+    }
+
+    setIsDotActive(true);
+    setDotCycle((current) => current + 1);
+  }, [isCueVisible]);
+
   if (!isPublicRoute) {
     return null;
   }
 
-  const isCueVisible = isReady && isScrollable && !isFooterVisible;
+  const handleCueTransitionEnd = (event) => {
+    if (event.target !== event.currentTarget || event.propertyName !== "opacity") {
+      return;
+    }
+
+    if (!isCueVisible) {
+      setIsDotActive(false);
+    }
+  };
 
   return (
     <div
       className={styles.cue}
       data-scroll-cue
       data-visible={isCueVisible ? "true" : "false"}
+      data-dot-active={isDotActive ? "true" : "false"}
       aria-hidden="true"
+      onTransitionEnd={handleCueTransitionEnd}
     >
-      <span className={styles.axis} />
+      <span className={`${styles.axis} ${styles.axisTop}`} />
 
       <span className={styles.capsule}>
-        <span className={styles.dot} />
+        {isDotActive && <span key={dotCycle} className={styles.dot} />}
       </span>
+
+      <span className={`${styles.axis} ${styles.axisBottom}`} />
     </div>
   );
 }

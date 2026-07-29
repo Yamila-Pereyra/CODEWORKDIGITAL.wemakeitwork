@@ -1,15 +1,37 @@
 .cue {
   --scroll-cue-capsule-width: 19px;
   --scroll-cue-capsule-height: 44px;
-  --scroll-cue-dot-size: 4px;
+  --scroll-cue-dot-size: 5px;
+  --scroll-cue-inner-inset: 6px;
   --scroll-cue-travel: calc(
-    var(--scroll-cue-capsule-height) - var(--scroll-cue-dot-size) - 12px
+    var(--scroll-cue-capsule-height) - var(--scroll-cue-dot-size) -
+      (var(--scroll-cue-inner-inset) * 2)
   );
-  --scroll-cue-loop-duration: 2200ms;
+  --scroll-cue-loop-duration: 2360ms;
+  --scroll-cue-fade-duration: 750ms;
+  --scroll-cue-fade-easing: cubic-bezier(.22, .61, .36, 1);
+  --scroll-cue-header-top: 22px;
+  --scroll-cue-header-height: 68px;
+  --scroll-cue-social-top: 30px;
+  --scroll-cue-social-height: 46px;
+  --scroll-cue-social-gap: 1em;
+  --scroll-cue-header-inline: max(24px, calc((100vw - 1440px) / 2 + 24px));
+  /* Mirrors the centered social row exceeding the language selector width. */
+  --scroll-cue-social-right-compensation: -33px;
 
   position: fixed;
-  left: max(clamp(14px, 1.8vw, 28px), env(safe-area-inset-left));
-  top: 52%;
+  right: max(
+    8px,
+    calc(
+      var(--scroll-cue-header-inline) +
+        var(--scroll-cue-social-right-compensation)
+    )
+  );
+  top: calc(
+    var(--scroll-cue-header-top) + var(--scroll-cue-header-height) +
+      var(--scroll-cue-social-top) + var(--scroll-cue-social-height) +
+      var(--scroll-cue-social-gap)
+  );
   z-index: 20;
 
   display: flex;
@@ -19,8 +41,8 @@
 
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-50%);
-  transition: opacity 400ms ease;
+  transition:
+    opacity var(--scroll-cue-fade-duration) var(--scroll-cue-fade-easing);
 }
 
 .cue[data-visible="true"] {
@@ -31,6 +53,12 @@
   width: 1px;
   height: 24px;
   background: rgba(255, 255, 255, 0.28);
+  flex: 0 0 auto;
+}
+
+.axisTop,
+.axisBottom {
+  display: block;
 }
 
 .capsule {
@@ -45,7 +73,7 @@
 .dot {
   position: absolute;
   left: 50%;
-  top: 6px;
+  top: var(--scroll-cue-inner-inset);
   width: var(--scroll-cue-dot-size);
   height: var(--scroll-cue-dot-size);
   border-radius: 50%;
@@ -54,15 +82,13 @@
   transform: translate(-50%, 0);
 }
 
-.cue[data-visible="true"] .dot {
+.cue[data-visible="true"][data-dot-active="true"] .dot {
   animation: cwdScrollCueDotTravel var(--scroll-cue-loop-duration)
     cubic-bezier(.4, 0, .2, 1) infinite;
 }
 
-.cue[data-visible="false"] .dot {
+.cue[data-dot-active="false"] .dot {
   animation: none;
-  opacity: 0;
-  transform: translate(-50%, 0);
 }
 
 @keyframes cwdScrollCueDotTravel {
@@ -76,16 +102,16 @@
     transform: translate(-50%, 0);
   }
 
-  18% {
+  17% {
     opacity: 0.92;
     transform: translate(-50%, 0);
   }
 
-  72% {
+  73% {
     opacity: 0.35;
   }
 
-  84% {
+  85% {
     opacity: 0;
     transform: translate(-50%, var(--scroll-cue-travel));
   }
@@ -100,12 +126,18 @@
   .cue {
     --scroll-cue-capsule-width: 17px;
     --scroll-cue-capsule-height: 40px;
+    --scroll-cue-header-top: 19px;
+    --scroll-cue-header-height: 58px;
+    --scroll-cue-social-top: 25px;
+    --scroll-cue-social-height: 36px;
+    --scroll-cue-header-inline: 16px;
+    --scroll-cue-social-right-compensation: -18px;
 
     gap: 8px;
   }
 
   .axis {
-    height: 20px;
+    height: 22px;
   }
 }
 
