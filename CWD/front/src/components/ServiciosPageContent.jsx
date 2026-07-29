@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import OpticalDivider from "@/components/OpticalDivider";
-import ServicesEditorialRail from "@/components/ServicesEditorialRail";
+import ServicesCardsSequence from "@/components/ServicesCardsSequence";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/translations";
 
@@ -37,9 +37,8 @@ export default function ServiciosPageContent() {
               <h2>{copy.list.title}</h2>
             </div>
 
-            <ServicesEditorialRail
+            <ServicesCardsSequence
               items={copy.list.items}
-              watermark={copy.list.watermark}
             />
           </div>
         </section>
