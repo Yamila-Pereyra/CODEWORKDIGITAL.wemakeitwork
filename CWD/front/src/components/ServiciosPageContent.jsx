@@ -1,24 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import {
-  FaLaptopCode,
-  FaShoppingCart,
-  FaChartLine,
-  FaChartPie,
-  FaMobileAlt,
-} from "react-icons/fa";
 import OpticalDivider from "@/components/OpticalDivider";
+import ServicesCardsSequence from "@/components/ServicesCardsSequence";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/translations";
-
-const serviceIcons = [
-  FaLaptopCode,
-  FaShoppingCart,
-  FaMobileAlt,
-  FaChartLine,
-  FaChartPie,
-];
 
 export default function ServiciosPageContent() {
   const { language } = useLanguage();
@@ -51,23 +37,9 @@ export default function ServiciosPageContent() {
               <h2>{copy.list.title}</h2>
             </div>
 
-            <div className="servicios-grid">
-              {copy.list.items.map((item, index) => {
-                const Icon = serviceIcons[index] || FaChartLine;
-
-                return (
-                    <article className="servicio-card" key={item.numero}>
-                      <Icon className="servicio-icon" />
-
-                      <span>{item.numero}</span>
-
-                      <h3>{item.titulo}</h3>
-
-                      <p>{item.texto}</p>
-                    </article>
-                );
-              })}
-            </div>
+            <ServicesCardsSequence
+              items={copy.list.items}
+            />
           </div>
         </section>
 
