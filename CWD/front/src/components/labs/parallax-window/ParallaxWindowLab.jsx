@@ -17,10 +17,10 @@ const PARALLAX_WINDOW_CONFIG = Object.freeze({
   mobileWindowMinHeight: "374px",
   mobileWindowMaxHeight: "612px",
   imageScale: 1.24,
-  imageOverscan: "78%",
-  mobileImageOverscan: "72%",
+  imageOverscan: "100%",
+  mobileImageOverscan: "100%",
   parallaxFactor: 0.6103,
-  imageBaseOffsetYRatio: 0.2,
+  imageBaseOffsetYRatio: 0.75,
   imageObjectPosition: "center center",
   scrub: true,
 });
