@@ -10,18 +10,18 @@ import styles from "./ParallaxWindowLab.module.css";
 gsap.registerPlugin(ScrollTrigger);
 
 const PARALLAX_WINDOW_CONFIG = Object.freeze({
-  windowHeight: "34vh",
-  windowMinHeight: "280px",
-  windowMaxHeight: "540px",
-  mobileWindowHeight: "38vh",
-  mobileWindowMinHeight: "220px",
-  mobileWindowMaxHeight: "360px",
+  windowHeight: "68vh",
+  windowMinHeight: "560px",
+  windowMaxHeight: "1080px",
+  mobileWindowHeight: "76vh",
+  mobileWindowMinHeight: "440px",
+  mobileWindowMaxHeight: "720px",
   imageScale: 1.24,
-  imageOverscan: "12%",
-  mobileImageOverscan: "16%",
-  parallaxFactor: 0.42,
+  imageOverscan: "62%",
+  mobileImageOverscan: "58%",
+  parallaxFactor: 0.63,
   imageObjectPosition: "center center",
-  scrub: 0.7,
+  scrub: true,
 });
 
 export default function ParallaxWindowLab() {
@@ -50,8 +50,11 @@ export default function ParallaxWindowLab() {
     }
 
     const ctx = gsap.context(() => {
-      const getTravel = () =>
-        section.offsetHeight * PARALLAX_WINDOW_CONFIG.parallaxFactor;
+      const getTravel = () => {
+        const traversalDistance = window.innerHeight + section.offsetHeight;
+
+        return traversalDistance * PARALLAX_WINDOW_CONFIG.parallaxFactor;
+      };
 
       gsap.set(imageLayer, {
         y: () => getTravel() * -0.5,
