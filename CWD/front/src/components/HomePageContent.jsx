@@ -9,6 +9,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/translations";
 import OpticalDivider from "@/components/OpticalDivider";
 import CodeCascade from "@/components/CodeCascade";
+import ParallaxContactWindow from "@/components/parallax-contact-window/ParallaxContactWindow";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -530,6 +531,27 @@ export default function HomePageContent() {
     return () => ctx.revert();
   }, []);
 
+  useEffect(() => {
+    let refreshFrame;
+    let refreshSettledFrame;
+
+    refreshFrame = requestAnimationFrame(() => {
+      refreshSettledFrame = requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
+    });
+
+    return () => {
+      if (refreshFrame) {
+        cancelAnimationFrame(refreshFrame);
+      }
+
+      if (refreshSettledFrame) {
+        cancelAnimationFrame(refreshSettledFrame);
+      }
+    };
+  }, []);
+
   const heroCarouselSlides = slides.length
     ? [
         {
@@ -809,6 +831,8 @@ export default function HomePageContent() {
           </div>
         </div>
       </section>
+
+      <ParallaxContactWindow headingLevel="h2" />
 
       <section className="cta-final">
         <div className="cta-glow" />

@@ -2,7 +2,7 @@
 
 import styles from "./GlassContactForm.module.css";
 
-const LAB_CONTACT_FIELDS = [
+const PARALLAX_CONTACT_FIELDS = [
   {
     id: "name",
     name: "name",
@@ -33,23 +33,27 @@ const LAB_CONTACT_FIELDS = [
   },
 ];
 
-export default function GlassContactForm({ submitLabel }) {
+export default function GlassContactForm({
+  submitLabel,
+  idPrefix = "parallax-contact",
+}) {
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Submission wiring is deferred to the production-transfer increment.
+    // TODO: Wire this form to the canonical contact submission flow
+    // in a dedicated functional-integration increment.
   };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.fieldsGrid}>
-        {LAB_CONTACT_FIELDS.map((field) => (
+        {PARALLAX_CONTACT_FIELDS.map((field) => (
           <div className={styles.field} key={field.id}>
-            <label className={styles.label} htmlFor={field.id}>
+            <label className={styles.label} htmlFor={`${idPrefix}-${field.id}`}>
               {field.label}
             </label>
             <input
               className={styles.control}
-              id={field.id}
+              id={`${idPrefix}-${field.id}`}
               name={field.name}
               type={field.type}
               autoComplete={field.autoComplete}
@@ -58,12 +62,12 @@ export default function GlassContactForm({ submitLabel }) {
         ))}
 
         <div className={`${styles.field} ${styles.messageField}`}>
-          <label className={styles.label} htmlFor="message">
+          <label className={styles.label} htmlFor={`${idPrefix}-message`}>
             Mensaje
           </label>
           <textarea
             className={`${styles.control} ${styles.textarea}`}
-            id="message"
+            id={`${idPrefix}-message`}
             name="message"
           />
         </div>
