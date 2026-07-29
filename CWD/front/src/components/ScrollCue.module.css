@@ -8,8 +8,6 @@
       (var(--scroll-cue-inner-inset) * 2)
   );
   --scroll-cue-loop-duration: 2360ms;
-  --scroll-cue-fade-duration: 750ms;
-  --scroll-cue-fade-easing: cubic-bezier(.22, .61, .36, 1);
   --scroll-cue-header-top: 22px;
   --scroll-cue-header-height: 68px;
   --scroll-cue-social-top: 30px;
@@ -18,13 +16,21 @@
   --scroll-cue-header-inline: max(24px, calc((100vw - 1440px) / 2 + 24px));
   /* Mirrors the centered social row exceeding the language selector width. */
   --scroll-cue-social-right-compensation: -33px;
-
-  position: fixed;
-  right: max(
+  --scroll-cue-current-right: max(
     8px,
     calc(
       var(--scroll-cue-header-inline) +
         var(--scroll-cue-social-right-compensation)
+    )
+  );
+  --scroll-cue-safe-edge: 8px;
+
+  position: fixed;
+  right: max(
+    calc(env(safe-area-inset-right) + var(--scroll-cue-safe-edge)),
+    calc(
+      var(--scroll-cue-current-right) - var(--scroll-cue-capsule-width) -
+        var(--scroll-cue-capsule-width)
     )
   );
   top: calc(
@@ -39,14 +45,8 @@
   align-items: center;
   gap: 10px;
 
-  opacity: 0;
+  opacity: var(--scroll-cue-opacity, 0);
   pointer-events: none;
-  transition:
-    opacity var(--scroll-cue-fade-duration) var(--scroll-cue-fade-easing);
-}
-
-.cue[data-visible="true"] {
-  opacity: 1;
 }
 
 .axis {
@@ -142,10 +142,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cue {
-    transition: none;
-  }
-
   .cue[data-visible="true"] .dot,
   .cue[data-visible="false"] .dot {
     animation: none;
