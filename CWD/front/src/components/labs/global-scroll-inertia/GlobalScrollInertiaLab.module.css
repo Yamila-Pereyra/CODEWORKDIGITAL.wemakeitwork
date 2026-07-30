@@ -1,0 +1,290 @@
+.lab {
+  min-height: 100vh;
+  overflow-x: clip;
+  background:
+    radial-gradient(circle at 16% 12%, rgba(255, 0, 119, 0.2), transparent 28rem),
+    radial-gradient(circle at 88% 34%, rgba(56, 189, 248, 0.12), transparent 24rem),
+    #050505;
+  color: #fff;
+}
+
+.prelude,
+.closing {
+  display: grid;
+  min-height: var(--scroll-inertia-prelude-min-height);
+  place-items: center;
+  padding:
+    var(--scroll-inertia-section-padding-y)
+    var(--scroll-inertia-section-padding-x);
+}
+
+.closing {
+  min-height: var(--scroll-inertia-closing-height);
+}
+
+.copyBlock {
+  width: min(920px, 100%);
+}
+
+.eyebrow,
+.blockMarker,
+.endMarker {
+  margin: 0 0 18px;
+  color: #38bdf8;
+  font-size: clamp(0.72rem, 0.66rem + 0.24vw, 0.9rem);
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.copyBlock h1,
+.copyBlock h2,
+.stickyCopy h2 {
+  max-width: 940px;
+  margin: 0;
+  font-size: clamp(3.4rem, 8vw, 8.6rem);
+  font-weight: 950;
+  letter-spacing: -0.075em;
+  line-height: 0.9;
+}
+
+.copyBlock p:not(.eyebrow):not(.endMarker),
+.stickyCopy p:not(.eyebrow),
+.narrativeBlock p:not(.blockMarker) {
+  max-width: 680px;
+  margin: 28px 0 0;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: clamp(1rem, 0.96rem + 0.24vw, 1.22rem);
+  line-height: 1.7;
+}
+
+.stickySection {
+  min-height: var(--scroll-inertia-sticky-height);
+  padding:
+    var(--scroll-inertia-section-padding-y)
+    var(--scroll-inertia-section-padding-x);
+}
+
+.stickyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
+  gap: clamp(44px, 8vw, 132px);
+  width: min(var(--scroll-inertia-content-max-width), 100%);
+  margin: 0 auto;
+  align-items: start;
+}
+
+.stickyCopy {
+  position: sticky;
+  top: var(--scroll-inertia-sticky-top);
+  padding: clamp(26px, 4vw, 52px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.stickyCopy h2 {
+  font-size: clamp(2.7rem, 5.6vw, 6.2rem);
+}
+
+.narrativeRail {
+  display: grid;
+  gap: clamp(28px, 7vh, 72px);
+}
+
+.narrativeBlock {
+  display: grid;
+  min-height: var(--scroll-inertia-narrative-block-height);
+  align-content: center;
+  padding: clamp(28px, 5vw, 58px);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.narrativeBlock p:not(.blockMarker) {
+  max-width: 620px;
+  margin-top: 0;
+  font-size: clamp(1.45rem, 2.3vw, 2.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.endMarker {
+  margin-top: clamp(72px, 12vh, 140px);
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.hud {
+  position: fixed;
+  top: var(--scroll-inertia-hud-top);
+  right: var(--scroll-inertia-hud-right);
+  z-index: 80;
+  width: var(--scroll-inertia-hud-width);
+  max-height: calc(100vh - 36px);
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 18px;
+  background: rgba(5, 5, 5, 0.76);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+  color: #fff;
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+}
+
+.hudCollapsed {
+  width: auto;
+}
+
+.hudHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 14px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.hudHeader p {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.hudToggle {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.hudBody {
+  display: grid;
+  gap: 16px;
+  padding: 14px;
+}
+
+.metricGrid {
+  display: grid;
+  gap: 6px;
+}
+
+.metricRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 10px;
+  font-size: 0.72rem;
+}
+
+.metricRow span {
+  color: rgba(255, 255, 255, 0.54);
+  letter-spacing: 0.08em;
+}
+
+.metricRow output {
+  color: rgba(255, 255, 255, 0.92);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.controlGroup {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+}
+
+.controlGroup legend,
+.controlRow label {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.switchRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.controlRow {
+  display: grid;
+  gap: 8px;
+}
+
+.controlInputs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px;
+  gap: 10px;
+  align-items: center;
+}
+
+.controlInputs input[type="range"] {
+  width: 100%;
+}
+
+.controlInputs input[type="number"] {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 7px 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.hud button:focus-visible,
+.hud input:focus-visible {
+  outline: 2px solid rgba(56, 189, 248, 0.86);
+  outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+  .stickyGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .stickyCopy {
+    position: sticky;
+    top: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .prelude,
+  .closing,
+  .stickySection {
+    padding:
+      clamp(58px, 12vh, 92px)
+      clamp(18px, 6vw, 28px);
+  }
+
+  .hud {
+    top: 10px;
+    right: 10px;
+    width: min(340px, calc(100vw - 20px));
+  }
+
+  .metricRow {
+    grid-template-columns: 1fr;
+  }
+
+  .metricRow output {
+    text-align: left;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .hud {
+    background: rgba(5, 5, 5, 0.9);
+  }
+}
