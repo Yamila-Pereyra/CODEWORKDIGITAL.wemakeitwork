@@ -1,35 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import { LENIS_LAB_DEFAULTS } from "./GlobalScrollInertiaController";
 import styles from "./GlobalScrollInertiaLab.module.css";
 
 const CONTROL_RANGES = Object.freeze({
-  distancePx: { min: 0, max: 80, step: 1, label: "Distance" },
-  durationMs: { min: 100, max: 700, step: 10, label: "Duration" },
-  scrollEndDelayMs: { min: 0, max: 180, step: 4, label: "Scroll-end delay" },
-  minGestureDistancePx: {
-    min: 0,
-    max: 60,
-    step: 1,
-    label: "Minimum gesture distance",
+  lerp: { min: 0.05, max: 0.3, step: 0.01, label: "Lerp" },
+  wheelMultiplier: {
+    min: 0.5,
+    max: 1.5,
+    step: 0.05,
+    label: "Wheel multiplier",
   },
 });
 
 const METRICS = [
   ["mode", "MODE"],
-  ["state", "STATE"],
-  ["scrollY", "SCROLL Y"],
-  ["direction", "DIRECTION"],
-  ["gestureDistance", "GESTURE DISTANCE"],
-  ["tailStartY", "TAIL START Y"],
-  ["tailTargetY", "TAIL TARGET Y"],
-  ["configuredDistance", "CONFIGURED DISTANCE"],
-  ["actualTailDistance", "ACTUAL TAIL DISTANCE"],
-  ["duration", "DURATION"],
-  ["endDelay", "END DELAY"],
-  ["minGestureDistance", "MIN GESTURE DISTANCE"],
   ["reducedMotion", "REDUCED MOTION"],
+  ["actualScroll", "ACTUAL SCROLL"],
+  ["animatedScroll", "ANIMATED SCROLL"],
+  ["targetScroll", "TARGET SCROLL"],
+  ["remainingDistance", "REMAINING DISTANCE"],
+  ["velocity", "VELOCITY"],
+  ["lastVelocity", "LAST VELOCITY"],
+  ["direction", "DIRECTION"],
+  ["isScrolling", "IS SCROLLING"],
+  ["progress", "PROGRESS"],
+  ["limit", "LIMIT"],
+  ["lerp", "LERP"],
+  ["wheelMultiplier", "WHEEL MULTIPLIER"],
+  ["smoothWheel", "SMOOTH WHEEL"],
 ];
 
 const clampNumber = (value, min, max) => {
@@ -42,12 +43,52 @@ const clampNumber = (value, min, max) => {
   return Math.min(Math.max(parsed, min), max);
 };
 
+const formatControlValue = (key, value) =>
+  key === "lerp" || key === "wheelMultiplier"
+    ? Number(value).toFixed(2)
+    : String(value);
+
 export default function GlobalScrollInertiaHud({
   settings,
   onSettingsChange,
   telemetryRef,
 }) {
   const [collapsed, setCollapsed] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [draftValues, setDraftValues] = useState({
+    lerp: settings.lerp,
+    wheelMultiplier: settings.wheelMultiplier,
+  });
+
+  useEffect(() => {
+    setDraftValues({
+      lerp: settings.lerp,
+      wheelMultiplier: settings.wheelMultiplier,
+    });
+  }, [settings.lerp, settings.wheelMultiplier]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const applyReducedMotion = () => setReducedMotion(mediaQuery.matches);
+
+    applyReducedMotion();
+    mediaQuery.addEventListener("change", applyReducedMotion);
+
+    return () => {
+      mediaQuery.removeEventListener("change", applyReducedMotion);
+    };
+  }, []);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      commitNumericSetting("lerp", draftValues.lerp);
+      commitNumericSetting("wheelMultiplier", draftValues.wheelMultiplier);
+    }, 140);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [draftValues.lerp, draftValues.wheelMultiplier]);
 
   const setNode = (key) => (node) => {
     if (!telemetryRef.current.nodes) {
@@ -59,15 +100,38 @@ export default function GlobalScrollInertiaHud({
     }
   };
 
-  const updateSetting = (key, value) => {
-    const range = CONTROL_RANGES[key];
-    const nextValue = clampNumber(value, range.min, range.max);
+  const patchSettings = (patch) => {
+    onSettingsChange((current) => {
+      const next = { ...current, ...patch };
 
-    onSettingsChange((current) => ({
+      return Object.keys(patch).every((key) => current[key] === next[key])
+        ? current
+        : next;
+    });
+  };
+
+  const commitNumericSetting = (key, rawValue) => {
+    const range = CONTROL_RANGES[key];
+    const nextValue = clampNumber(rawValue, range.min, range.max);
+
+    patchSettings({ [key]: nextValue });
+  };
+
+  const flushNumericSetting = (key) => {
+    commitNumericSetting(key, draftValues[key]);
+  };
+
+  const updateDraftValue = (key, rawValue) => {
+    const range = CONTROL_RANGES[key];
+    const nextValue = clampNumber(rawValue, range.min, range.max);
+
+    setDraftValues((current) => ({
       ...current,
       [key]: nextValue,
     }));
   };
+
+  const lenisControlsDisabled = reducedMotion;
 
   return (
     <aside
@@ -93,33 +157,45 @@ export default function GlobalScrollInertiaHud({
             {METRICS.map(([key, label]) => (
               <div className={styles.metricRow} key={key}>
                 <span>{label}</span>
-                <output ref={setNode(key)}>—</output>
+                <output ref={setNode(key)}>--</output>
               </div>
             ))}
           </div>
 
+          {reducedMotion && (
+            <p className={styles.hudNotice}>
+              Reduced motion is active. Effective mode stays native.
+            </p>
+          )}
+
           <fieldset className={styles.controlGroup}>
-            <legend>Compare mode</legend>
-            <label className={styles.switchRow}>
-              <input
-                type="checkbox"
-                checked={settings.enabled}
-                onChange={(event) =>
-                  onSettingsChange((current) => ({
-                    ...current,
-                    enabled: event.target.checked,
-                  }))
-                }
-              />
-              <span>{settings.enabled ? "INERTIA" : "NATIVE"}</span>
-            </label>
+            <legend>Mode</legend>
+            <div className={styles.modeOptions}>
+              <label className={styles.radioRow}>
+                <input
+                  type="radio"
+                  name="scroll-inertia-mode"
+                  checked={!settings.enabled}
+                  onChange={() => patchSettings({ enabled: false })}
+                />
+                <span>NATIVE</span>
+              </label>
+
+              <label className={styles.radioRow}>
+                <input
+                  type="radio"
+                  name="scroll-inertia-mode"
+                  checked={settings.enabled}
+                  onChange={() => patchSettings({ enabled: true })}
+                />
+                <span>LENIS</span>
+              </label>
+            </div>
           </fieldset>
 
           {Object.entries(CONTROL_RANGES).map(([key, range]) => (
             <div className={styles.controlRow} key={key}>
-              <label htmlFor={`scroll-inertia-${key}`}>
-                {range.label}
-              </label>
+              <label htmlFor={`scroll-inertia-${key}`}>{range.label}</label>
               <div className={styles.controlInputs}>
                 <input
                   id={`scroll-inertia-${key}`}
@@ -127,21 +203,48 @@ export default function GlobalScrollInertiaHud({
                   min={range.min}
                   max={range.max}
                   step={range.step}
-                  value={settings[key]}
-                  onChange={(event) => updateSetting(key, event.target.value)}
+                  value={draftValues[key]}
+                  disabled={lenisControlsDisabled}
+                  onChange={(event) => updateDraftValue(key, event.target.value)}
+                  onPointerUp={() => flushNumericSetting(key)}
+                  onKeyUp={() => flushNumericSetting(key)}
+                  onBlur={() => flushNumericSetting(key)}
                 />
-                <input
-                  type="number"
-                  min={range.min}
-                  max={range.max}
-                  step={range.step}
-                  value={settings[key]}
-                  onChange={(event) => updateSetting(key, event.target.value)}
-                  aria-label={`${range.label} numeric value`}
-                />
+                <output className={styles.controlValue}>
+                  {formatControlValue(key, draftValues[key])}
+                </output>
               </div>
             </div>
           ))}
+
+          <fieldset className={styles.controlGroup} disabled={lenisControlsDisabled}>
+            <legend>Smooth wheel</legend>
+            <label className={styles.switchRow}>
+              <input
+                type="checkbox"
+                checked={settings.smoothWheel}
+                onChange={(event) =>
+                  patchSettings({ smoothWheel: event.target.checked })
+                }
+              />
+              <span>{settings.smoothWheel ? "TRUE" : "FALSE"}</span>
+            </label>
+          </fieldset>
+
+          <button
+            type="button"
+            className={styles.resetButton}
+            disabled={lenisControlsDisabled}
+            onClick={() =>
+              patchSettings({
+                lerp: LENIS_LAB_DEFAULTS.lerp,
+                wheelMultiplier: LENIS_LAB_DEFAULTS.wheelMultiplier,
+                smoothWheel: LENIS_LAB_DEFAULTS.smoothWheel,
+              })
+            }
+          >
+            Reset
+          </button>
         </div>
       )}
     </aside>

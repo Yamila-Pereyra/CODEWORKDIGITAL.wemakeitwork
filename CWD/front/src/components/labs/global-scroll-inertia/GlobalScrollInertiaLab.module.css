@@ -191,11 +191,26 @@
   text-align: right;
 }
 
+.hudNotice {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  border-radius: 12px;
+  background: rgba(56, 189, 248, 0.08);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
 .controlGroup {
   margin: 0;
   padding: 12px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 12px;
+}
+
+.controlGroup:disabled {
+  opacity: 0.58;
 }
 
 .controlGroup legend,
@@ -217,6 +232,21 @@
   font-weight: 800;
 }
 
+.modeOptions {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.radioRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
 .controlRow {
   display: grid;
   gap: 8px;
@@ -224,7 +254,7 @@
 
 .controlInputs {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 72px;
+  grid-template-columns: minmax(0, 1fr) 80px;
   gap: 10px;
   align-items: center;
 }
@@ -233,13 +263,35 @@
   width: 100%;
 }
 
-.controlInputs input[type="number"] {
+.controlValue {
   width: 100%;
+  min-height: 36px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   padding: 7px 8px;
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.resetButton {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.resetButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
 }
 
 .hud button:focus-visible,

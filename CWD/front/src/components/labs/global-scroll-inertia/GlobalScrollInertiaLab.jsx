@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 
 import ParallaxContactWindow from "@/components/parallax-contact-window/ParallaxContactWindow";
 import GlobalScrollInertiaController, {
-  GLOBAL_SCROLL_INERTIA_DEFAULTS,
+  LENIS_LAB_DEFAULTS,
 } from "./GlobalScrollInertiaController";
 import GlobalScrollInertiaHud from "./GlobalScrollInertiaHud";
 import styles from "./GlobalScrollInertiaLab.module.css";
@@ -39,7 +39,7 @@ const LAB_STYLE = {
 };
 
 export default function GlobalScrollInertiaLab() {
-  const [settings, setSettings] = useState(GLOBAL_SCROLL_INERTIA_DEFAULTS);
+  const [settings, setSettings] = useState(LENIS_LAB_DEFAULTS);
   const telemetryRef = useRef({ nodes: {} });
 
   return (
