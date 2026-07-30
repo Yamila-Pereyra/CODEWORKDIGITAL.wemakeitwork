@@ -1,6 +1,7 @@
 export const PUBLIC_LENIS_ENABLED_PATHS = Object.freeze([
   "/",
   "/quienessomos",
+  "/contacto",
 ]);
 
 export const PUBLIC_LENIS_CONFIG = Object.freeze({
