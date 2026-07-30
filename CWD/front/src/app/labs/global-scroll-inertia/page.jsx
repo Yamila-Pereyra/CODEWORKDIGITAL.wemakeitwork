@@ -1,5 +1,3 @@
-import "lenis/dist/lenis.css";
-
 import GlobalScrollInertiaLab from "@/components/labs/global-scroll-inertia/GlobalScrollInertiaLab";
 
 export const metadata = {
