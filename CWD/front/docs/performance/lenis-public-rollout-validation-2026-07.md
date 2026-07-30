@@ -206,7 +206,24 @@ Laboratory architecture found:
 Observed divergence:
 
 - `LenisScrollProvider` calls `gsap.ticker.lagSmoothing(0)` once and never restores the prior global GSAP ticker state on cleanup.
-- `ScrollCue` does not inspect reduced motion and remains active under `prefers-reduced-motion: reduce`.
+- `ScrollCue.module.css` contains a reduced-motion branch, but a computed-style
+  check under active `prefers-reduced-motion: reduce` still returned an active
+  animation for the dot:
+  - node matched: `span.ScrollCue_dot__DP9fE`
+  - computed `animation-name`:
+    `ScrollCue_cwdScrollCueDotTravel__tWCmU`
+  - computed `animation-duration`: `2.36s`
+  - computed `animation-play-state`: `running`
+  - measured context:
+    `data-visible="true"` and `data-dot-active="true"` on `/servicios`
+  - specificity:
+    `.cue[data-visible="true"][data-dot-active="true"] .dot` = `0,4,0`
+  - reduced-motion selector specificity:
+    `.cue[data-visible="true"] .dot` = `0,3,0`
+  - classification:
+    confirmed reduced-motion CSS cascade defect in `ScrollCue`, not a Lenis
+    defect, caused by selector specificity and demonstrated by computed style
+    under active reduced-motion emulation
 
 ## Instance Count
 
@@ -266,6 +283,100 @@ Listener snapshots stayed stable when returning from Labs to public routes:
 - `/quienessomos -> /labs/globe` removed public Lenis classes entirely.
 - `/contacto -> /servicios -> /labs/parallax-window -> /` removed Lenis classes in the Lab step and restored public baseline on return to `/`.
 
+## Runtime Automation Method
+
+Primary runtime automation used raw Chrome DevTools Protocol, not Playwright.
+
+- Browser control:
+  - dedicated headless Chrome on `127.0.0.1:9222`
+  - temp script:
+    `C:\Users\marce\AppData\Local\Temp\cwd-lenis-rollout-validation-20260730-181529\runtime-validation.cjs`
+- Trace capture:
+  - temp script:
+    `C:\Users\marce\AppData\Local\Temp\cwd-lenis-rollout-validation-20260730-181529\profiles\capture-scroll-profiles.cjs`
+- Runtime summary output:
+  - `runtime/runtime-summary.json`
+- Trace summary output:
+  - `profiles/scroll-profile-summary.json`
+
+Navigation method:
+
+- Direct route changes used `Page.navigate`.
+- Public header-route transitions used a DOM click through
+  `Runtime.evaluate(...)` on a visible `a[href="..."]`.
+- No router-level instrumentation was added.
+
+Input simulation:
+
+- Wheel input used `Input.dispatchMouseEvent` with `type: "mouseWheel"`.
+- Runtime snapshot script used fixed coordinates `x: 720`, `y: 360`.
+- Trace script used fixed coordinates `x: 720`, `y: 450`.
+- Delta and wait sequences were hardcoded per route scenario in the temp scripts.
+- Mobile touch validation was not part of the main runtime harness. It was a
+  supplemental smoke check using `Input.dispatchTouchEvent` on `/contacto`.
+
+Reduced-motion method:
+
+- The harness changed the media feature through
+  `Emulation.setEmulatedMedia({ features: [{ name: "prefers-reduced-motion", value }] })`.
+- Cold-load reduced-motion snapshots were taken after navigation with the
+  feature already emulated.
+- Hot-change reduced-motion snapshots were taken by toggling the emulated media
+  value in-place and waiting for the route to settle.
+
+Listener-count method:
+
+- No monkeypatch or wrapper was added around `addEventListener`.
+- Listener counts came from CDP object handles for `window` and `document`,
+  followed by `DOMDebugger.getEventListeners`.
+- Counts were grouped only by event `type`.
+- The method does not identify unique callback sources and does not census
+  listeners attached to arbitrary DOM nodes.
+
+Snapshot selectors queried by the runtime harness:
+
+- `[data-scroll-cue]`
+- `.services-cards-grid`
+- `.contacto-form`
+- `[role="status"]`
+- `[data-parallax-contact-window]`
+- `.services-clean`
+- `.services-list`
+- `.qs-hero-globe__stage canvas`
+- `[data-scroll-inertia-controls]`
+
+Trace extraction method:
+
+- `Tracing.start` categories:
+  `devtools.timeline,v8.execute,blink.user_timing,disabled-by-default-devtools.timeline.frame`
+- The renderer main thread was identified through trace metadata where
+  `thread_name === "CrRendererMain"`.
+- Event-mix totals were extracted from trace events on that renderer thread with
+  numeric `dur` values.
+- Selected named buckets were:
+  `Layout`, `EvaluateScript`, `FunctionCall`, `FireAnimationFrame`,
+  `EventDispatch`, `UpdateLayoutTree`, and `MajorGC`.
+- Cadence deltas were computed from consecutive `DrawFrame` timestamps, not
+  from raw `requestAnimationFrame` callback timestamps.
+- `FireAnimationFrame` totals were reported separately as event mix, not used as
+  the delta source.
+- Scenario boundaries were marked with `performance.mark(...)` and then used to
+  split interaction and idle-tail windows.
+
+Supplemental checks outside the main runtime harness:
+
+- a reduced-motion computed-style probe for the `ScrollCue` dot
+- an emulated touch swipe smoke check on `/contacto`
+
+Method limitations:
+
+- all runtime automation was headless
+- wheel and swipe paths were synthetic, not human input
+- listener counts were limited to `window` and `document`
+- cadence data is a trace proxy, not a direct measure of user-visible frame
+  presentation on a compositor-backed browser window
+- touch results remain emulation-only
+
 ## Reduced Motion
 
 ### Cold load
@@ -292,30 +403,53 @@ Focused verification on `/servicios`:
   - Lenis classes returned
   - no jump to top observed
 
-### Reduced-motion defect reproduced
+### ScrollCue reduced-motion CSS cascade defect
 
-`ScrollCue` still animates under reduced motion.
+Static inspection:
 
-Reproduction:
+- `ScrollCue.jsx` does not read `matchMedia` directly.
+- `ScrollCue.module.css` does contain
+  `@media (prefers-reduced-motion: reduce)`.
+- That media query sets `animation: none` for the dot and keeps the visible dot
+  static through `transform: translate(-50%, 0)`.
+
+Supplemental runtime probe:
 
 1. Cold load `/servicios`
 2. Emulate `prefers-reduced-motion: reduce`
-3. Read `data-scroll-cue` attributes
+3. Query the computed style of the rendered dot node
+4. Compare it against the reduced-motion CSS intent
 
 Observed:
 
 - `data-visible="true"`
 - `data-dot-active="true"`
-- `--scroll-cue-opacity: 1.0000`
+- `matchMedia("(prefers-reduced-motion: reduce)").matches === true`
+- computed `animation-name`:
+  `ScrollCue_cwdScrollCueDotTravel__tWCmU`
+- computed `animation-duration`: `2.36s`
+- computed `animation-play-state`: `running`
+- computed `opacity`: `0.359724`
+- computed `transform`: `matrix(1, 0, 0, 1, -2.5, 25.1257)`
 
-Expected:
+Interpretation:
 
-- cue should avoid the animated dot under reduced motion
-
-Status:
-
-- documented only
-- not corrected in this branch
+- Lenis itself disables correctly under reduced motion.
+- `ScrollCue` does contain an explicit reduced-motion CSS path.
+- That reduced-motion intent does not win the cascade when
+  `data-visible="true"` and `data-dot-active="true"`.
+- Specificity explains the result:
+  - active selector:
+    `.cue[data-visible="true"][data-dot-active="true"] .dot` = `0,4,0`
+  - reduced-motion selector:
+    `.cue[data-visible="true"] .dot` = `0,3,0`
+- Because the active selector is more specific, the later media-query rule is
+  not sufficient to neutralize the animation in that active state.
+- The defect is therefore confirmed at the CSS/computed-style level.
+- This is not a Lenis defect. It is an independent reduced-motion
+  accessibility defect in `ScrollCue`.
+- A visible-browser pass is not required to confirm the existence of the
+  defect; it would only help characterize its perceptual magnitude.
 
 ## Touch
 
@@ -581,18 +715,26 @@ Interpretation:
 | 2 | 100 | 100 | 100 | 100 | 528 | 0.000 | 0 | 290 | 290 | 2 | 277 | 0 | 0 | 21176 |
 | 3 | 100 | 100 | 100 | 100 | 528 | 0.000 | 0 | 293 | 296 | 2 | 299 | 0 | 0 | 20839 |
 
-## Median Selection
+## Metric Medians
 
-| Route | Profile | Selected run | Perf | A11y | BP | SEO | LCP ms | CLS | TBT ms | FCP ms | Speed Index ms | TTFB ms | Main-thread ms | Long tasks | Max long task ms |
-| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `/` | mobile | 1 | 93 | 100 | 100 | 100 | 2993 | 0.004 | 116 | 1708 | 1723 | 3 | 2655 | 4 | 140 |
-| `/` | desktop | 1 | 99 | 100 | 100 | 100 | 834 | 0.037 | 0 | 794 | 794 | 3 | 956 | 0 | 0 |
-| `/quienessomos` | mobile | 1 | 86 | 100 | 100 | 100 | 2557 | 0.053 | 415 | 1061 | 1824 | 3 | 8305 | 20 | 161 |
-| `/quienessomos` | desktop | 3 | 100 | 100 | 100 | 100 | 525 | 0.023 | 0 | 292 | 532 | 2 | 1938 | 0 | 0 |
-| `/servicios` | mobile | 1 | 97 | 100 | 100 | 100 | 2563 | 0.000 | 34 | 1061 | 1061 | 2 | 1187 | 4 | 137 |
-| `/servicios` | desktop | 1 | 100 | 100 | 100 | 100 | 527 | 0.000 | 0 | 290 | 290 | 4 | 306 | 0 | 0 |
-| `/contacto` | mobile | 1 | 97 | 100 | 100 | 100 | 2563 | 0.027 | 31 | 1061 | 1061 | 2 | 1149 | 3 | 110 |
-| `/contacto` | desktop | 3 | 100 | 100 | 100 | 100 | 528 | 0.000 | 0 | 293 | 296 | 2 | 299 | 0 | 0 |
+The table below uses independent per-metric medians across the three runs of
+each route/profile set.
+
+- It is not a "selected run" table.
+- A given row may combine medians drawn from different underlying runs.
+- The per-run Lighthouse tables above remain the source of truth for each raw
+  report.
+
+| Route | Profile | Perf | A11y | BP | SEO | LCP ms | CLS | TBT ms | FCP ms | Speed Index ms | TTFB ms | Main-thread ms | Long tasks | Max long task ms |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `/` | mobile | 93 | 100 | 100 | 100 | 2954 | 0.004 | 77 | 1848 | 1848 | 3 | 2655 | 3 | 165 |
+| `/` | desktop | 99 | 100 | 100 | 100 | 834 | 0.037 | 0 | 794 | 794 | 3 | 956 | 0 | 0 |
+| `/quienessomos` | mobile | 86 | 100 | 100 | 100 | 2557 | 0.053 | 423 | 1061 | 1824 | 3 | 8374 | 20 | 114 |
+| `/quienessomos` | desktop | 100 | 100 | 100 | 100 | 525 | 0.023 | 0 | 292 | 541 | 2 | 1943 | 0 | 0 |
+| `/servicios` | mobile | 97 | 100 | 100 | 100 | 2563 | 0 | 34 | 1061 | 1061 | 2 | 1187 | 4 | 137 |
+| `/servicios` | desktop | 100 | 100 | 100 | 100 | 527 | 0 | 0 | 290 | 290 | 2 | 299 | 0 | 0 |
+| `/contacto` | mobile | 97 | 100 | 100 | 100 | 2563 | 0.027 | 31 | 1060 | 1060 | 2 | 1162 | 3 | 116 |
+| `/contacto` | desktop | 100 | 100 | 100 | 100 | 528 | 0 | 0 | 292 | 292 | 2 | 291 | 0 | 0 |
 
 ## Historical Comparison
 
@@ -614,9 +756,9 @@ Comparison caveats:
 
 | Route | Profile | Historical | Current | Read |
 | --- | --- | --- | --- | --- |
-| `/` | mobile Perf / TBT / LCP | `93 / 123 ms / 2.89 s` | `93 / 116 ms / 2.99 s` | broadly stable, LCP slightly slower |
+| `/` | mobile Perf / TBT / LCP | `93 / 123 ms / 2.89 s` | `93 / 77 ms / 2.95 s` | performance stable, TBT lower, LCP slightly higher and not conclusive under non-identical environments |
 | `/` | desktop Perf / TBT / LCP | `99 / 0 ms / 0.85 s` | `99 / 0 ms / 0.83 s` | stable |
-| `/quienessomos` | mobile Perf / TBT / LCP | `82 / 638 ms / 2.16 s` | `86 / 415 ms / 2.56 s` | better Perf/TBT, slower LCP, still heaviest route |
+| `/quienessomos` | mobile Perf / TBT / LCP | `82 / 638 ms / 2.16 s` | `86 / 423 ms / 2.56 s` | better Perf/TBT, slower LCP, still heaviest route |
 | `/quienessomos` | desktop Perf / TBT / LCP | `100 / 0 ms / 0.48 s` | `100 / 0 ms / 0.53 s` | stable within small variance |
 | `/servicios` | mobile Perf / TBT / LCP | `99 / 30 ms / 2.14 s` | `97 / 34 ms / 2.56 s` | slight Perf/LCP regression, not clearly material under changed environment and old `n=1` baseline |
 | `/servicios` | desktop Perf / TBT / LCP | `100 / 0 ms / 0.48 s` | `100 / 0 ms / 0.53 s` | stable within small variance |
@@ -629,7 +771,7 @@ The July attribution document measured a much harsher mobile headless profile fo
 the globe route:
 
 - Historical median `/quienessomos` mobile TBT there: `1314 ms`
-- Current validation median `/quienessomos` mobile TBT: `415 ms`
+- Current validation metric median `/quienessomos` mobile TBT: `423 ms`
 
 Interpretation:
 
@@ -642,10 +784,10 @@ Interpretation:
 
 Lighthouse median long-task counts:
 
-- `/` mobile: `4`, max `140 ms`
-- `/quienessomos` mobile: `20`, max `161 ms`
+- `/` mobile: `3`, max `165 ms`
+- `/quienessomos` mobile: `20`, max `114 ms`
 - `/servicios` mobile: `4`, max `137 ms`
-- `/contacto` mobile: `3`, max `110 ms`
+- `/contacto` mobile: `3`, max `116 ms`
 - all desktop medians: `0`
 
 Interpretation:
@@ -654,7 +796,7 @@ Interpretation:
 - `/quienessomos` remains the dominant mobile long-task route
 - Home is the second-highest public mobile main-thread workload
 
-## Frame Stability
+## requestAnimationFrame Cadence And Headless Trace Proxy
 
 Scroll traces were captured for:
 
@@ -672,11 +814,20 @@ Trace summaries:
 
 Interpretation:
 
-- Home and `/quienessomos` stayed near 60 fps in the idle tail.
-- `/servicios` showed the largest interaction gap in headless trace capture.
-- That `/servicios` `216.62 ms` gap did not pair with a corresponding
-  `>50 ms` renderer-main event and is therefore medium-confidence as a real
-  interactive hitch; it may partly reflect headless/compositor capture noise.
+- The trace harness did not measure user-visible compositor presentation
+  directly.
+- The delta table above was derived from headless trace `DrawFrame`
+  timestamps.
+- `FireAnimationFrame` totals are reported in the next section as event mix,
+  not as the delta source.
+- These cadence numbers are therefore a headless scheduling proxy, not a
+  definitive visible-browser FPS claim.
+- Home and `/quienessomos` showed idle-tail `DrawFrame` spacing clustered near
+  `16.66 ms` in the measured headless trace.
+- `/servicios` showed the largest interaction gap in the same proxy data.
+- That `/servicios` `216.62 ms` gap did not pair with any renderer-main event
+  above `50 ms`, so it should be treated as low/medium-confidence evidence of a
+  scheduling anomaly rather than a confirmed visual defect.
 
 ## Scroll-Profile Event Mix
 
@@ -722,6 +873,8 @@ Static finding:
 
 - `LenisScrollProvider.jsx` calls `gsap.ticker.lagSmoothing(0)`
 - cleanup does not restore the prior GSAP global lag-smoothing state
+- `node_modules/lenis/README.md` includes the same GSAP integration pattern and
+  explicitly recommends `gsap.ticker.lagSmoothing(0)` in that setup example
 
 Focused runtime comparison:
 
@@ -739,28 +892,60 @@ Conclusion:
 
 - No observable user-facing regression from the non-restored `lagSmoothing(0)`
   was reproduced in this smoke validation.
-- The global-state mutation remains a real maintenance risk because it survives
-  cleanup and applies beyond enabled Lenis routes.
+- The global-state mutation remains an ownership ambiguity and maintenance risk
+  because it survives cleanup and applies beyond enabled Lenis routes.
+- In the current evidence set, it is not a reproduced user-facing bug.
+
+## Overall Conclusion
+
+- No functional defect of the public Lenis rollout was confirmed in this
+  validation update.
+- One independent accessibility defect was confirmed in `ScrollCue` reduced
+  motion: its dot animation is not neutralized when the active selector wins
+  the CSS cascade on specificity.
 
 ## Defects Found
 
-### 1. `ScrollCue` ignores reduced motion
+No functional Lenis defect was confirmed in this corrective review.
+
+### 1. ScrollCue reduced-motion rule loses the CSS cascade
 
 Reproduced on:
 
-- `/servicios`
-- desktop `1440x900`
-- cold load with `prefers-reduced-motion: reduce`
+- public-route `ScrollCue`
+- focused runtime probe on `/servicios`
+- `prefers-reduced-motion: reduce`
 
 Observed:
 
-- public Lenis correctly disabled
-- cue remained visible
-- dot remained active
+- `matchMedia("(prefers-reduced-motion: reduce)").matches === true`
+- `data-visible="true"`
+- `data-dot-active="true"`
+- computed `animation-name`:
+  `ScrollCue_cwdScrollCueDotTravel__tWCmU`
+- computed `animation-duration`: `2.36s`
+- computed `animation-play-state`: `running`
+- computed `transform`: `matrix(1, 0, 0, 1, -2.5, 25.1257)`
+
+Cause:
+
+- reduced-motion selector:
+  `.cue[data-visible="true"] .dot` = `0,3,0`
+- active selector:
+  `.cue[data-visible="true"][data-dot-active="true"] .dot` = `0,4,0`
+- the active selector is more specific, so the later reduced-motion media-query
+  rule does not override it in the active visible state
 
 Impact:
 
-- reduced-motion contract is incomplete even though Lenis itself honors it
+- global `ScrollCue` on public routes does not currently neutralize its dot
+  animation under reduced motion when the cue is visible and active
+
+Classification:
+
+- confirmed accessibility defect
+- not a Lenis defect
+- documented only; not corrected in this branch
 
 ### 2. Contact success path not verified in local environment
 
@@ -789,6 +974,12 @@ Classification:
 - Touch validation used mobile emulation only, not physical hardware.
 - Visual judgment for the Home Benefits title fade remains inconclusive here.
 - Lighthouse and trace results are synthetic and headless.
+- The ScrollCue reduced-motion cascade defect was confirmed through a headless
+  computed-style probe; this validation did not measure its perceptual
+  magnitude in a visible-browser pass.
+- Listener counts came from CDP snapshots of `window` and `document` only.
+- Metric medians are independent per metric and do not correspond to a single
+  coherent Lighthouse report.
 - Historical comparisons mix Chrome `149` and `150` and mix `n=1` and `n=3`
   baselines.
 - Success path for the canonical Contact form was not observed locally.
@@ -800,6 +991,9 @@ Classification:
 
 ## Residual Risks
 
+- `ScrollCue` does not currently neutralize its dot animation under
+  `prefers-reduced-motion` because its reduced-motion selector loses on
+  specificity.
 - `gsap.ticker.lagSmoothing(0)` remains globally mutated after public Lenis cleanup.
 - `/quienessomos` is still the highest-cost public mobile route by main-thread work.
 - Public routes keep idle animation-frame activity; this is not duplicated, but it
@@ -807,19 +1001,21 @@ Classification:
 - `/servicios` interaction trace showed the largest frame gap in headless capture;
   visual behavior remained acceptable in the measured smoke, but a non-headless
   pass would reduce uncertainty.
-- Reduced motion is incomplete until `ScrollCue` stops animating its dot.
 
 ## Recommendation For The Next Increment
 
 Recommended next follow-up, without mixing concerns:
 
-1. Fix reduced-motion handling in `ScrollCue` and validate it separately.
+1. Apply a scoped CSS fix for `ScrollCue` reduced motion so the active dot rule
+   no longer outranks the reduced-motion override, without changing normal
+   behavior and without touching Lenis, routes, provider, GSAP, observers, or
+   other animations.
 2. Decide whether `gsap.ticker.lagSmoothing(0)` should be restored on cleanup or
    intentionally owned at a broader lifecycle boundary.
-3. Run a non-headless visual pass for `/servicios` and Home Benefits fade to
-   reduce residual uncertainty from headless capture.
-4. Keep globe work isolated from Lenis rollout decisions; `/quienessomos` remains
+3. Keep globe work isolated from Lenis rollout decisions; `/quienessomos` remains
    a route-specific performance topic.
+4. Continue any non-headless visual follow-up as perceptual validation work,
+   not as a prerequisite for confirming the ScrollCue cascade defect.
 
 ## Declaration
 
