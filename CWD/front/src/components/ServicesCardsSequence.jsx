@@ -12,11 +12,14 @@ const CARD_SEQUENCE_CONFIG = Object.freeze({
 });
 
 const VISUALS = {
-  "01": WebVisual,
-  "02": CommerceVisual,
-  "03": AppsVisual,
-  "04": OptimizationVisual,
-  "05": AnalyticsVisual,
+  "01": SectorIdentityVisual,
+  "02": WebVisual,
+  "03": CommerceVisual,
+  "04": AppsVisual,
+  "05": OptimizationVisual,
+  "06": EvolutionMaintenanceVisual,
+  "07": AnalyticsVisual,
+  "08": ResultsActionVisual,
 };
 
 function ServiceCardSvg({ children }) {
@@ -45,6 +48,24 @@ function WebVisual() {
       <circle className="node services-visual-node" cx="132" cy="138" r="7" />
       <circle className="node services-visual-node" cx="184" cy="158" r="7" />
       <circle className="node services-visual-node is-primary" cx="232" cy="104" r="7" />
+    </ServiceCardSvg>
+  );
+}
+
+function SectorIdentityVisual() {
+  return (
+    <ServiceCardSvg>
+      <rect className="services-visual-block" x="54" y="72" width="54" height="74" rx="14" />
+      <rect className="services-visual-block" x="133" y="60" width="54" height="86" rx="14" />
+      <rect className="services-visual-block" x="212" y="80" width="54" height="66" rx="14" />
+      <path className="services-visual-path" d="M70 100H92M70 122H86M149 88H171M149 110H167M149 132H163M228 108H250M228 128H244" />
+      <path className="services-visual-path" d="M54 164H266" />
+      <path className="accent services-visual-accent" d="M120 50H200V156H120" />
+      <path className="accent services-visual-accent" d="M86 176C118 162 154 156 196 160C218 162 236 168 252 176" />
+      <circle className="node services-visual-node" cx="86" cy="176" r="7" />
+      <circle className="node services-visual-node" cx="196" cy="160" r="7" />
+      <circle className="node services-visual-node is-primary" cx="160" cy="50" r="10" />
+      <path className="accent services-visual-path" d="M150 50H170M160 40V60" />
     </ServiceCardSvg>
   );
 }
@@ -93,6 +114,22 @@ function OptimizationVisual() {
   );
 }
 
+function EvolutionMaintenanceVisual() {
+  return (
+    <ServiceCardSvg>
+      <rect className="services-visual-frame" x="56" y="54" width="108" height="86" rx="16" />
+      <rect className="services-visual-frame" x="156" y="88" width="108" height="86" rx="16" />
+      <path className="services-visual-block" d="M78 86H142M78 112H126M178 120H242M178 146H230" />
+      <path className="accent services-visual-accent" d="M112 42C154 24 208 32 234 72" />
+      <path className="accent services-visual-path" d="M218 58L236 73L215 78" />
+      <path className="accent services-visual-accent" d="M208 186C164 198 114 190 86 148" />
+      <path className="accent services-visual-path" d="M102 164L84 149L105 144" />
+      <circle className="node services-visual-node" cx="144" cy="54" r="7" />
+      <circle className="node services-visual-node is-primary" cx="176" cy="174" r="9" />
+    </ServiceCardSvg>
+  );
+}
+
 function AnalyticsVisual() {
   return (
     <ServiceCardSvg>
@@ -104,6 +141,25 @@ function AnalyticsVisual() {
       <path className="accent services-visual-accent" d="M90 96L138 70L186 82L234 46" />
       <circle className="node services-visual-node" cx="138" cy="70" r="7" />
       <circle className="node services-visual-node is-primary" cx="234" cy="46" r="9" />
+    </ServiceCardSvg>
+  );
+}
+
+function ResultsActionVisual() {
+  return (
+    <ServiceCardSvg>
+      <rect className="services-visual-frame" x="54" y="58" width="102" height="104" rx="18" />
+      <path className="services-visual-path" d="M72 144H138" />
+      <rect className="services-visual-block" x="76" y="118" width="18" height="26" rx="5" />
+      <rect className="services-visual-block" x="104" y="102" width="18" height="42" rx="5" />
+      <rect className="services-visual-block" x="132" y="88" width="18" height="56" rx="5" />
+      <rect className="services-visual-frame" x="186" y="72" width="80" height="88" rx="18" />
+      <path className="services-visual-block" d="M206 102H244M206 124H236M206 146H228" />
+      <path className="accent services-visual-accent" d="M150 96H184" />
+      <path className="accent services-visual-path" d="M172 86L188 96L172 106" />
+      <path className="accent services-visual-accent" d="M202 118L218 134L250 94" />
+      <circle className="node services-visual-node" cx="150" cy="88" r="7" />
+      <circle className="node services-visual-node is-primary" cx="250" cy="94" r="9" />
     </ServiceCardSvg>
   );
 }
@@ -340,7 +396,7 @@ export default function ServicesCardsSequence({ items }) {
         style={sequenceVariables}
       >
         {items.map((item, index) => {
-          const Visual = VISUALS[item.numero] || AnalyticsVisual;
+          const Visual = VISUALS[item.numero];
 
           return (
             <article
@@ -350,9 +406,11 @@ export default function ServicesCardsSequence({ items }) {
               onAnimationEnd={(event) => handleCardAnimationEnd(event, index)}
             >
               <div className="services-sequence-card-surface">
-                <div className="services-sequence-card-visual" aria-hidden="true">
-                  <Visual />
-                </div>
+                {Visual ? (
+                  <div className="services-sequence-card-visual" aria-hidden="true">
+                    <Visual />
+                  </div>
+                ) : null}
 
                 <span className="services-sequence-card-number">
                   {item.numero}
