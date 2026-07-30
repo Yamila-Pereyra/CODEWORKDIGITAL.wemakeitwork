@@ -5,9 +5,9 @@ import Lenis from "lenis";
 
 export const LENIS_LAB_DEFAULTS = Object.freeze({
   enabled: true,
-  lerp: 0.14,
+  lerp: 0.05,
   smoothWheel: true,
-  wheelMultiplier: 1,
+  wheelMultiplier: 0.95,
   syncTouch: false,
   stopInertiaOnNavigate: true,
 });
