@@ -2,11 +2,13 @@ import "@/styles/globals.css";
 import "@/styles/quienessomos.css";
 import "@/styles/servicios.css";
 import "@/styles/contacto.css";
+import "lenis/dist/lenis.css";
 
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import LanguageSelector from "@/components/LanguageSelector";
 import HeaderSocialLinks from "@/components/HeaderSocialLinks";
+import LenisScrollProvider from "@/components/smooth-scroll/LenisScrollProvider";
 import ScrollCue from "@/components/ScrollCue";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { DEFAULT_LOCALE, DEFAULT_OG_IMAGE, SITE_NAME } from "@/lib/metadata";
@@ -47,6 +49,7 @@ export default function RootLayout({ children }) {
         <html lang="es">
         <body className={redHat.className}>
         <LanguageProvider>
+            <LenisScrollProvider />
             <header className="top-header">
                 <div className="logo-container">
                     <Link href="/" className="logo-link">
