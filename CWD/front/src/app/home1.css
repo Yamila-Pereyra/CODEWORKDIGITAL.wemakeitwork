@@ -1536,6 +1536,12 @@ nav .holder li a.activo {
    CTA FINAL
 =================================== */
 
+.home-parallax-contact-window {
+  --home-parallax-contact-after-space: 178.75px;
+
+  margin-bottom: var(--home-parallax-contact-after-space);
+}
+
 .cta-final {
   position: relative;
 
@@ -1742,6 +1748,10 @@ nav .holder li a.activo {
 =================================== */
 
 @media (max-width:768px){
+
+  .home-parallax-contact-window {
+    --home-parallax-contact-after-space: 162.5px;
+  }
 
   .cta-final{
     padding:120px 0;
