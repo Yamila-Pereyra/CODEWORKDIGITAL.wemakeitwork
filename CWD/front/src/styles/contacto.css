@@ -106,52 +106,140 @@
   margin: 0;
   padding: 38px;
   border-radius: 30px;
-  background: linear-gradient(
-          145deg,
-          rgba(255,255,255,.08),
-          rgba(255,255,255,.03)
-  );
-  border: 1px solid rgba(255,255,255,.1);
-  box-shadow: none;
-}
-
-.contacto-form p {
-  margin-bottom: 18px;
-}
-
-.contacto-form label {
-  display: block;
-  margin-bottom: 8px;
-  color: rgba(255,255,255,.85);
-  font-weight: 700;
-}
-
-.contacto-form input,
-.contacto-form textarea {
-  width: 100%;
-  padding: 15px 16px;
-  border-radius: 16px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 0, 119, 0.08), transparent 34%),
+    linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
   border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.35);
-  color: #fff;
-  font-size: 1rem;
-  outline: none;
-  transition: .3s ease;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.02),
+    0 24px 60px rgba(0,0,0,.2);
 }
 
-.contacto-form textarea {
-  min-height: 140px;
+.contacto-form-title {
+  margin: 0 0 22px;
+  color: rgba(255,255,255,.95);
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.contacto-form {
+  width: 100%;
+}
+
+.contacto-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.contacto-form-field {
+  min-width: 0;
+  padding: 10px 15px 9px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.11),
+      rgba(255,255,255,.05)
+    );
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
+  backdrop-filter: blur(10px) saturate(115%);
+  transition:
+    border-color .16s ease,
+    background-color .16s ease,
+    box-shadow .16s ease;
+}
+
+.contacto-form-field:focus-within {
+  border-color: rgba(255,255,255,.9);
+  background-color: rgba(255,255,255,.14);
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.42),
+    0 0 0 5px rgba(255,0,119,.12);
+}
+
+.contacto-form-field.is-error {
+  border-color: rgba(255, 99, 132, .72);
+  background-color: rgba(255, 99, 132, .08);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.03),
+    0 0 0 2px rgba(255, 99, 132, .08);
+}
+
+.contacto-form-field-full,
+.contacto-form-submit-row {
+  grid-column: 1 / -1;
+}
+
+.contacto-form-label {
+  display: block;
+  margin: 0 0 7px;
+  color: rgba(255,255,255,.86);
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.contacto-form-optional {
+  color: rgba(255,255,255,.52);
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: none;
+}
+
+.contacto-form-control {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  caret-color: #fff;
+  font: inherit;
+  font-size: .98rem;
+  line-height: 1.35;
+}
+
+.contacto-form-control::placeholder {
+  color: rgba(255,255,255,.4);
+}
+
+.contacto-form-control:-webkit-autofill,
+.contacto-form-control:-webkit-autofill:hover,
+.contacto-form-control:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  caret-color: #ffffff;
+  transition: background-color 9999s ease-in-out 0s;
+  box-shadow: 0 0 0 1000px rgba(255,255,255,.01) inset;
+}
+
+.contacto-form-textarea {
+  min-height: 152px;
   resize: vertical;
 }
 
-.contacto-form input:focus,
-.contacto-form textarea:focus {
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 4px rgba(56,189,248,.12);
+.contacto-form-field-error {
+  margin: 10px 0 0;
+  color: #ffd7df;
+  font-size: .85rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.contacto-form-submit-row {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 4px;
 }
 
 .btn-primary.form-btn {
-  width: 100%;
+  width: auto;
   min-height: 52px;
   display: inline-flex;
   align-items: center;
@@ -195,15 +283,39 @@
   opacity: .84;
 }
 
-.form-msg {
+.contacto-form-status {
   margin-top: 16px;
-  text-align: center;
+}
+
+.form-msg {
+  margin-top: 0;
+  text-align: left;
   font-weight: 800;
   color: #38bdf8;
 }
 
 .form-msg.error {
   color: #ef4444;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .contacto-form-field {
+    background: rgba(255,255,255,.1);
+  }
+}
+
+@media (max-width: 980px) {
+  .contacto-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contacto-form-submit-row {
+    justify-content: stretch;
+  }
+
+  .btn-primary.form-btn {
+    width: 100%;
+  }
 }
 
 /* RESPONSIVE */
@@ -244,6 +356,10 @@
   .contacto-form-wrapper {
     padding: 26px;
     border-radius: 24px;
+  }
+
+  .contacto-form-title {
+    margin-bottom: 18px;
   }
 
 }
