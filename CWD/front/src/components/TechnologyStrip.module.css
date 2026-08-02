@@ -11,7 +11,17 @@
   --technology-logo-opacity: 0.78;
   --technology-logo-shadow-opacity: 0.045;
   --technology-logo-highlight-opacity: 0.88;
+  --cwd-technology-reveal-gap-base: calc(clamp(236px, 18vw, 304px) + 94px);
+  --cwd-technology-reveal-gap: calc(
+    var(--cwd-technology-reveal-gap-base) +
+      var(--cwd-technology-reveal-gap-base)
+  );
   position: relative;
+  /* Narrative reveal gap: 2× the preserved baseline. */
+  margin-block-start: calc(
+    var(--cwd-technology-reveal-gap) -
+      var(--cwd-technology-reveal-gap-base)
+  );
   padding: clamp(236px, 18vw, 304px) 0 112px;
   background: #000;
   overflow: hidden;
@@ -296,6 +306,7 @@
     --technology-logo-height-base: 1.7rem;
     --technology-item-padding-block: 0.68rem;
     --technology-item-padding-inline: 0.92rem;
+    --cwd-technology-reveal-gap-base: calc(clamp(144px, 24vw, 188px) + 75px);
     padding: clamp(144px, 24vw, 188px) 0 92px;
   }
 
