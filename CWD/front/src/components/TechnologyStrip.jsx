@@ -112,7 +112,6 @@ export default function TechnologyStrip({ copy }) {
         <h2 className={styles.title} id={headingId}>
           {copy.title}
         </h2>
-        <p className={styles.description}>{copy.description}</p>
       </div>
 
       <div className={styles.viewport}>
@@ -120,6 +119,10 @@ export default function TechnologyStrip({ copy }) {
           <TechnologyGroup />
           <TechnologyGroup decorative />
         </div>
+      </div>
+
+      <div className={styles.descriptionWrap}>
+        <p className={styles.description}>{copy.description}</p>
       </div>
     </section>
   );

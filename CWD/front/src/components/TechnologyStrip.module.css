@@ -6,15 +6,20 @@
   );
   --technology-item-gap: 0;
   --technology-item-label-height: 0rem;
+  --technology-item-padding-block: clamp(0.72rem, 0.7rem + 0.2vw, 0.92rem);
+  --technology-item-padding-inline: clamp(1rem, 0.88rem + 0.7vw, 1.42rem);
+  --technology-logo-opacity: 0.78;
+  --technology-logo-shadow-opacity: 0.045;
+  --technology-logo-highlight-opacity: 0.88;
   position: relative;
-  padding: 28px 0 112px;
+  padding: clamp(236px, 18vw, 304px) 0 112px;
   background: #000;
   overflow: hidden;
 }
 
 .editorial {
   width: min(1400px, calc(100% - 80px));
-  margin: 0 auto clamp(84px, 8vw, 102px);
+  margin: 0 auto clamp(72px, 6vw, 92px);
 }
 
 .eyebrow {
@@ -38,9 +43,14 @@
   letter-spacing: -0.048em;
 }
 
+.descriptionWrap {
+  width: min(1400px, calc(100% - 80px));
+  margin: clamp(52px, 5vw, 72px) auto 0;
+}
+
 .description {
   max-width: 760px;
-  margin: 22px 0 0;
+  margin: 0;
   color: rgba(255, 255, 255, 0.68);
   font-size: 1.08rem;
   line-height: 1.8;
@@ -51,7 +61,7 @@
   position: relative;
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  padding: 22px 0;
+  padding: 26px 0 30px;
   overflow: hidden;
   color: rgba(255, 255, 255, 0.5);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -97,12 +107,22 @@
   align-items: center;
   justify-content: flex-start;
   flex: 0 0 auto;
+  gap: var(--technology-item-gap);
+  padding: var(--technology-item-padding-block)
+    var(--technology-item-padding-inline);
   min-height: calc(
-    var(--technology-logo-height) + var(--technology-item-gap) + var(--technology-item-label-height)
+    var(--technology-logo-height) + var(--technology-item-gap) +
+      var(--technology-item-label-height) +
+      (var(--technology-item-padding-block) * 2)
   );
-  color: inherit;
+  color: rgba(255, 255, 255, 0.5);
   cursor: default;
   transition: color 0.22s ease;
+}
+
+.item > * {
+  position: relative;
+  z-index: 1;
 }
 
 .logoFrame {
@@ -118,10 +138,25 @@
 }
 
 .logoMark {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
-  background-color: currentColor;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 50% 18%,
+      rgba(255, 255, 255, 0.44) 0%,
+      rgba(255, 255, 255, 0.16) 28%,
+      rgba(255, 255, 255, 0) 54%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(244, 248, 255, 0.9) 0%,
+      rgba(221, 230, 241, 0.76) 34%,
+      rgba(176, 189, 208, 0.56) 70%,
+      rgba(134, 147, 164, 0.46) 100%
+    );
   -webkit-mask-image: var(--technology-logo-mask);
   mask-image: var(--technology-logo-mask);
   -webkit-mask-repeat: no-repeat;
@@ -130,6 +165,36 @@
   mask-position: center;
   -webkit-mask-size: contain;
   mask-size: contain;
+  opacity: var(--technology-logo-opacity);
+  filter: drop-shadow(
+    0 0 12px rgba(212, 228, 255, var(--technology-logo-shadow-opacity))
+  );
+  transition:
+    opacity 0.22s ease,
+    filter 0.22s ease;
+}
+
+.logoMark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.62) 0%,
+      rgba(255, 255, 255, 0.1) 44%,
+      rgba(255, 255, 255, 0) 78%
+    ),
+    radial-gradient(
+      circle at 50% 12%,
+      rgba(255, 255, 255, 0.42) 0%,
+      rgba(255, 255, 255, 0.12) 24%,
+      rgba(255, 255, 255, 0) 52%
+    );
+  mix-blend-mode: screen;
+  opacity: var(--technology-logo-highlight-opacity);
+  pointer-events: none;
+  transition: opacity 0.22s ease;
 }
 
 .itemLabel {
@@ -150,16 +215,14 @@
 
 @media (hover: hover) and (pointer: fine) {
   .section {
-    --technology-item-gap: 0.55rem;
+    --technology-item-gap: 1.4rem;
     --technology-item-label-height: 0.95rem;
   }
 
-  .viewport:hover .track {
-    animation-play-state: paused;
-  }
-
   .item:hover {
-    color: rgba(255, 255, 255, 0.74);
+    --technology-logo-opacity: 0.96;
+    --technology-logo-shadow-opacity: 0.11;
+    --technology-logo-highlight-opacity: 1;
   }
 
   .itemLabel {
@@ -222,15 +285,25 @@
   .editorial {
     width: calc(100% - 48px);
   }
+
+  .descriptionWrap {
+    width: calc(100% - 48px);
+  }
 }
 
 @media (max-width: 768px) {
   .section {
     --technology-logo-height-base: 1.7rem;
-    padding: 10px 0 92px;
+    --technology-item-padding-block: 0.68rem;
+    --technology-item-padding-inline: 0.92rem;
+    padding: clamp(144px, 24vw, 188px) 0 92px;
   }
 
   .editorial {
+    width: calc(100% - 32px);
+  }
+
+  .descriptionWrap {
     width: calc(100% - 32px);
   }
 
@@ -240,15 +313,18 @@
     letter-spacing: 0.2em;
   }
 
+  .descriptionWrap {
+    margin-top: clamp(40px, 10vw, 56px);
+  }
+
   .description {
-    margin-top: 18px;
     font-size: 1rem;
     line-height: 1.72;
   }
 
   .viewport {
     --edge-fade: clamp(18px, 8vw, 42px);
-    padding: 18px 0;
+    padding: 18px 0 22px;
   }
 
   .group {
