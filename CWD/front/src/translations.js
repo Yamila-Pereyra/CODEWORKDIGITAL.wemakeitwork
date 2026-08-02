@@ -123,6 +123,11 @@ export const translations = {
                 titulo: "Tecnología pensada para crear, crecer y evolucionar.",
                 lineas: ["Tecnología", "pensada", "para crear,", "crecer y", "evolucionar."],
             },
+            technologyStrip: {
+                eyebrow: "TECNOLOGÍA CON CRITERIO",
+                title: "Elegimos tecnologías por su capacidad para resolver, escalar y evolucionar.",
+                description: "Cada proyecto requiere decisiones técnicas distintas. Trabajamos con herramientas modernas y maduras, priorizando rendimiento, mantenibilidad y una experiencia de calidad.",
+            },
             servicios: {
                 titulo: "SERVICIOS",
 
@@ -436,7 +441,11 @@ digitales que generan resultados.`,
                 titulo: "Technology designed to create, grow and evolve.",
                 lineas: ["Technology", "designed", "to create,", "grow and", "evolve."],
             },
-
+            technologyStrip: {
+                eyebrow: "TECHNOLOGY WITH INTENT",
+                title: "We choose technologies for their ability to solve, scale and evolve.",
+                description: "Every project calls for different technical decisions. We work with modern, mature tools, prioritizing performance, maintainability and a high-quality experience.",
+            },
             servicios: {
                 titulo: "SERVICES",
 
@@ -747,6 +756,11 @@ experiences that deliver results.`,
                 subtitulo: "Perché scegliere noi",
                     titulo: "Tecnologia pensata per creare, crescere ed evolvere.",
                     lineas: ["Tecnologia", "pensata", "per creare,", "crescere ed", "evolvere."],
+            },
+            technologyStrip: {
+                eyebrow: "TECNOLOGIA CON CRITERIO",
+                title: "Scegliamo le tecnologie per la loro capacità di risolvere, scalare ed evolvere.",
+                description: "Ogni progetto richiede decisioni tecniche diverse. Lavoriamo con strumenti moderni e maturi, privilegiando prestazioni, manutenibilità e un’esperienza di qualità.",
             },
             servicios: {
                 titulo: "SERVIZI",
