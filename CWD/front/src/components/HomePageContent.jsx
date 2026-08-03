@@ -10,6 +10,7 @@ import { translations } from "@/translations";
 import OpticalDivider from "@/components/OpticalDivider";
 import CodeCascade from "@/components/CodeCascade";
 import ParallaxContactWindow from "@/components/parallax-contact-window/ParallaxContactWindow";
+import TechnologyStrip from "@/components/TechnologyStrip";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,6 +75,7 @@ export default function HomePageContent() {
   const beneficios = t.homePage.beneficios;
   const beneficiosExtended = t.homePage.beneficiosExtended || [];
   const beneficiosHeader = t.homePage.beneficiosHeader;
+  const technologyStrip = t.homePage.technologyStrip;
   const servicios = t.homePage.servicios;
   const cta = t.homePage.cta;
   const narrative = t.homePage.narrative;
@@ -808,6 +810,8 @@ export default function HomePageContent() {
           </div>
         </div>
       </section>
+
+      <TechnologyStrip copy={technologyStrip} />
 
       <section className="services-clean" ref={sectionRef}>
         <div className="services-bg-title">
