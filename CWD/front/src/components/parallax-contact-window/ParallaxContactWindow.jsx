@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translations } from "@/translations";
 
 import GlassContactForm from "./GlassContactForm";
 import styles from "./ParallaxContactWindow.module.css";
@@ -24,14 +26,6 @@ const PARALLAX_WINDOW_CONFIG = Object.freeze({
   imageBaseOffsetYRatio: 0.75,
   imageObjectPosition: "center center",
   scrub: true,
-});
-
-// TODO: Replace when final editorial copy is approved.
-const LAB_CONTACT_COPY = Object.freeze({
-  eyebrow: "Hablemos de tu proyecto",
-  title: "El momento perfecto no llega. Se decide.",
-  body: "",
-  submitLabel: "Enviar mensaje",
 });
 
 const LAB_CONTENT_STYLE = Object.freeze({
@@ -83,6 +77,8 @@ const LAB_CONTENT_STYLE = Object.freeze({
 });
 
 export default function ParallaxContactWindow({ className = "", headingLevel = "h2" }) {
+  const { language } = useLanguage();
+  const copy = translations[language].homePage.parallaxContactWindow;
   const sectionRef = useRef(null);
   const imageLayerRef = useRef(null);
   const Heading = headingLevel;
@@ -184,19 +180,19 @@ export default function ParallaxContactWindow({ className = "", headingLevel = "
         <div className={styles.contentInner}>
           <div className={styles.editorialBlock}>
             <p className={styles.contactEyebrow}>
-              {LAB_CONTACT_COPY.eyebrow}
+              {copy.eyebrow}
             </p>
             <Heading className={styles.contactTitle}>
-              {LAB_CONTACT_COPY.title}
+              {copy.title}
             </Heading>
-            {LAB_CONTACT_COPY.body ? (
+            {copy.body ? (
               <p className={styles.contactBody}>
-                {LAB_CONTACT_COPY.body}
+                {copy.body}
               </p>
             ) : null}
           </div>
 
-          <GlassContactForm submitLabel={LAB_CONTACT_COPY.submitLabel} />
+          <GlassContactForm copy={copy.form} />
         </div>
       </div>
     </section>

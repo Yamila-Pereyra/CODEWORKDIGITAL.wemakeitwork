@@ -128,6 +128,19 @@ export const translations = {
                 title: "Elegimos tecnologías por su capacidad para resolver, escalar y evolucionar.",
                 description: "Cada proyecto requiere decisiones técnicas distintas. Trabajamos con herramientas modernas y maduras, priorizando rendimiento, mantenibilidad y una experiencia de calidad.",
             },
+            parallaxContactWindow: {
+                eyebrow: "HABLEMOS DE TU PROYECTO",
+                title: "El momento perfecto llega cuando decides actuar. ¡Escríbenos!",
+                body: "",
+                form: {
+                    name: "Nombre",
+                    email: "Email",
+                    whatsapp: "WhatsApp",
+                    companyBrand: "Empresa / Marca",
+                    message: "Mensaje",
+                    submit: "Enviar mensaje",
+                },
+            },
             servicios: {
                 titulo: "SERVICIOS",
 
@@ -446,6 +459,19 @@ digitales que generan resultados.`,
                 title: "We choose technologies for their ability to solve, scale and evolve.",
                 description: "Every project calls for different technical decisions. We work with modern, mature tools, prioritizing performance, maintainability and a high-quality experience.",
             },
+            parallaxContactWindow: {
+                eyebrow: "LET'S TALK ABOUT YOUR PROJECT",
+                title: "The perfect moment comes when you decide to act. Get in touch!",
+                body: "",
+                form: {
+                    name: "Name",
+                    email: "Email",
+                    whatsapp: "WhatsApp",
+                    companyBrand: "Company / Brand",
+                    message: "Message",
+                    submit: "Send message",
+                },
+            },
             servicios: {
                 titulo: "SERVICES",
 
@@ -761,6 +787,19 @@ experiences that deliver results.`,
                 eyebrow: "TECNOLOGIA CON CRITERIO",
                 title: "Scegliamo le tecnologie per la loro capacità di risolvere, scalare ed evolvere.",
                 description: "Ogni progetto richiede decisioni tecniche diverse. Lavoriamo con strumenti moderni e maturi, privilegiando prestazioni, manutenibilità e un’esperienza di qualità.",
+            },
+            parallaxContactWindow: {
+                eyebrow: "PARLIAMO DEL TUO PROGETTO",
+                title: "Il momento perfetto arriva quando decidi di agire. Scrivici!",
+                body: "",
+                form: {
+                    name: "Nome",
+                    email: "Email",
+                    whatsapp: "WhatsApp",
+                    companyBrand: "Azienda / Brand",
+                    message: "Messaggio",
+                    submit: "Invia messaggio",
+                },
             },
             servicios: {
                 titulo: "SERVIZI",
