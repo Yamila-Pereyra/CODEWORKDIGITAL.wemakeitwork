@@ -171,6 +171,12 @@ export const translations = {
                         texto: "Decisiones respaldadas por datos reales",
                     },
                 ],
+                editorialBridge: {
+                    eyebrow: "NUESTRO CRITERIO",
+                    title: "La interfaz puede parecer similar. La arquitectura no lo es.",
+                    text: "Diseñamos cada solución según el proceso que comienza detrás de ella.",
+                    cta: "Explorar todos los servicios",
+                },
             },
             cta: {
                 badge: "HABLEMOS DE TU PROYECTO",
@@ -502,6 +508,12 @@ digitales que generan resultados.`,
                         texto: "Decisions backed by real data.",
                     },
                 ],
+                editorialBridge: {
+                    eyebrow: "OUR APPROACH",
+                    title: "The interface may look similar. The architecture is not.",
+                    text: "We design each solution around the process that begins behind it.",
+                    cta: "Explore all services",
+                },
             },
             cta: {
                 badge: "LET'S TALK ABOUT YOUR PROJECT",
@@ -831,6 +843,12 @@ experiences that deliver results.`,
                         texto: "Decisioni supportate da dati reali.",
                     },
                 ],
+                editorialBridge: {
+                    eyebrow: "IL NOSTRO APPROCCIO",
+                    title: "L’interfaccia può sembrare simile. L’architettura no.",
+                    text: "Progettiamo ogni soluzione in base al processo che inizia dietro di essa.",
+                    cta: "Scopri tutti i servizi",
+                },
             },
             cta: {
                 badge: "PARLIAMO DEL TUO PROGETTO",
