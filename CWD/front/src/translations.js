@@ -128,6 +128,19 @@ export const translations = {
                 title: "Elegimos tecnologías por su capacidad para resolver, escalar y evolucionar.",
                 description: "Cada proyecto requiere decisiones técnicas distintas. Trabajamos con herramientas modernas y maduras, priorizando rendimiento, mantenibilidad y una experiencia de calidad.",
             },
+            parallaxContactWindow: {
+                eyebrow: "HABLEMOS DE TU PROYECTO",
+                title: "El momento perfecto llega cuando decides actuar. ¡Escríbenos!",
+                body: "",
+                form: {
+                    name: "Nombre",
+                    email: "Email",
+                    whatsapp: "WhatsApp",
+                    companyBrand: "Empresa / Marca",
+                    message: "Mensaje",
+                    submit: "Enviar mensaje",
+                },
+            },
             servicios: {
                 titulo: "SERVICIOS",
 
@@ -267,7 +280,7 @@ export const translations = {
                 ],
             },
             cta: {
-                title: "Tu próximo cliente puede estar buscando exactamente lo que vos ofrecés.",
+                title: "Miles de clientes están buscando exactamente lo que vos ofrecés.",
                 text: "Transformemos tu idea en una solución digital profesional, moderna y preparada para crecer junto a tu negocio.",
                 button: "Empezar mi proyecto",
             },
@@ -446,6 +459,19 @@ digitales que generan resultados.`,
                 title: "We choose technologies for their ability to solve, scale and evolve.",
                 description: "Every project calls for different technical decisions. We work with modern, mature tools, prioritizing performance, maintainability and a high-quality experience.",
             },
+            parallaxContactWindow: {
+                eyebrow: "LET'S TALK ABOUT YOUR PROJECT",
+                title: "The perfect moment comes when you decide to act. Get in touch!",
+                body: "",
+                form: {
+                    name: "Name",
+                    email: "Email",
+                    whatsapp: "WhatsApp",
+                    companyBrand: "Company / Brand",
+                    message: "Message",
+                    submit: "Send message",
+                },
+            },
             servicios: {
                 titulo: "SERVICES",
 
@@ -585,7 +611,7 @@ digitales que generan resultados.`,
                 ],
             },
             cta: {
-                title: "Your next customer may be looking for exactly what you offer.",
+                title: "Thousands of clients are looking for exactly what you offer.",
                 text: "Let's turn your idea into a professional, modern digital solution prepared to grow with your business.",
                 button: "Start my project",
             },
@@ -762,6 +788,19 @@ experiences that deliver results.`,
                 title: "Scegliamo le tecnologie per la loro capacità di risolvere, scalare ed evolvere.",
                 description: "Ogni progetto richiede decisioni tecniche diverse. Lavoriamo con strumenti moderni e maturi, privilegiando prestazioni, manutenibilità e un’esperienza di qualità.",
             },
+            parallaxContactWindow: {
+                eyebrow: "PARLIAMO DEL TUO PROGETTO",
+                title: "Il momento perfetto arriva quando decidi di agire. Scrivici!",
+                body: "",
+                form: {
+                    name: "Nome",
+                    email: "Email",
+                    whatsapp: "WhatsApp",
+                    companyBrand: "Azienda / Brand",
+                    message: "Messaggio",
+                    submit: "Invia messaggio",
+                },
+            },
             servicios: {
                 titulo: "SERVIZI",
 
@@ -901,7 +940,7 @@ experiences that deliver results.`,
                 ],
             },
             cta: {
-                title: "Il tuo prossimo cliente potrebbe cercare esattamente ciò che offri.",
+                title: "Migliaia di clienti stanno cercando esattamente ciò che offri.",
                 text: "Trasformiamo la tua idea in una soluzione digitale professionale, moderna e pronta a crescere insieme al tuo business.",
                 button: "Inizia il mio progetto",
             },

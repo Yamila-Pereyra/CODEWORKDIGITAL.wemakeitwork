@@ -4,8 +4,8 @@
   --technology-logo-height: calc(
     var(--technology-logo-height-base) * var(--technology-logo-scale)
   );
-  --technology-item-gap: 0;
-  --technology-item-label-height: 0rem;
+  --technology-item-gap: 1.4rem;
+  --technology-item-label-height: 0.95rem;
   --technology-item-padding-block: clamp(0.72rem, 0.7rem + 0.2vw, 0.92rem);
   --technology-item-padding-inline: clamp(1rem, 0.88rem + 0.7vw, 1.42rem);
   --technology-logo-opacity: 0.78;
@@ -208,57 +208,26 @@
 }
 
 .itemLabel {
-  display: none;
-}
-
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  display: block;
+  min-height: var(--technology-item-label-height);
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-align: center;
   white-space: nowrap;
-  border: 0;
+  opacity: 1;
+  transform: none;
+  pointer-events: none;
+  user-select: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .section {
-    --technology-item-gap: 1.4rem;
-    --technology-item-label-height: 0.95rem;
-  }
-
   .item:hover {
     --technology-logo-opacity: 0.96;
     --technology-logo-shadow-opacity: 0.11;
     --technology-logo-highlight-opacity: 1;
-  }
-
-  .itemLabel {
-    display: block;
-    min-height: var(--technology-item-label-height);
-    color: rgba(255, 255, 255, 0.52);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateY(4px);
-    transition:
-      opacity 0.18s ease,
-      transform 0.18s ease,
-      color 0.18s ease;
-    pointer-events: none;
-    user-select: none;
-  }
-
-  .item:hover .itemLabel {
-    color: rgba(255, 255, 255, 0.8);
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -304,6 +273,8 @@
 @media (max-width: 768px) {
   .section {
     --technology-logo-height-base: 1.7rem;
+    --technology-item-gap: 1rem;
+    --technology-item-label-height: 0.9rem;
     --technology-item-padding-block: 0.68rem;
     --technology-item-padding-inline: 0.92rem;
     --cwd-technology-reveal-gap-base: calc(clamp(144px, 24vw, 188px) + 75px);

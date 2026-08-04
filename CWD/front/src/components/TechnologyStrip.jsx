@@ -76,24 +76,25 @@ function TechnologyGroup({ decorative = false }) {
       aria-hidden={decorative ? "true" : undefined}
       className={`${styles.group} ${decorative ? styles.groupClone : ""}`}
     >
-      {TECHNOLOGIES.map(({ name, assetPath, widthRem }) => (
-        <li
-          className={styles.item}
-          key={`${decorative ? "clone" : "primary"}-${name}`}
-          style={{
-            "--technology-logo-mask": `url("${assetPath}")`,
-            "--technology-logo-width-base": `${widthRem}rem`,
-          }}
-        >
-          <span aria-hidden="true" className={styles.logoFrame}>
-            <span className={styles.logoMark} />
-          </span>
-          <span aria-hidden="true" className={styles.itemLabel}>
-            {name}
-          </span>
-          {!decorative ? <span className={styles.srOnly}>{name}</span> : null}
-        </li>
-      ))}
+      {TECHNOLOGIES.map(({ name, assetPath, widthRem }, index) => {
+        const key = `${decorative ? "clone" : "primary"}-${index}`;
+
+        return (
+          <li
+            className={styles.item}
+            key={key}
+            style={{
+              "--technology-logo-mask": `url("${assetPath}")`,
+              "--technology-logo-width-base": `${widthRem}rem`,
+            }}
+          >
+            <span aria-hidden="true" className={styles.logoFrame}>
+              <span className={styles.logoMark} />
+            </span>
+            <span className={styles.itemLabel}>{name}</span>
+          </li>
+        );
+      })}
     </ul>
   );
 }

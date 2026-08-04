@@ -6,37 +6,34 @@ const PARALLAX_CONTACT_FIELDS = [
   {
     id: "name",
     name: "name",
-    label: "Nombre",
+    labelKey: "name",
     type: "text",
     autoComplete: "name",
   },
   {
     id: "email",
     name: "email",
-    label: "Email",
+    labelKey: "email",
     type: "email",
     autoComplete: "email",
   },
   {
     id: "whatsapp",
     name: "whatsapp",
-    label: "WhatsApp",
+    labelKey: "whatsapp",
     type: "tel",
     autoComplete: "tel",
   },
   {
     id: "organization",
     name: "organization",
-    label: "Empresa / Marca",
+    labelKey: "companyBrand",
     type: "text",
     autoComplete: "organization",
   },
 ];
 
-export default function GlassContactForm({
-  submitLabel,
-  idPrefix = "parallax-contact",
-}) {
+export default function GlassContactForm({ copy, idPrefix = "parallax-contact" }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     // TODO: Wire this form to the canonical contact submission flow
@@ -49,7 +46,7 @@ export default function GlassContactForm({
         {PARALLAX_CONTACT_FIELDS.map((field) => (
           <div className={styles.field} key={field.id}>
             <label className={styles.label} htmlFor={`${idPrefix}-${field.id}`}>
-              {field.label}
+              {copy[field.labelKey]}
             </label>
             <input
               className={styles.control}
@@ -63,7 +60,7 @@ export default function GlassContactForm({
 
         <div className={`${styles.field} ${styles.messageField}`}>
           <label className={styles.label} htmlFor={`${idPrefix}-message`}>
-            Mensaje
+            {copy.message}
           </label>
           <textarea
             className={`${styles.control} ${styles.textarea}`}
@@ -74,7 +71,7 @@ export default function GlassContactForm({
 
         <div className={styles.submitRow}>
           <button className={styles.submitButton} type="submit">
-            {submitLabel}
+            {copy.submit}
           </button>
         </div>
       </div>
