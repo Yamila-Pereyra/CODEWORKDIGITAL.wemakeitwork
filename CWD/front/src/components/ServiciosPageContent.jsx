@@ -20,12 +20,6 @@ export default function ServiciosPageContent() {
             <h1>{copy.hero.title}</h1>
 
             <p>{copy.hero.text}</p>
-
-            <div className="servicios-actions">
-              <Link href="/contacto" className="servicios-btn-primary">
-                {copy.hero.cta}
-              </Link>
-            </div>
           </div>
         </section>
 
@@ -40,6 +34,35 @@ export default function ServiciosPageContent() {
             <ServicesCardsSequence
               items={copy.list.items}
             />
+          </div>
+        </section>
+
+        <section
+          className="servicios-editorial"
+          aria-labelledby="servicios-editorial-title"
+        >
+          <div className="servicios-container">
+            <div className="servicios-editorial-grid">
+              <div className="servicios-editorial-intro">
+                <span className="servicios-label">{copy.editorial.eyebrow}</span>
+
+                <h2 id="servicios-editorial-title">{copy.editorial.title}</h2>
+              </div>
+
+              <div className="servicios-editorial-copy">
+                <p>{copy.editorial.intro}</p>
+
+                <p className="servicios-editorial-contrast">{copy.editorial.contrast}</p>
+
+                <p>{copy.editorial.analysis}</p>
+
+                <p>{copy.editorial.sizing}</p>
+
+                <p>{copy.editorial.complexity}</p>
+
+                <p className="servicios-editorial-closing">{copy.editorial.closing}</p>
+              </div>
+            </div>
           </div>
         </section>
 
