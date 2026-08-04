@@ -47,13 +47,6 @@
   font-size: 1.18rem;
   line-height: 1.7;
 }
-
-.servicios-actions {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-top: 36px;
-}
 .servicios-btn-primary,
 .servicios-btn-secondary {
   position: relative;
@@ -312,6 +305,57 @@
   }
 }
 
+/* EDITORIAL */
+
+.servicios-editorial {
+  padding: 104px 0 112px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.servicios-editorial-grid {
+  display: grid;
+  grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+  gap: 56px;
+  align-items: start;
+}
+
+.servicios-editorial-intro h2 {
+  max-width: 560px;
+  margin: 0;
+  font-size: clamp(2.4rem, 4vw, 4.4rem);
+  line-height: .96;
+  letter-spacing: -0.06em;
+  font-weight: 900;
+}
+
+.servicios-editorial-copy {
+  max-width: 720px;
+}
+
+.servicios-editorial-copy p {
+  margin: 0;
+  color: rgba(255,255,255,.72);
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.servicios-editorial-copy p + p {
+  margin-top: 22px;
+}
+
+.servicios-editorial-contrast {
+  color: rgba(255,255,255,.96);
+  font-size: clamp(1.32rem, 2vw, 1.7rem);
+  line-height: 1.28;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.servicios-editorial-closing {
+  color: rgba(255,255,255,.92);
+  font-size: 1.1rem;
+}
+
 /* CTA */
 
 .servicios-cta {
@@ -360,6 +404,17 @@
   }
 }
 
+@media (max-width: 980px) {
+  .servicios-editorial-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .servicios-editorial-copy {
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
 
   .servicios-container {
@@ -370,15 +425,12 @@
     padding: 80px 0 70px;
   }
 
-  .servicios-actions {
-    flex-direction: column;
-  }
-
   .servicios-btn-primary,
   .servicios-btn-secondary {
     width: 100%;
   }
 
+  .servicios-editorial,
   .servicios-lista,
   .servicios-cta {
     padding: 70px 0;
@@ -399,6 +451,19 @@
 
   .services-sequence-card-visual {
     width: min(190px, 100%);
+  }
+
+  .servicios-editorial-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .servicios-editorial-intro h2 {
+    max-width: 100%;
+  }
+
+  .servicios-editorial-copy p {
+    font-size: 1rem;
   }
 }
 
