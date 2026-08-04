@@ -459,6 +459,8 @@ export default function HomePageContent() {
       const mm = gsap.matchMedia();
 
       mm.add("(min-width: 769px)", () => {
+        const SERVICES_TERMINAL_EXIT_TOLERANCE_PX = 24;
+
         gsap.set(cardsScroll, {
           autoAlpha: 1,
         });
@@ -474,11 +476,26 @@ export default function HomePageContent() {
 
         const getEntryGap = () => Math.max(48, window.innerHeight * 0.08);
         const getInitialY = () => window.innerHeight + getEntryGap();
-        const getFinalY = () =>
-          -Math.max(
-            list.scrollHeight - window.innerHeight * 0.4,
-            window.innerHeight * 1.1
+        const getPinnedHeaderBottom = () => {
+          const fixedHeader = document.querySelector(
+            ".fixed-header-nav, .top-header, header"
           );
+
+          return fixedHeader?.getBoundingClientRect().bottom ?? 0;
+        };
+        const getLastItemBottomInList = () => {
+          const lastItem = items[items.length - 1];
+
+          if (!lastItem) {
+            return list.scrollHeight;
+          }
+
+          return lastItem.offsetTop + lastItem.offsetHeight;
+        };
+        const getTerminalVisibleBottom = () =>
+          getPinnedHeaderBottom() + SERVICES_TERMINAL_EXIT_TOLERANCE_PX;
+        const getFinalY = () =>
+          -(getLastItemBottomInList() - getTerminalVisibleBottom());
         const getTravelDistance = () => getInitialY() - getFinalY();
         const getScrollDistance = () =>
           Math.max(
@@ -552,7 +569,7 @@ export default function HomePageContent() {
         cancelAnimationFrame(refreshSettledFrame);
       }
     };
-  }, []);
+  }, [language]);
 
   const heroCarouselSlides = slides.length
     ? [
@@ -832,6 +849,17 @@ export default function HomePageContent() {
                 <p>{item.texto}</p>
               </div>
             ))}
+
+            <div className="service-item service-item--editorial right">
+              <p className="service-item-eyebrow">
+                {servicios.editorialBridge.eyebrow}
+              </p>
+              <h3>{servicios.editorialBridge.title}</h3>
+              <p>{servicios.editorialBridge.text}</p>
+              <Link href="/servicios" className="service-editorial-link">
+                {servicios.editorialBridge.cta}
+              </Link>
+            </div>
           </div>
         </div>
       </section>
