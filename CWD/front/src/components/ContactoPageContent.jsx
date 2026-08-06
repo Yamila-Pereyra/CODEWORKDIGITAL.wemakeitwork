@@ -36,9 +36,7 @@ export default function ContactoPageContent() {
               </div>
 
               <div className="contacto-form-card">
-                <ContactForm
-                    postUr={`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/contacto`}
-                />
+                <ContactForm />
               </div>
             </div>
           </div>

@@ -27,7 +27,7 @@ const PARALLAX_CONTACT_FIELDS = [
   {
     id: "organization",
     name: "organization",
-    labelKey: "companyBrand",
+    labelKey: "companyProject",
     type: "text",
     autoComplete: "organization",
   },
