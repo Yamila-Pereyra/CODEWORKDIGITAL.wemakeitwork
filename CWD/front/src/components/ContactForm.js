@@ -1,7 +1,22 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+import TurnstileWidget from "@/components/contact/TurnstileWidget";
 import { useLanguage } from "@/contexts/LanguageContext";
+import {
+  CONTACT_FIELD_LIMITS,
+  CONTACT_SUBMISSION_SOURCE,
+  CONTACT_TURNSTILE_ACTION,
+  buildContactSubmissionPayload,
+  getContactSubmissionFingerprint,
+  validateContactFormData,
+} from "@/lib/contact/contactSubmissionContract";
+import {
+  getPublicContactApiBaseUrl,
+  getPublicTurnstileSiteKey,
+  submitContactSubmission,
+} from "@/lib/contact/contactSubmissionClient";
 import { translations } from "@/translations";
 
 const INITIAL_FORM = Object.freeze({
@@ -13,329 +28,564 @@ const INITIAL_FORM = Object.freeze({
 });
 
 const FIELD_IDS = Object.freeze({
-  nombre: "contact-name",
-  email: "contact-email",
-  whatsapp: "contact-whatsapp",
-  empresaProyecto: "contact-company-project",
-  mensaje: "contact-message",
+  nombre: "contacto-nombre",
+  email: "contacto-email",
+  whatsapp: "contacto-whatsapp",
+  empresaProyecto: "contacto-empresa-proyecto",
+  mensaje: "contacto-mensaje",
 });
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const WHATSAPP_ALLOWED_PATTERN = /^[+\d\s\-()]+$/;
+const FIELD_NAMES = Object.keys(FIELD_IDS);
 
-function trimForValidation(value) {
-  return value.trim();
+function mapErrorMessages(errorKeys, errorCopy) {
+  return Object.entries(errorKeys).reduce((messages, [fieldName, errorKey]) => {
+    if (errorCopy?.[errorKey]) {
+      messages[fieldName] = errorCopy[errorKey];
+    }
+
+    return messages;
+  }, {});
 }
 
-function validateField(fieldName, value, errorsCopy) {
-  const nextErrors = errorsCopy || {};
-  const normalizedValue = trimForValidation(value);
+function getProblemMessage(result, formCopy) {
+  if (result.kind === "configuration") {
+    return formCopy.messages.configuration;
+  }
 
-  switch (fieldName) {
-    case "nombre":
-      if (!normalizedValue) {
-        nextErrors.nombre = "requiredName";
-      }
-      break;
-    case "email":
-      if (!normalizedValue) {
-        nextErrors.email = "requiredEmail";
-      } else if (!EMAIL_PATTERN.test(normalizedValue)) {
-        nextErrors.email = "invalidEmail";
-      }
-      break;
-    case "whatsapp": {
-      if (!normalizedValue) {
-        break;
-      }
+  if (result.kind === "network") {
+    return formCopy.messages.network;
+  }
 
-      const isAllowed = WHATSAPP_ALLOWED_PATTERN.test(normalizedValue);
-      const digitsOnly = normalizedValue.replace(/\D/g, "");
-      const hasValidLength = digitsOnly.length >= 7 && digitsOnly.length <= 15;
+  if (result.kind === "invalid_success") {
+    return formCopy.messages.serviceUnavailable;
+  }
 
-      if (!isAllowed || !hasValidLength) {
-        nextErrors.whatsapp = "invalidWhatsApp";
-      }
-      break;
-    }
-    case "mensaje":
-      if (!normalizedValue) {
-        nextErrors.mensaje = "requiredMessage";
-      }
-      break;
+  switch (result.code) {
+    case "validation_failed":
+    case "invalid_request":
+      return formCopy.messages.invalidData;
+    case "human_verification_failed":
+      return formCopy.messages.verificationFailed;
+    case "missing_idempotency_key":
+    case "invalid_idempotency_key":
+    case "unsupported_media_type":
+      return formCopy.messages.internalError;
+    case "idempotency_conflict":
+      return formCopy.messages.retryConflict;
+    case "request_too_large":
+      return formCopy.messages.requestTooLarge;
+    case "human_verification_unavailable":
+      return formCopy.messages.verificationUnavailable;
     default:
       break;
   }
 
-  return nextErrors;
+  switch (result.status) {
+    case 400:
+      return formCopy.messages.invalidData;
+    case 409:
+      return formCopy.messages.retryConflict;
+    case 413:
+      return formCopy.messages.requestTooLarge;
+    case 503:
+      return formCopy.messages.verificationUnavailable;
+    default:
+      break;
+  }
+
+  if (result.status >= 500) {
+    return formCopy.messages.serviceUnavailable;
+  }
+
+  return formCopy.messages.internalError;
 }
 
-function buildValidationErrors(formData) {
-  let nextErrors = {};
-
-  nextErrors = validateField("nombre", formData.nombre, nextErrors);
-  nextErrors = validateField("email", formData.email, nextErrors);
-  nextErrors = validateField("whatsapp", formData.whatsapp, nextErrors);
-  nextErrors = validateField("mensaje", formData.mensaje, nextErrors);
-
-  return nextErrors;
-}
-
-export default function ContactForm({ postUr }) {
+export default function ContactForm() {
   const { language } = useLanguage();
-  const t = translations[language] || translations.es;
-  const formCopy = t.contactPage.form;
-  const [formData, setFormData] = useState(INITIAL_FORM);
-  const [errors, setErrors] = useState({});
-  const [sending, setSending] = useState(false);
-  const [msg, setMsg] = useState("");
-  const [isError, setIsError] = useState(false);
+  const formCopy =
+    (translations[language] || translations.es).contactPage.form;
+  const apiBaseUrl = useMemo(() => getPublicContactApiBaseUrl(), []);
+  const siteKey = useMemo(() => getPublicTurnstileSiteKey(), []);
   const fieldRefs = useRef({});
+  const retrySubmissionRef = useRef(null);
+  const submissionCompletedRef = useRef(false);
 
-  const focusField = (fieldName) => {
-    fieldRefs.current[fieldName]?.focus();
+  const [formData, setFormData] = useState(INITIAL_FORM);
+  const [touchedFields, setTouchedFields] = useState({});
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [statusVariant, setStatusVariant] = useState("idle");
+  const [submissionCompleted, setSubmissionCompleted] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileReady, setTurnstileReady] = useState(false);
+  const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
+
+  const validationResult = useMemo(
+    () => validateContactFormData(formData),
+    [formData]
+  );
+  const translatedErrors = useMemo(
+    () => mapErrorMessages(validationResult.errors, formCopy.errors),
+    [formCopy.errors, validationResult.errors]
+  );
+  const visibleErrors = useMemo(() => {
+    return FIELD_NAMES.reduce((messages, fieldName) => {
+      if (
+        translatedErrors[fieldName] &&
+        (submitAttempted || touchedFields[fieldName])
+      ) {
+        messages[fieldName] = translatedErrors[fieldName];
+      }
+
+      return messages;
+    }, {});
+  }, [submitAttempted, touchedFields, translatedErrors]);
+  const formHasValidationErrors =
+    Object.keys(validationResult.errors).length > 0;
+  const submitDisabled =
+    submissionCompleted ||
+    sending ||
+    formHasValidationErrors ||
+    !apiBaseUrl ||
+    !siteKey ||
+    !turnstileReady ||
+    !turnstileToken;
+
+  useEffect(() => {
+    if (apiBaseUrl && siteKey) {
+      return;
+    }
+
+    setStatusVariant("error");
+    setStatusMessage(formCopy.messages.configuration);
+  }, [apiBaseUrl, formCopy.messages.configuration, siteKey]);
+
+  const focusFirstInvalidField = () => {
+    const firstInvalidField = FIELD_NAMES.find(
+      (fieldName) => validationResult.errors[fieldName]
+    );
+
+    if (!firstInvalidField) {
+      return;
+    }
+
+    fieldRefs.current[firstInvalidField]?.focus();
   };
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
+  const clearRetrySubmission = () => {
+    retrySubmissionRef.current = null;
+  };
 
-    setFormData((prev) => ({
-      ...prev,
+  const markSubmissionCompleted = () => {
+    submissionCompletedRef.current = true;
+    setSubmissionCompleted(true);
+    setTurnstileToken("");
+    setTurnstileReady(false);
+  };
+
+  const beginNewSubmissionSession = () => {
+    if (!submissionCompletedRef.current) {
+      return false;
+    }
+
+    submissionCompletedRef.current = false;
+    setSubmissionCompleted(false);
+    setSubmitAttempted(false);
+    setTouchedFields({});
+    setStatusVariant("idle");
+    setStatusMessage("");
+    setTurnstileToken("");
+    setTurnstileReady(false);
+    clearRetrySubmission();
+
+    return true;
+  };
+
+  const handleFieldBlur = (fieldName) => {
+    setTouchedFields((currentTouchedFields) => {
+      if (currentTouchedFields[fieldName]) {
+        return currentTouchedFields;
+      }
+
+      return {
+        ...currentTouchedFields,
+        [fieldName]: true,
+      };
+    });
+  };
+
+  const handleChange = ({ target: { name, value } }) => {
+    const restartedAfterSuccess = beginNewSubmissionSession();
+
+    clearRetrySubmission();
+
+    setFormData((currentFormData) => ({
+      ...currentFormData,
       [name]: value,
     }));
 
-    setErrors((prev) => {
-      if (!prev[name]) {
-        return prev;
-      }
+    if (!restartedAfterSuccess && statusVariant !== "idle") {
+      setStatusVariant("idle");
+      setStatusMessage("");
+    }
+  };
 
-      const nextErrors = { ...prev };
-      delete nextErrors[name];
+  const handleTurnstileReadyChange = (isReady) => {
+    if (submissionCompletedRef.current && isReady) {
+      return;
+    }
 
-      const revalidatedErrors = validateField(name, value, nextErrors);
-      return revalidatedErrors;
-    });
+    setTurnstileReady(isReady);
+  };
+
+  const handleTurnstileToken = (token) => {
+    if (submissionCompletedRef.current) {
+      return;
+    }
+
+    setTurnstileToken(token);
+  };
+
+  const resetTurnstile = () => {
+    setTurnstileToken("");
+    setTurnstileResetSignal((currentSignal) => currentSignal + 1);
+  };
+
+  const handleTurnstileExpire = () => {
+    if (submissionCompletedRef.current) {
+      return;
+    }
+
+    resetTurnstile();
+    setStatusVariant("error");
+    setStatusMessage(formCopy.messages.verificationExpired);
+  };
+
+  const handleTurnstileError = (code) => {
+    if (submissionCompletedRef.current) {
+      return;
+    }
+
+    if (code === "script_load_failed" || code === "turnstile_reset_failed") {
+      setTurnstileToken("");
+      setTurnstileReady(false);
+    } else {
+      resetTurnstile();
+    }
+
+    setStatusVariant("error");
+    setStatusMessage(
+      code === "script_load_failed"
+        ? formCopy.messages.verificationUnavailable
+        : formCopy.messages.verificationFailed
+    );
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setMsg("");
-    setIsError(false);
+    setSubmitAttempted(true);
 
-    const validationErrors = buildValidationErrors(formData);
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      const [firstInvalidField] = Object.keys(validationErrors);
-      focusField(firstInvalidField);
+    if (!apiBaseUrl || !siteKey) {
+      setStatusVariant("error");
+      setStatusMessage(formCopy.messages.configuration);
       return;
     }
 
-    setErrors({});
-    setSending(true);
-
-    const trimmedNombre = trimForValidation(formData.nombre);
-    const trimmedEmail = trimForValidation(formData.email);
-    const trimmedWhatsApp = trimForValidation(formData.whatsapp);
-    const trimmedMessage = trimForValidation(formData.mensaje);
-
-    // `empresaProyecto` remains intentionally out of the payload until the
-    // backend contract is expanded in a dedicated future increment.
-    const payload = {
-      nombre: trimmedNombre,
-      email: trimmedEmail,
-      telefono: trimmedWhatsApp,
-      mensaje: trimmedMessage,
-    };
-
-    try {
-      const rawResponse = await fetch(postUr, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!rawResponse.ok) {
-        throw new Error(`HTTP error! status: ${rawResponse.status}`);
-      }
-
-      const response = await rawResponse.json();
-
-      setMsg(response.message || formCopy.success);
-      setIsError(Boolean(response.error));
-
-      if (response.error === false) {
-        setFormData(INITIAL_FORM);
-      }
-    } catch (error) {
-      console.error("Error enviando formulario:", error);
-      setMsg(formCopy.error);
-      setIsError(true);
-    } finally {
-      setSending(false);
+    if (!turnstileReady) {
+      setStatusVariant("error");
+      setStatusMessage(formCopy.messages.verificationUnavailable);
+      return;
     }
-  };
 
-  const getErrorId = (fieldName) => `${FIELD_IDS[fieldName]}-error`;
-  const renderFieldError = (fieldName) =>
-    errors[fieldName] ? (
-      <p className="contacto-form-field-error" id={getErrorId(fieldName)}>
-        {formCopy.errors[errors[fieldName]]}
-      </p>
-    ) : null;
+    if (formHasValidationErrors) {
+      focusFirstInvalidField();
+      return;
+    }
+
+    const payloadResult = buildContactSubmissionPayload({
+      formData,
+      locale: language,
+      source: CONTACT_SUBMISSION_SOURCE.CONTACT_PAGE,
+      turnstileToken,
+    });
+
+    if (!payloadResult.ok) {
+      setStatusVariant("error");
+      setStatusMessage(
+        payloadResult.reason === "missing_turnstile_token"
+          ? formCopy.messages.verificationRequired
+          : formCopy.messages.invalidData
+      );
+      return;
+    }
+
+    const idempotencyKey =
+      retrySubmissionRef.current?.fingerprint ===
+      getContactSubmissionFingerprint(payloadResult.payload)
+        ? retrySubmissionRef.current.key
+        : globalThis.crypto?.randomUUID?.();
+
+    if (!idempotencyKey) {
+      setStatusVariant("error");
+      setStatusMessage(formCopy.messages.internalError);
+      return;
+    }
+
+    setSending(true);
+    setStatusVariant("idle");
+    setStatusMessage("");
+
+    const result = await submitContactSubmission({
+      payload: payloadResult.payload,
+      idempotencyKey,
+      baseUrl: apiBaseUrl,
+    });
+
+    if (result.ok) {
+      clearRetrySubmission();
+      markSubmissionCompleted();
+      setFormData(INITIAL_FORM);
+      setTouchedFields({});
+      setSubmitAttempted(false);
+      setStatusVariant("success");
+      setStatusMessage(formCopy.success);
+      setSending(false);
+      return;
+    }
+
+    if (result.kind === "network") {
+      retrySubmissionRef.current = {
+        key: idempotencyKey,
+        fingerprint: getContactSubmissionFingerprint(payloadResult.payload),
+      };
+    } else {
+      clearRetrySubmission();
+    }
+
+    setStatusVariant("error");
+    setStatusMessage(getProblemMessage(result, formCopy));
+    resetTurnstile();
+    setSending(false);
+  };
 
   return (
     <div className="contacto-form-wrapper">
       <h3 className="contacto-form-title">{formCopy.title}</h3>
 
-      <form
-        noValidate
-        onSubmit={handleSubmit}
-        className="contacto-form"
-        aria-busy={sending}
-      >
+      <form className="contacto-form" onSubmit={handleSubmit} noValidate aria-busy={sending}>
         <div className="contacto-form-grid">
-          <div className={`contacto-form-field${errors.nombre ? " is-error" : ""}`}>
+          <div
+            className={`contacto-form-field${visibleErrors.nombre ? " is-error" : ""}`}
+          >
             <label className="contacto-form-label" htmlFor={FIELD_IDS.nombre}>
               {formCopy.name}
             </label>
             <input
-              ref={(node) => {
-                fieldRefs.current.nombre = node;
+              ref={(element) => {
+                fieldRefs.current.nombre = element;
               }}
               className="contacto-form-control"
               id={FIELD_IDS.nombre}
               name="nombre"
               type="text"
               autoComplete="name"
+              maxLength={CONTACT_FIELD_LIMITS.name}
               required
               value={formData.nombre}
+              onBlur={() => handleFieldBlur("nombre")}
               onChange={handleChange}
-              aria-invalid={errors.nombre ? "true" : undefined}
-              aria-describedby={errors.nombre ? getErrorId("nombre") : undefined}
+              aria-invalid={visibleErrors.nombre ? "true" : "false"}
+              aria-describedby={
+                visibleErrors.nombre ? `${FIELD_IDS.nombre}-error` : undefined
+              }
             />
-            {renderFieldError("nombre")}
+            {visibleErrors.nombre ? (
+              <p className="contacto-form-field-error" id={`${FIELD_IDS.nombre}-error`}>
+                {visibleErrors.nombre}
+              </p>
+            ) : null}
           </div>
 
-          <div className={`contacto-form-field${errors.email ? " is-error" : ""}`}>
+          <div
+            className={`contacto-form-field${visibleErrors.email ? " is-error" : ""}`}
+          >
             <label className="contacto-form-label" htmlFor={FIELD_IDS.email}>
               {formCopy.email}
             </label>
             <input
-              ref={(node) => {
-                fieldRefs.current.email = node;
+              ref={(element) => {
+                fieldRefs.current.email = element;
               }}
               className="contacto-form-control"
               id={FIELD_IDS.email}
               name="email"
               type="email"
               autoComplete="email"
+              maxLength={CONTACT_FIELD_LIMITS.email}
               required
               value={formData.email}
+              onBlur={() => handleFieldBlur("email")}
               onChange={handleChange}
-              aria-invalid={errors.email ? "true" : undefined}
-              aria-describedby={errors.email ? getErrorId("email") : undefined}
+              aria-invalid={visibleErrors.email ? "true" : "false"}
+              aria-describedby={
+                visibleErrors.email ? `${FIELD_IDS.email}-error` : undefined
+              }
             />
-            {renderFieldError("email")}
+            {visibleErrors.email ? (
+              <p className="contacto-form-field-error" id={`${FIELD_IDS.email}-error`}>
+                {visibleErrors.email}
+              </p>
+            ) : null}
           </div>
 
-          <div className={`contacto-form-field${errors.whatsapp ? " is-error" : ""}`}>
+          <div
+            className={`contacto-form-field${visibleErrors.whatsapp ? " is-error" : ""}`}
+          >
             <label className="contacto-form-label" htmlFor={FIELD_IDS.whatsapp}>
-              {formCopy.whatsapp}
-              <span className="contacto-form-optional"> {formCopy.optional}</span>
+              {formCopy.whatsapp}{" "}
+              <span className="contacto-form-optional">({formCopy.optional})</span>
             </label>
             <input
-              ref={(node) => {
-                fieldRefs.current.whatsapp = node;
+              ref={(element) => {
+                fieldRefs.current.whatsapp = element;
               }}
               className="contacto-form-control"
               id={FIELD_IDS.whatsapp}
               name="whatsapp"
               type="tel"
-              inputMode="tel"
               autoComplete="tel"
+              maxLength={CONTACT_FIELD_LIMITS.phone}
               value={formData.whatsapp}
+              onBlur={() => handleFieldBlur("whatsapp")}
               onChange={handleChange}
-              aria-invalid={errors.whatsapp ? "true" : undefined}
+              aria-invalid={visibleErrors.whatsapp ? "true" : "false"}
               aria-describedby={
-                errors.whatsapp ? getErrorId("whatsapp") : undefined
+                visibleErrors.whatsapp ? `${FIELD_IDS.whatsapp}-error` : undefined
               }
             />
-            {renderFieldError("whatsapp")}
+            {visibleErrors.whatsapp ? (
+              <p
+                className="contacto-form-field-error"
+                id={`${FIELD_IDS.whatsapp}-error`}
+              >
+                {visibleErrors.whatsapp}
+              </p>
+            ) : null}
           </div>
 
-          <div className="contacto-form-field">
+          <div
+            className={`contacto-form-field${
+              visibleErrors.empresaProyecto ? " is-error" : ""
+            }`}
+          >
             <label
               className="contacto-form-label"
               htmlFor={FIELD_IDS.empresaProyecto}
             >
-              {formCopy.companyProject}
-              <span className="contacto-form-optional"> {formCopy.optional}</span>
+              {formCopy.companyProject}{" "}
+              <span className="contacto-form-optional">({formCopy.optional})</span>
             </label>
             <input
-              ref={(node) => {
-                fieldRefs.current.empresaProyecto = node;
+              ref={(element) => {
+                fieldRefs.current.empresaProyecto = element;
               }}
               className="contacto-form-control"
               id={FIELD_IDS.empresaProyecto}
               name="empresaProyecto"
               type="text"
               autoComplete="organization"
+              maxLength={CONTACT_FIELD_LIMITS.companyOrProject}
               value={formData.empresaProyecto}
+              onBlur={() => handleFieldBlur("empresaProyecto")}
               onChange={handleChange}
+              aria-invalid={visibleErrors.empresaProyecto ? "true" : "false"}
+              aria-describedby={
+                visibleErrors.empresaProyecto
+                  ? `${FIELD_IDS.empresaProyecto}-error`
+                  : undefined
+              }
             />
+            {visibleErrors.empresaProyecto ? (
+              <p
+                className="contacto-form-field-error"
+                id={`${FIELD_IDS.empresaProyecto}-error`}
+              >
+                {visibleErrors.empresaProyecto}
+              </p>
+            ) : null}
           </div>
 
           <div
             className={`contacto-form-field contacto-form-field-full${
-              errors.mensaje ? " is-error" : ""
+              visibleErrors.mensaje ? " is-error" : ""
             }`}
           >
             <label className="contacto-form-label" htmlFor={FIELD_IDS.mensaje}>
               {formCopy.message}
             </label>
             <textarea
-              ref={(node) => {
-                fieldRefs.current.mensaje = node;
+              ref={(element) => {
+                fieldRefs.current.mensaje = element;
               }}
               className="contacto-form-control contacto-form-textarea"
               id={FIELD_IDS.mensaje}
               name="mensaje"
-              rows="5"
+              maxLength={CONTACT_FIELD_LIMITS.message}
               required
               value={formData.mensaje}
+              onBlur={() => handleFieldBlur("mensaje")}
               onChange={handleChange}
-              aria-invalid={errors.mensaje ? "true" : undefined}
-              aria-describedby={errors.mensaje ? getErrorId("mensaje") : undefined}
+              aria-invalid={visibleErrors.mensaje ? "true" : "false"}
+              aria-describedby={
+                visibleErrors.mensaje ? `${FIELD_IDS.mensaje}-error` : undefined
+              }
             />
-            {renderFieldError("mensaje")}
+            {visibleErrors.mensaje ? (
+              <p className="contacto-form-field-error" id={`${FIELD_IDS.mensaje}-error`}>
+                {visibleErrors.mensaje}
+              </p>
+            ) : null}
+          </div>
+
+          <div className="contacto-form-turnstile-row">
+            {!submissionCompleted ? (
+              <TurnstileWidget
+                siteKey={siteKey}
+                action={CONTACT_TURNSTILE_ACTION.CONTACT_PAGE}
+                resetSignal={turnstileResetSignal}
+                disabled={sending}
+                className={`contacto-form-turnstile-shell${
+                  sending ? " is-disabled" : ""
+                }`}
+                onReadyChange={handleTurnstileReadyChange}
+                onToken={handleTurnstileToken}
+                onExpire={handleTurnstileExpire}
+                onError={handleTurnstileError}
+              />
+            ) : null}
           </div>
 
           <div className="contacto-form-submit-row">
-            <button
-              type="submit"
-              className="btn-primary form-btn contacto-form-submit"
-              disabled={sending}
-            >
+            <button className="btn-primary form-btn" type="submit" disabled={submitDisabled}>
               {sending ? formCopy.sending : formCopy.submit}
             </button>
           </div>
         </div>
-      </form>
 
-      <div
-        className="contacto-form-status"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        {msg ? (
-          <p className={`form-msg${isError ? " error" : ""}`}>{msg}</p>
-        ) : null}
-      </div>
+        <div
+          className="contacto-form-status"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {statusMessage ? (
+            <p className={`form-msg${statusVariant === "error" ? " error" : ""}`}>
+              {statusMessage}
+            </p>
+          ) : null}
+        </div>
+      </form>
     </div>
   );
 }
