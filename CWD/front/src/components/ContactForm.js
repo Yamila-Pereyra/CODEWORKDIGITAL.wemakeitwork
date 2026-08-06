@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import ContactFeedbackPanel from "@/components/contact/ContactFeedbackPanel";
 import TurnstileWidget from "@/components/contact/TurnstileWidget";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
@@ -37,6 +38,27 @@ const FIELD_IDS = Object.freeze({
 
 const FIELD_NAMES = Object.keys(FIELD_IDS);
 
+const STATUS_VARIANTS = Object.freeze({
+  IDLE: "idle",
+  SUCCESS: "success",
+  ERROR: "error",
+});
+
+const STATUS_REASONS = Object.freeze({
+  CONFIGURATION: "configuration",
+  INTERNAL_ERROR: "internal_error",
+  INVALID_DATA: "invalid_data",
+  NETWORK: "network",
+  REQUEST_TOO_LARGE: "request_too_large",
+  RETRY_CONFLICT: "retry_conflict",
+  SERVICE_UNAVAILABLE: "service_unavailable",
+  SUCCESS: "success",
+  VERIFICATION_EXPIRED: "verification_expired",
+  VERIFICATION_FAILED: "verification_failed",
+  VERIFICATION_REQUIRED: "verification_required",
+  VERIFICATION_UNAVAILABLE: "verification_unavailable",
+});
+
 function mapErrorMessages(errorKeys, errorCopy) {
   return Object.entries(errorKeys).reduce((messages, [fieldName, errorKey]) => {
     if (errorCopy?.[errorKey]) {
@@ -47,57 +69,100 @@ function mapErrorMessages(errorKeys, errorCopy) {
   }, {});
 }
 
-function getProblemMessage(result, formCopy) {
+function getProblemReason(result) {
   if (result.kind === "configuration") {
-    return formCopy.messages.configuration;
+    return STATUS_REASONS.CONFIGURATION;
   }
 
   if (result.kind === "network") {
-    return formCopy.messages.network;
+    return STATUS_REASONS.NETWORK;
   }
 
   if (result.kind === "invalid_success") {
-    return formCopy.messages.serviceUnavailable;
+    return STATUS_REASONS.SERVICE_UNAVAILABLE;
   }
 
   switch (result.code) {
     case "validation_failed":
     case "invalid_request":
-      return formCopy.messages.invalidData;
+      return STATUS_REASONS.INVALID_DATA;
     case "human_verification_failed":
-      return formCopy.messages.verificationFailed;
+      return STATUS_REASONS.VERIFICATION_FAILED;
     case "missing_idempotency_key":
     case "invalid_idempotency_key":
     case "unsupported_media_type":
-      return formCopy.messages.internalError;
+      return STATUS_REASONS.INTERNAL_ERROR;
     case "idempotency_conflict":
-      return formCopy.messages.retryConflict;
+      return STATUS_REASONS.RETRY_CONFLICT;
     case "request_too_large":
-      return formCopy.messages.requestTooLarge;
+      return STATUS_REASONS.REQUEST_TOO_LARGE;
     case "human_verification_unavailable":
-      return formCopy.messages.verificationUnavailable;
+      return STATUS_REASONS.VERIFICATION_UNAVAILABLE;
     default:
       break;
   }
 
   switch (result.status) {
     case 400:
-      return formCopy.messages.invalidData;
+      return STATUS_REASONS.INVALID_DATA;
     case 409:
-      return formCopy.messages.retryConflict;
+      return STATUS_REASONS.RETRY_CONFLICT;
     case 413:
-      return formCopy.messages.requestTooLarge;
+      return STATUS_REASONS.REQUEST_TOO_LARGE;
     case 503:
-      return formCopy.messages.verificationUnavailable;
+      return STATUS_REASONS.VERIFICATION_UNAVAILABLE;
     default:
       break;
   }
 
   if (result.status >= 500) {
-    return formCopy.messages.serviceUnavailable;
+    return STATUS_REASONS.SERVICE_UNAVAILABLE;
   }
 
-  return formCopy.messages.internalError;
+  return STATUS_REASONS.INTERNAL_ERROR;
+}
+
+function getFeedbackContent(formCopy, statusVariant, statusReason) {
+  if (statusVariant === STATUS_VARIANTS.SUCCESS) {
+    const title = formCopy.successTitle;
+    const detail = formCopy.successDetail;
+
+    return {
+      tone: "success",
+      title,
+      detail,
+      liveMessage: [title, detail].filter(Boolean).join(" "),
+    };
+  }
+
+  if (statusVariant !== STATUS_VARIANTS.ERROR || !statusReason) {
+    return null;
+  }
+
+  const errorMessageMap = {
+    [STATUS_REASONS.CONFIGURATION]: formCopy.messages.configuration,
+    [STATUS_REASONS.INTERNAL_ERROR]: formCopy.messages.internalError,
+    [STATUS_REASONS.INVALID_DATA]: formCopy.messages.invalidData,
+    [STATUS_REASONS.NETWORK]: formCopy.messages.network,
+    [STATUS_REASONS.REQUEST_TOO_LARGE]: formCopy.messages.requestTooLarge,
+    [STATUS_REASONS.RETRY_CONFLICT]: formCopy.messages.retryConflict,
+    [STATUS_REASONS.SERVICE_UNAVAILABLE]: formCopy.messages.serviceUnavailable,
+    [STATUS_REASONS.VERIFICATION_EXPIRED]: formCopy.messages.verificationExpired,
+    [STATUS_REASONS.VERIFICATION_FAILED]: formCopy.messages.verificationFailed,
+    [STATUS_REASONS.VERIFICATION_REQUIRED]: formCopy.messages.verificationRequired,
+    [STATUS_REASONS.VERIFICATION_UNAVAILABLE]:
+      formCopy.messages.verificationUnavailable,
+  };
+
+  const title = errorMessageMap[statusReason] || formCopy.messages.internalError;
+
+  return {
+    tone:
+      statusReason === STATUS_REASONS.VERIFICATION_EXPIRED ? "expired" : "error",
+    title,
+    detail: "",
+    liveMessage: title,
+  };
 }
 
 export default function ContactForm() {
@@ -114,8 +179,8 @@ export default function ContactForm() {
   const [touchedFields, setTouchedFields] = useState({});
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [sending, setSending] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
-  const [statusVariant, setStatusVariant] = useState("idle");
+  const [statusVariant, setStatusVariant] = useState(STATUS_VARIANTS.IDLE);
+  const [statusReason, setStatusReason] = useState(null);
   const [submissionCompleted, setSubmissionCompleted] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
   const [turnstileReady, setTurnstileReady] = useState(false);
@@ -151,15 +216,19 @@ export default function ContactForm() {
     !siteKey ||
     !turnstileReady ||
     !turnstileToken;
+  const feedbackContent = useMemo(() => {
+    return getFeedbackContent(formCopy, statusVariant, statusReason);
+  }, [formCopy, statusReason, statusVariant]);
+  const hasFeedbackPanel = Boolean(feedbackContent);
 
   useEffect(() => {
     if (apiBaseUrl && siteKey) {
       return;
     }
 
-    setStatusVariant("error");
-    setStatusMessage(formCopy.messages.configuration);
-  }, [apiBaseUrl, formCopy.messages.configuration, siteKey]);
+    setStatusVariant(STATUS_VARIANTS.ERROR);
+    setStatusReason(STATUS_REASONS.CONFIGURATION);
+  }, [apiBaseUrl, siteKey]);
 
   const focusFirstInvalidField = () => {
     const firstInvalidField = FIELD_NAMES.find(
@@ -175,6 +244,11 @@ export default function ContactForm() {
 
   const clearRetrySubmission = () => {
     retrySubmissionRef.current = null;
+  };
+
+  const clearFeedback = () => {
+    setStatusVariant(STATUS_VARIANTS.IDLE);
+    setStatusReason(null);
   };
 
   const markSubmissionCompleted = () => {
@@ -193,8 +267,7 @@ export default function ContactForm() {
     setSubmissionCompleted(false);
     setSubmitAttempted(false);
     setTouchedFields({});
-    setStatusVariant("idle");
-    setStatusMessage("");
+    clearFeedback();
     setTurnstileToken("");
     setTurnstileReady(false);
     clearRetrySubmission();
@@ -225,9 +298,12 @@ export default function ContactForm() {
       [name]: value,
     }));
 
-    if (!restartedAfterSuccess && statusVariant !== "idle") {
-      setStatusVariant("idle");
-      setStatusMessage("");
+    if (
+      !restartedAfterSuccess &&
+      statusVariant !== STATUS_VARIANTS.IDLE &&
+      statusReason !== STATUS_REASONS.CONFIGURATION
+    ) {
+      clearFeedback();
     }
   };
 
@@ -245,6 +321,14 @@ export default function ContactForm() {
     }
 
     setTurnstileToken(token);
+
+    if (
+      token &&
+      statusVariant === STATUS_VARIANTS.ERROR &&
+      statusReason !== STATUS_REASONS.CONFIGURATION
+    ) {
+      clearFeedback();
+    }
   };
 
   const resetTurnstile = () => {
@@ -258,8 +342,8 @@ export default function ContactForm() {
     }
 
     resetTurnstile();
-    setStatusVariant("error");
-    setStatusMessage(formCopy.messages.verificationExpired);
+    setStatusVariant(STATUS_VARIANTS.ERROR);
+    setStatusReason(STATUS_REASONS.VERIFICATION_EXPIRED);
   };
 
   const handleTurnstileError = (code) => {
@@ -274,11 +358,11 @@ export default function ContactForm() {
       resetTurnstile();
     }
 
-    setStatusVariant("error");
-    setStatusMessage(
+    setStatusVariant(STATUS_VARIANTS.ERROR);
+    setStatusReason(
       code === "script_load_failed"
-        ? formCopy.messages.verificationUnavailable
-        : formCopy.messages.verificationFailed
+        ? STATUS_REASONS.VERIFICATION_UNAVAILABLE
+        : STATUS_REASONS.VERIFICATION_FAILED
     );
   };
 
@@ -287,14 +371,14 @@ export default function ContactForm() {
     setSubmitAttempted(true);
 
     if (!apiBaseUrl || !siteKey) {
-      setStatusVariant("error");
-      setStatusMessage(formCopy.messages.configuration);
+      setStatusVariant(STATUS_VARIANTS.ERROR);
+      setStatusReason(STATUS_REASONS.CONFIGURATION);
       return;
     }
 
     if (!turnstileReady) {
-      setStatusVariant("error");
-      setStatusMessage(formCopy.messages.verificationUnavailable);
+      setStatusVariant(STATUS_VARIANTS.ERROR);
+      setStatusReason(STATUS_REASONS.VERIFICATION_UNAVAILABLE);
       return;
     }
 
@@ -311,11 +395,11 @@ export default function ContactForm() {
     });
 
     if (!payloadResult.ok) {
-      setStatusVariant("error");
-      setStatusMessage(
+      setStatusVariant(STATUS_VARIANTS.ERROR);
+      setStatusReason(
         payloadResult.reason === "missing_turnstile_token"
-          ? formCopy.messages.verificationRequired
-          : formCopy.messages.invalidData
+          ? STATUS_REASONS.VERIFICATION_REQUIRED
+          : STATUS_REASONS.INVALID_DATA
       );
       return;
     }
@@ -327,14 +411,13 @@ export default function ContactForm() {
         : globalThis.crypto?.randomUUID?.();
 
     if (!idempotencyKey) {
-      setStatusVariant("error");
-      setStatusMessage(formCopy.messages.internalError);
+      setStatusVariant(STATUS_VARIANTS.ERROR);
+      setStatusReason(STATUS_REASONS.INTERNAL_ERROR);
       return;
     }
 
     setSending(true);
-    setStatusVariant("idle");
-    setStatusMessage("");
+    clearFeedback();
 
     const result = await submitContactSubmission({
       payload: payloadResult.payload,
@@ -348,8 +431,8 @@ export default function ContactForm() {
       setFormData(INITIAL_FORM);
       setTouchedFields({});
       setSubmitAttempted(false);
-      setStatusVariant("success");
-      setStatusMessage(formCopy.success);
+      setStatusVariant(STATUS_VARIANTS.SUCCESS);
+      setStatusReason(STATUS_REASONS.SUCCESS);
       setSending(false);
       return;
     }
@@ -363,8 +446,8 @@ export default function ContactForm() {
       clearRetrySubmission();
     }
 
-    setStatusVariant("error");
-    setStatusMessage(getProblemMessage(result, formCopy));
+    setStatusVariant(STATUS_VARIANTS.ERROR);
+    setStatusReason(getProblemReason(result));
     resetTurnstile();
     setSending(false);
   };
@@ -548,8 +631,49 @@ export default function ContactForm() {
             ) : null}
           </div>
 
-          <div className="contacto-form-turnstile-row">
-            {!submissionCompleted ? (
+          <div
+            className={`contacto-form-action-region${
+              hasFeedbackPanel ? " has-feedback" : ""
+            }`}
+          >
+            <div
+              className="contacto-form-status"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {feedbackContent?.liveMessage || ""}
+            </div>
+
+            <div
+              className={`contacto-form-submit-row${
+                hasFeedbackPanel ? " is-hidden" : ""
+              }`}
+            >
+              <button className="btn-primary form-btn" type="submit" disabled={submitDisabled}>
+                {sending ? formCopy.sending : formCopy.submit}
+              </button>
+            </div>
+
+            <div
+              className={`contacto-form-feedback-row${
+                hasFeedbackPanel ? " is-visible" : ""
+              }`}
+            >
+              {feedbackContent ? (
+                <ContactFeedbackPanel
+                  tone={feedbackContent.tone}
+                  title={feedbackContent.title}
+                  detail={feedbackContent.detail}
+                  animationKey={`${statusVariant}:${statusReason ?? "none"}:${language}`}
+                />
+              ) : null}
+            </div>
+          </div>
+
+
+          {!submissionCompleted ? (
+            <div className="contacto-form-turnstile-row">
               <TurnstileWidget
                 siteKey={siteKey}
                 action={CONTACT_TURNSTILE_ACTION.CONTACT_PAGE}
@@ -563,26 +687,7 @@ export default function ContactForm() {
                 onExpire={handleTurnstileExpire}
                 onError={handleTurnstileError}
               />
-            ) : null}
-          </div>
-
-          <div className="contacto-form-submit-row">
-            <button className="btn-primary form-btn" type="submit" disabled={submitDisabled}>
-              {sending ? formCopy.sending : formCopy.submit}
-            </button>
-          </div>
-        </div>
-
-        <div
-          className="contacto-form-status"
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          {statusMessage ? (
-            <p className={`form-msg${statusVariant === "error" ? " error" : ""}`}>
-              {statusMessage}
-            </p>
+            </div>
           ) : null}
         </div>
       </form>
