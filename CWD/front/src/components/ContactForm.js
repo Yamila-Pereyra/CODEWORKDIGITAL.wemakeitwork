@@ -108,6 +108,7 @@ export default function ContactForm() {
   const siteKey = useMemo(() => getPublicTurnstileSiteKey(), []);
   const fieldRefs = useRef({});
   const retrySubmissionRef = useRef(null);
+  const submissionCompletedRef = useRef(false);
 
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [touchedFields, setTouchedFields] = useState({});
@@ -115,6 +116,7 @@ export default function ContactForm() {
   const [sending, setSending] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [statusVariant, setStatusVariant] = useState("idle");
+  const [submissionCompleted, setSubmissionCompleted] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
   const [turnstileReady, setTurnstileReady] = useState(false);
   const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
@@ -142,6 +144,7 @@ export default function ContactForm() {
   const formHasValidationErrors =
     Object.keys(validationResult.errors).length > 0;
   const submitDisabled =
+    submissionCompleted ||
     sending ||
     formHasValidationErrors ||
     !apiBaseUrl ||
@@ -174,6 +177,31 @@ export default function ContactForm() {
     retrySubmissionRef.current = null;
   };
 
+  const markSubmissionCompleted = () => {
+    submissionCompletedRef.current = true;
+    setSubmissionCompleted(true);
+    setTurnstileToken("");
+    setTurnstileReady(false);
+  };
+
+  const beginNewSubmissionSession = () => {
+    if (!submissionCompletedRef.current) {
+      return false;
+    }
+
+    submissionCompletedRef.current = false;
+    setSubmissionCompleted(false);
+    setSubmitAttempted(false);
+    setTouchedFields({});
+    setStatusVariant("idle");
+    setStatusMessage("");
+    setTurnstileToken("");
+    setTurnstileReady(false);
+    clearRetrySubmission();
+
+    return true;
+  };
+
   const handleFieldBlur = (fieldName) => {
     setTouchedFields((currentTouchedFields) => {
       if (currentTouchedFields[fieldName]) {
@@ -188,6 +216,8 @@ export default function ContactForm() {
   };
 
   const handleChange = ({ target: { name, value } }) => {
+    const restartedAfterSuccess = beginNewSubmissionSession();
+
     clearRetrySubmission();
 
     setFormData((currentFormData) => ({
@@ -195,13 +225,25 @@ export default function ContactForm() {
       [name]: value,
     }));
 
-    if (statusVariant !== "idle") {
+    if (!restartedAfterSuccess && statusVariant !== "idle") {
       setStatusVariant("idle");
       setStatusMessage("");
     }
   };
 
+  const handleTurnstileReadyChange = (isReady) => {
+    if (submissionCompletedRef.current && isReady) {
+      return;
+    }
+
+    setTurnstileReady(isReady);
+  };
+
   const handleTurnstileToken = (token) => {
+    if (submissionCompletedRef.current) {
+      return;
+    }
+
     setTurnstileToken(token);
   };
 
@@ -211,12 +253,20 @@ export default function ContactForm() {
   };
 
   const handleTurnstileExpire = () => {
+    if (submissionCompletedRef.current) {
+      return;
+    }
+
     resetTurnstile();
     setStatusVariant("error");
     setStatusMessage(formCopy.messages.verificationExpired);
   };
 
   const handleTurnstileError = (code) => {
+    if (submissionCompletedRef.current) {
+      return;
+    }
+
     if (code === "script_load_failed" || code === "turnstile_reset_failed") {
       setTurnstileToken("");
       setTurnstileReady(false);
@@ -294,12 +344,12 @@ export default function ContactForm() {
 
     if (result.ok) {
       clearRetrySubmission();
+      markSubmissionCompleted();
       setFormData(INITIAL_FORM);
       setTouchedFields({});
       setSubmitAttempted(false);
       setStatusVariant("success");
       setStatusMessage(formCopy.success);
-      resetTurnstile();
       setSending(false);
       return;
     }
@@ -499,19 +549,21 @@ export default function ContactForm() {
           </div>
 
           <div className="contacto-form-turnstile-row">
-            <TurnstileWidget
-              siteKey={siteKey}
-              action={CONTACT_TURNSTILE_ACTION.CONTACT_PAGE}
-              resetSignal={turnstileResetSignal}
-              disabled={sending}
-              className={`contacto-form-turnstile-shell${
-                sending ? " is-disabled" : ""
-              }`}
-              onReadyChange={setTurnstileReady}
-              onToken={handleTurnstileToken}
-              onExpire={handleTurnstileExpire}
-              onError={handleTurnstileError}
-            />
+            {!submissionCompleted ? (
+              <TurnstileWidget
+                siteKey={siteKey}
+                action={CONTACT_TURNSTILE_ACTION.CONTACT_PAGE}
+                resetSignal={turnstileResetSignal}
+                disabled={sending}
+                className={`contacto-form-turnstile-shell${
+                  sending ? " is-disabled" : ""
+                }`}
+                onReadyChange={handleTurnstileReadyChange}
+                onToken={handleTurnstileToken}
+                onExpire={handleTurnstileExpire}
+                onError={handleTurnstileError}
+              />
+            ) : null}
           </div>
 
           <div className="contacto-form-submit-row">
