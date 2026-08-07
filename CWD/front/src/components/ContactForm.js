@@ -59,6 +59,12 @@ const STATUS_REASONS = Object.freeze({
   VERIFICATION_UNAVAILABLE: "verification_unavailable",
 });
 
+const TERMINAL_STATES = Object.freeze({
+  NONE: "none",
+  SUCCESS: "success",
+  VERIFICATION_EXPIRED: "verification_expired",
+});
+
 function mapErrorMessages(errorKeys, errorCopy) {
   return Object.entries(errorKeys).reduce((messages, [fieldName, errorKey]) => {
     if (errorCopy?.[errorKey]) {
@@ -173,7 +179,7 @@ export default function ContactForm() {
   const siteKey = useMemo(() => getPublicTurnstileSiteKey(), []);
   const fieldRefs = useRef({});
   const retrySubmissionRef = useRef(null);
-  const submissionCompletedRef = useRef(false);
+  const terminalStateRef = useRef(TERMINAL_STATES.NONE);
 
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [touchedFields, setTouchedFields] = useState({});
@@ -181,7 +187,7 @@ export default function ContactForm() {
   const [sending, setSending] = useState(false);
   const [statusVariant, setStatusVariant] = useState(STATUS_VARIANTS.IDLE);
   const [statusReason, setStatusReason] = useState(null);
-  const [submissionCompleted, setSubmissionCompleted] = useState(false);
+  const [terminalState, setTerminalState] = useState(TERMINAL_STATES.NONE);
   const [turnstileToken, setTurnstileToken] = useState("");
   const [turnstileReady, setTurnstileReady] = useState(false);
   const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
@@ -208,8 +214,10 @@ export default function ContactForm() {
   }, [submitAttempted, touchedFields, translatedErrors]);
   const formHasValidationErrors =
     Object.keys(validationResult.errors).length > 0;
+  const isSuccessTerminal = terminalState === TERMINAL_STATES.SUCCESS;
+  const hasTerminalState = terminalState !== TERMINAL_STATES.NONE;
   const submitDisabled =
-    submissionCompleted ||
+    hasTerminalState ||
     sending ||
     formHasValidationErrors ||
     !apiBaseUrl ||
@@ -251,28 +259,11 @@ export default function ContactForm() {
     setStatusReason(null);
   };
 
-  const markSubmissionCompleted = () => {
-    submissionCompletedRef.current = true;
-    setSubmissionCompleted(true);
+  const enterTerminalState = (nextTerminalState) => {
+    terminalStateRef.current = nextTerminalState;
+    setTerminalState(nextTerminalState);
     setTurnstileToken("");
     setTurnstileReady(false);
-  };
-
-  const beginNewSubmissionSession = () => {
-    if (!submissionCompletedRef.current) {
-      return false;
-    }
-
-    submissionCompletedRef.current = false;
-    setSubmissionCompleted(false);
-    setSubmitAttempted(false);
-    setTouchedFields({});
-    clearFeedback();
-    setTurnstileToken("");
-    setTurnstileReady(false);
-    clearRetrySubmission();
-
-    return true;
   };
 
   const handleFieldBlur = (fieldName) => {
@@ -289,7 +280,9 @@ export default function ContactForm() {
   };
 
   const handleChange = ({ target: { name, value } }) => {
-    const restartedAfterSuccess = beginNewSubmissionSession();
+    if (terminalStateRef.current !== TERMINAL_STATES.NONE) {
+      return;
+    }
 
     clearRetrySubmission();
 
@@ -299,7 +292,7 @@ export default function ContactForm() {
     }));
 
     if (
-      !restartedAfterSuccess &&
+      terminalStateRef.current === TERMINAL_STATES.NONE &&
       statusVariant !== STATUS_VARIANTS.IDLE &&
       statusReason !== STATUS_REASONS.CONFIGURATION
     ) {
@@ -308,7 +301,7 @@ export default function ContactForm() {
   };
 
   const handleTurnstileReadyChange = (isReady) => {
-    if (submissionCompletedRef.current && isReady) {
+    if (terminalStateRef.current !== TERMINAL_STATES.NONE) {
       return;
     }
 
@@ -316,7 +309,7 @@ export default function ContactForm() {
   };
 
   const handleTurnstileToken = (token) => {
-    if (submissionCompletedRef.current) {
+    if (terminalStateRef.current !== TERMINAL_STATES.NONE) {
       return;
     }
 
@@ -337,17 +330,18 @@ export default function ContactForm() {
   };
 
   const handleTurnstileExpire = () => {
-    if (submissionCompletedRef.current) {
+    if (terminalStateRef.current !== TERMINAL_STATES.NONE) {
       return;
     }
 
-    resetTurnstile();
+    clearRetrySubmission();
+    enterTerminalState(TERMINAL_STATES.VERIFICATION_EXPIRED);
     setStatusVariant(STATUS_VARIANTS.ERROR);
     setStatusReason(STATUS_REASONS.VERIFICATION_EXPIRED);
   };
 
   const handleTurnstileError = (code) => {
-    if (submissionCompletedRef.current) {
+    if (terminalStateRef.current !== TERMINAL_STATES.NONE) {
       return;
     }
 
@@ -427,7 +421,7 @@ export default function ContactForm() {
 
     if (result.ok) {
       clearRetrySubmission();
-      markSubmissionCompleted();
+      enterTerminalState(TERMINAL_STATES.SUCCESS);
       setFormData(INITIAL_FORM);
       setTouchedFields({});
       setSubmitAttempted(false);
@@ -457,7 +451,11 @@ export default function ContactForm() {
       <h3 className="contacto-form-title">{formCopy.title}</h3>
 
       <form className="contacto-form" onSubmit={handleSubmit} noValidate aria-busy={sending}>
-        <div className="contacto-form-grid">
+        <div
+          className={`contacto-form-grid${
+            isSuccessTerminal ? " is-success-terminal" : ""
+          }`}
+        >
           <div
             className={`contacto-form-field${visibleErrors.nombre ? " is-error" : ""}`}
           >
@@ -475,6 +473,7 @@ export default function ContactForm() {
               autoComplete="name"
               maxLength={CONTACT_FIELD_LIMITS.name}
               required
+              disabled={hasTerminalState}
               value={formData.nombre}
               onBlur={() => handleFieldBlur("nombre")}
               onChange={handleChange}
@@ -507,6 +506,7 @@ export default function ContactForm() {
               autoComplete="email"
               maxLength={CONTACT_FIELD_LIMITS.email}
               required
+              disabled={hasTerminalState}
               value={formData.email}
               onBlur={() => handleFieldBlur("email")}
               onChange={handleChange}
@@ -539,6 +539,7 @@ export default function ContactForm() {
               type="tel"
               autoComplete="tel"
               maxLength={CONTACT_FIELD_LIMITS.phone}
+              disabled={hasTerminalState}
               value={formData.whatsapp}
               onBlur={() => handleFieldBlur("whatsapp")}
               onChange={handleChange}
@@ -579,6 +580,7 @@ export default function ContactForm() {
               type="text"
               autoComplete="organization"
               maxLength={CONTACT_FIELD_LIMITS.companyOrProject}
+              disabled={hasTerminalState}
               value={formData.empresaProyecto}
               onBlur={() => handleFieldBlur("empresaProyecto")}
               onChange={handleChange}
@@ -616,6 +618,7 @@ export default function ContactForm() {
               name="mensaje"
               maxLength={CONTACT_FIELD_LIMITS.message}
               required
+              disabled={hasTerminalState}
               value={formData.mensaje}
               onBlur={() => handleFieldBlur("mensaje")}
               onChange={handleChange}
@@ -672,7 +675,7 @@ export default function ContactForm() {
           </div>
 
 
-          {!submissionCompleted ? (
+          {!hasTerminalState ? (
             <div className="contacto-form-turnstile-row">
               <TurnstileWidget
                 siteKey={siteKey}
