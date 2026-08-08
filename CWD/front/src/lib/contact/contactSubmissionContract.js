@@ -8,6 +8,23 @@ export const CONTACT_TURNSTILE_ACTION = Object.freeze({
   CONTACT_PAGE: "contact_page",
 });
 
+export const CONTACT_FORM_FIELD_MAPS = Object.freeze({
+  CONTACT_PAGE: Object.freeze({
+    name: "nombre",
+    email: "email",
+    phone: "whatsapp",
+    companyOrProject: "empresaProyecto",
+    message: "mensaje",
+  }),
+  HOME: Object.freeze({
+    name: "name",
+    email: "email",
+    phone: "whatsapp",
+    companyOrProject: "companyProject",
+    message: "message",
+  }),
+});
+
 export const CONTACT_FIELD_LIMITS = Object.freeze({
   name: 120,
   email: 254,
@@ -32,44 +49,59 @@ export function trimToNull(value) {
   return trimmedValue === "" ? null : trimmedValue;
 }
 
-export function normalizeContactFormData(formData) {
+function getFieldName(fieldMap, canonicalFieldName) {
+  return fieldMap?.[canonicalFieldName] || CONTACT_FORM_FIELD_MAPS.CONTACT_PAGE[canonicalFieldName];
+}
+
+export function normalizeContactFormData(
+  formData,
+  fieldMap = CONTACT_FORM_FIELD_MAPS.CONTACT_PAGE
+) {
   return {
-    name: trimToNull(formData?.nombre) ?? "",
-    email: trimToNull(formData?.email) ?? "",
-    phone: trimToNull(formData?.whatsapp),
-    companyOrProject: trimToNull(formData?.empresaProyecto),
-    message: trimToNull(formData?.mensaje) ?? "",
+    name: trimToNull(formData?.[getFieldName(fieldMap, "name")]) ?? "",
+    email: trimToNull(formData?.[getFieldName(fieldMap, "email")]) ?? "",
+    phone: trimToNull(formData?.[getFieldName(fieldMap, "phone")]),
+    companyOrProject: trimToNull(formData?.[getFieldName(fieldMap, "companyOrProject")]),
+    message: trimToNull(formData?.[getFieldName(fieldMap, "message")]) ?? "",
   };
 }
 
-export function validateContactFormData(formData) {
-  const normalized = normalizeContactFormData(formData);
+export function validateContactFormData(
+  formData,
+  fieldMap = CONTACT_FORM_FIELD_MAPS.CONTACT_PAGE
+) {
+  const normalized = normalizeContactFormData(formData, fieldMap);
   const errors = {};
+  const nameField = getFieldName(fieldMap, "name");
+  const emailField = getFieldName(fieldMap, "email");
+  const phoneField = getFieldName(fieldMap, "phone");
+  const companyProjectField = getFieldName(fieldMap, "companyOrProject");
+  const messageField = getFieldName(fieldMap, "message");
 
   if (!normalized.name) {
-    errors.nombre = "requiredName";
+    errors[nameField] = "requiredName";
   } else if (normalized.name.length > CONTACT_FIELD_LIMITS.name) {
-    errors.nombre = "nameTooLong";
+    errors[nameField] = "nameTooLong";
   }
 
   if (!normalized.email) {
-    errors.email = "requiredEmail";
+    errors[emailField] = "requiredEmail";
   } else if (normalized.email.length > CONTACT_FIELD_LIMITS.email) {
-    errors.email = "emailTooLong";
+    errors[emailField] = "emailTooLong";
   } else if (!EMAIL_PATTERN.test(normalized.email)) {
-    errors.email = "invalidEmail";
+    errors[emailField] = "invalidEmail";
   }
 
   if (normalized.phone) {
     if (normalized.phone.length > CONTACT_FIELD_LIMITS.phone) {
-      errors.whatsapp = "phoneTooLong";
+      errors[phoneField] = "phoneTooLong";
     } else {
       const digits = normalized.phone.replace(/\D/g, "");
       const invalidDigitsCount =
         digits.length < MIN_PHONE_DIGITS || digits.length > MAX_PHONE_DIGITS;
 
       if (!WHATSAPP_PATTERN.test(normalized.phone) || invalidDigitsCount) {
-        errors.whatsapp = "invalidWhatsApp";
+        errors[phoneField] = "invalidWhatsApp";
       }
     }
   }
@@ -78,13 +110,13 @@ export function validateContactFormData(formData) {
     normalized.companyOrProject &&
     normalized.companyOrProject.length > CONTACT_FIELD_LIMITS.companyOrProject
   ) {
-    errors.empresaProyecto = "companyProjectTooLong";
+    errors[companyProjectField] = "companyProjectTooLong";
   }
 
   if (!normalized.message) {
-    errors.mensaje = "requiredMessage";
+    errors[messageField] = "requiredMessage";
   } else if (normalized.message.length > CONTACT_FIELD_LIMITS.message) {
-    errors.mensaje = "messageTooLong";
+    errors[messageField] = "messageTooLong";
   }
 
   return {
@@ -98,8 +130,9 @@ export function buildContactSubmissionPayload({
   locale,
   source,
   turnstileToken,
+  fieldMap = CONTACT_FORM_FIELD_MAPS.CONTACT_PAGE,
 }) {
-  const { normalized, errors } = validateContactFormData(formData);
+  const { normalized, errors } = validateContactFormData(formData, fieldMap);
 
   if (Object.keys(errors).length > 0) {
     return {
