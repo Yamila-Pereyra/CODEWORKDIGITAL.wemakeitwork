@@ -82,6 +82,7 @@ export default function ParallaxContactWindow({ className = "", headingLevel = "
   const sectionRef = useRef(null);
   const imageLayerRef = useRef(null);
   const Heading = headingLevel;
+  const titleId = "parallax-contact-window-title";
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -160,7 +161,7 @@ export default function ParallaxContactWindow({ className = "", headingLevel = "
           PARALLAX_WINDOW_CONFIG.imageObjectPosition,
         ...LAB_CONTENT_STYLE,
       }}
-      aria-label="Parallax contact window"
+      aria-labelledby={titleId}
       data-parallax-contact-window
     >
       <div className={styles.imageLayer} ref={imageLayerRef}>
@@ -182,7 +183,7 @@ export default function ParallaxContactWindow({ className = "", headingLevel = "
             <p className={styles.contactEyebrow}>
               {copy.eyebrow}
             </p>
-            <Heading className={styles.contactTitle}>
+            <Heading className={styles.contactTitle} id={titleId}>
               {copy.title}
             </Heading>
             {copy.body ? (
