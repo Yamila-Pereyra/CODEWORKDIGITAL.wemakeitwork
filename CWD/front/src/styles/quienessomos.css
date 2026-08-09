@@ -65,7 +65,9 @@
     line-height: 0.92;
     letter-spacing: -0.075em;
     font-weight: 900;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
 }
 
 .qs-hero-content p {
@@ -501,19 +503,19 @@
     .qs-actions{
         display:flex;
         flex-direction:column;
+        align-items:center;
         gap:12px;
         margin-top:40px;
     }
 
     .qs-btn-primary{
         width:fit-content;
-        align-self:flex-start;
+        align-self:center;
     }
 
     .qs-btn-secondary{
         width:fit-content;
-        align-self:flex-end;
-        margin-right:24px;
+        align-self:center;
     }
     .qs-manifiesto {
         padding: 70px 0;
