@@ -18,10 +18,12 @@ const PULSE_SIZE = 0.032;
 const ORIGIN_NODE_RADIUS = 0.017;
 const ORIGIN_NODE_HALO_RADIUS = 0.027;
 const ORIGIN_RING_RADIUS = 0.0385;
-const BLOOM_STRENGTH = 0.82;
+const BLOOM_STRENGTH = 0.2;
 const BLOOM_RADIUS = 0.46;
 const BLOOM_THRESHOLD = 0.12;
 const GLOBE_DEBUG_TIMINGS = false;
+const GLOBE_POINT_ACCENT_COLOR = new THREE.Color(0xff0077);
+const GLOBE_POINT_ACCENT_MIX = 0.15;
 const LAB_GLOBE_BLOOM_CHOREOGRAPHY = {
   enabled: true,
   final: {
@@ -62,8 +64,8 @@ const LAB_GLOBE_BLOOM_CHOREOGRAPHY = {
     },
   },
   composer: {
-    createAfterFirstShell: false,
-    createDelayMs: 80,
+    createAfterFirstShell: true,
+    createDelayMs: 0,
   },
 };
 const LAB_GLOBE_REVEAL_CHOREOGRAPHY = {
@@ -339,7 +341,9 @@ function getWarmNeonColor(point) {
     0.18,
   );
 
-  return color.lerp(highlight, highlightAmount);
+  return color
+    .lerp(highlight, highlightAmount)
+    .lerp(GLOBE_POINT_ACCENT_COLOR, GLOBE_POINT_ACCENT_MIX);
 }
 
 function pushGlobePoint(positions, colors, point) {
@@ -442,9 +446,11 @@ function createBloomComposer(renderer, scene, camera) {
 
   composer.addPass(renderPass);
   composer.addPass(bloomPass);
-  composer.userData.bloomPass = bloomPass;
 
-  return composer;
+  return {
+    composer,
+    bloomPass,
+  };
 }
 
 function clamp01(value) {
@@ -1056,9 +1062,10 @@ export default function GlobeLab({
 
     camera.position.set(0, 0, 4);
 
-    const composer = useBloom && !progressiveReveal
+    const initialBloomComposer = useBloom && !progressiveReveal
       ? createBloomComposer(renderer, scene, camera)
       : null;
+    const composer = initialBloomComposer?.composer ?? null;
     mark("globe:renderer", rendererStart);
 
     const globeAxis = new THREE.Group();
@@ -1222,8 +1229,9 @@ export default function GlobeLab({
 
         const bloomStart = performance.now();
         try {
-          composer = createBloomComposer(renderer, scene, camera);
-          bloomPass = composer.userData.bloomPass;
+          const progressiveBloomComposer = createBloomComposer(renderer, scene, camera);
+          composer = progressiveBloomComposer.composer;
+          bloomPass = progressiveBloomComposer.bloomPass;
           applyBloomState(bloomPass, LAB_GLOBE_BLOOM_CHOREOGRAPHY.stages.initial);
           const { clientWidth, clientHeight } = container;
           composer.setSize(clientWidth, clientHeight);
