@@ -442,9 +442,11 @@ function createBloomComposer(renderer, scene, camera) {
 
   composer.addPass(renderPass);
   composer.addPass(bloomPass);
-  composer.userData.bloomPass = bloomPass;
 
-  return composer;
+  return {
+    composer,
+    bloomPass,
+  };
 }
 
 function clamp01(value) {
@@ -1056,9 +1058,10 @@ export default function GlobeLab({
 
     camera.position.set(0, 0, 4);
 
-    const composer = useBloom && !progressiveReveal
+    const initialBloomComposer = useBloom && !progressiveReveal
       ? createBloomComposer(renderer, scene, camera)
       : null;
+    const composer = initialBloomComposer?.composer ?? null;
     mark("globe:renderer", rendererStart);
 
     const globeAxis = new THREE.Group();
@@ -1222,8 +1225,9 @@ export default function GlobeLab({
 
         const bloomStart = performance.now();
         try {
-          composer = createBloomComposer(renderer, scene, camera);
-          bloomPass = composer.userData.bloomPass;
+          const progressiveBloomComposer = createBloomComposer(renderer, scene, camera);
+          composer = progressiveBloomComposer.composer;
+          bloomPass = progressiveBloomComposer.bloomPass;
           applyBloomState(bloomPass, LAB_GLOBE_BLOOM_CHOREOGRAPHY.stages.initial);
           const { clientWidth, clientHeight } = container;
           composer.setSize(clientWidth, clientHeight);
