@@ -1,3 +1,4 @@
+const INSTAGRAM_ES_URL = "https://www.instagram.com/codeworkdigital_/";
 const INSTAGRAM_EN_URL =
   "https://www.instagram.com/codeworkdigital?igsh=MXZ4ZGpxanhleGJwcg%3D%3D&utm_source=qr";
 const INSTAGRAM_IT_URL =
@@ -10,7 +11,7 @@ const SOCIAL_LINKS_BY_LOCALE = {
   es: {
     facebook:
       "https://www.facebook.com/share/1C4ibzzxhV/?mibextid=wwXIfr",
-    instagram: INSTAGRAM_EN_URL, // Temporary fallback until the Spanish account is verified.
+    instagram: INSTAGRAM_ES_URL,
     whatsapp: WHATSAPP_URL,
     phoneHref: PHONE_HREF,
     phoneDisplay: PHONE_DISPLAY,
